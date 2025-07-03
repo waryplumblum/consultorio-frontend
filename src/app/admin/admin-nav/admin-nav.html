@@ -1,0 +1,27 @@
+<nav class="admin-sidebar" *ngIf="isLoggedIn">
+  <div class="sidebar-header">
+    <h3>Panel de Administración</h3>
+  </div>
+  <ul class="sidebar-links">
+    <li>
+      <a routerLink="/admin/dashboard" routerLinkActive="active">
+        <i class="fas fa-chart-line"></i> Dashboard
+      </a>
+    </li>
+    <li>
+      <a routerLink="/admin/appointments" routerLinkActive="active">
+        <i class="fas fa-calendar-alt"></i> Gestión de Citas
+      </a>
+    </li>
+    <li *ngIf="isAdmin">
+      <a routerLink="/admin/users" routerLinkActive="active">
+        <i class="fas fa-users-cog"></i> Gestión de Usuarios
+      </a>
+    </li>
+    <li>
+      <a (click)="logout()" class="logout-link">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </a>
+    </li>
+  </ul>
+</nav>

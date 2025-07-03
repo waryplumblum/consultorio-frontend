@@ -1,0 +1,11 @@
+.admin-wrapper {
+  display: flex;
+  min-height: 100vh; // Ocupa al menos toda la altura de la vista
+}
+
+.admin-content {
+  margin-left: 250px; // Deja espacio para el sidebar
+  flex-grow: 1; // Ocupa el resto del espacio disponible
+  padding: 20px;
+  background-color: #f0f2f5; // Un color de fondo claro para el contenido
+}

@@ -1,0 +1,72 @@
+.admin-sidebar {
+  width: 250px;
+  height: 100vh; // Ocupa toda la altura de la ventana
+  background-color: #2c3e50; // Color oscuro para sidebar
+  color: white;
+  padding-top: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed; // Fija el sidebar a la izquierda
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000; // Asegura que esté encima de otros elementos
+
+  .sidebar-header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #4a6572;
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 1.6em;
+      margin: 0;
+      color: #ecf0f1;
+    }
+  }
+
+  .sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; // Permite que la lista crezca y empuje el botón de logout hacia abajo
+
+    li {
+      margin-bottom: 5px;
+
+      a {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 1.1em;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        border-left: 5px solid transparent; // Para el indicador de activo
+
+        i {
+          margin-right: 10px;
+          font-size: 1.2em;
+        }
+
+        &:hover {
+          background-color: #34495e;
+          border-left-color: #3498db;
+        }
+
+        &.active {
+          background-color: #3498db; // Color azul para el enlace activo
+          border-left-color: #2980b9;
+          font-weight: bold;
+        }
+      }
+
+      .logout-link {
+        cursor: pointer; // Indica que es clickable
+        margin-top: auto; // Empuja el botón de logout al final si flex-grow: 1 está en sidebar-links
+        border-top: 1px solid #4a6572;
+        padding-top: 20px; // Espacio entre el último link y logout
+      }
+    }
+  }
+}
