@@ -1,0 +1,112 @@
+.doctor-presentation-container {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+.hero-section {
+  background-color: #007bff; // Azul primario
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 2.8em;
+    margin-bottom: 10px;
+  }
+  .specialties {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-bottom: 25px;
+  }
+  .btn-primary {
+    display: inline-block;
+    background-color: #28a745; // Verde para botón
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #218838;
+    }
+  }
+}
+
+.info-section, .services-section, .contact-section, .appointment-section {
+  padding: 40px 20px;
+  border-bottom: 1px solid #eee;
+  &:last-child {
+    border-bottom: none;
+  }
+  .section-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h2 {
+    font-size: 2em;
+    color: #007bff;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  p {
+    margin-bottom: 15px;
+    text-align: justify;
+  }
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  .service-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    h3 {
+      color: #0056b3;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 0.95em;
+      color: #555;
+      text-align: left;
+    }
+  }
+}
+
+.contact-info {
+  margin-bottom: 30px;
+  text-align: center;
+  a {
+    color: #007bff;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.map-container {
+  background-color: #e9e9e9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  iframe {
+    display: block; // Eliminar espacio debajo del iframe
+  }
+}
+
+// Estilos básicos para el formulario de citas si lo pones directamente aquí
+.appointment-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background-color: #eef7ff; // Un fondo suave para diferenciar la sección
+}

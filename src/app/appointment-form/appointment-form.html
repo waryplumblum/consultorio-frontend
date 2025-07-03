@@ -1,0 +1,66 @@
+<div class="appointment-form-container">
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="patientName">Nombre Completo:</label>
+      <input type="text" id="patientName" formControlName="patientName" placeholder="Ej. Juan Pérez">
+      <div *ngIf="formSubmitted && appointmentForm.controls['patientName'].errors?.['required']" class="error-message">
+        El nombre es requerido.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="patientPhone">Teléfono:</label>
+      <input type="tel" id="patientPhone" formControlName="patientPhone" placeholder="Ej. +521234567890">
+      <div *ngIf="formSubmitted && appointmentForm.controls['patientPhone'].errors?.['required']" class="error-message">
+        El teléfono es requerido.
+      </div>
+      <div *ngIf="formSubmitted && appointmentForm.controls['patientPhone'].errors?.['pattern']" class="error-message">
+        Formato de teléfono inválido (ej. +521234567890).
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="patientEmail">Correo Electrónico:</label>
+      <input type="email" id="patientEmail" formControlName="patientEmail" placeholder="Ej. correo@ejemplo.com">
+      <div *ngIf="formSubmitted && appointmentForm.controls['patientEmail'].errors?.['required']" class="error-message">
+        El correo electrónico es requerido.
+      </div>
+      <div *ngIf="formSubmitted && appointmentForm.controls['patientEmail'].errors?.['email']" class="error-message">
+        Ingrese un correo electrónico válido.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="reason">Motivo de la Consulta:</label>
+      <textarea id="reason" formControlName="reason" rows="4" placeholder="Ej. Dolor de cabeza persistente, chequeo general, etc."></textarea>
+      <div *ngIf="formSubmitted && appointmentForm.controls['reason'].errors?.['required']" class="error-message">
+        El motivo de la consulta es requerido.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="preferredDate">Fecha Preferida:</label>
+      <input type="date" id="preferredDate" formControlName="preferredDate">
+      <div *ngIf="formSubmitted && appointmentForm.controls['preferredDate'].errors?.['required']" class="error-message">
+        La fecha preferida es requerida.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="preferredTime">Hora Preferida:</label>
+      <input type="time" id="preferredTime" formControlName="preferredTime">
+      <div *ngIf="formSubmitted && appointmentForm.controls['preferredTime'].errors?.['required']" class="error-message">
+        La hora preferida es requerida.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="formSubmitted && !appointmentForm.valid">Agendar Cita</button>
+
+    <div *ngIf="submissionSuccess" class="success-message">
+      ¡Su solicitud de cita ha sido enviada con éxito! Nos pondremos en contacto pronto para confirmar.
+    </div>
+    <div *ngIf="submissionError" class="general-error-message">
+      {{ errorMessage }}
+    </div>
+  </form>
+</div>

@@ -1,0 +1,58 @@
+<div class="doctor-presentation-container">
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1>{{ doctor.name }}</h1>
+      <p class="specialties">{{ doctor.specialties.join(' | ') }}</p>
+      <a routerLink="/agendar-cita" class="btn-primary">Agendar Cita</a>
+    </div>
+  </header>
+
+  <section class="info-section">
+    <div class="section-content">
+      <h2>Sobre mí</h2>
+      <p>{{ doctor.experience }}</p>
+    </div>
+  </section>
+
+  <section class="services-section">
+    <div class="section-content">
+      <h2>Mis Servicios</h2>
+      <div class="services-grid">
+        <div *ngFor="let service of doctor.services" class="service-card">
+          <h3>{{ service.name }}</h3>
+          <p>{{ service.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="section-content">
+      <h2>Contacto</h2>
+      <div class="contact-info">
+        <p><strong>Teléfono:</strong> <a href="tel:{{ doctor.contactInfo.phone }}">{{ doctor.contactInfo.phone }}</a></p>
+        <p><strong>Email:</strong> <a href="mailto:{{ doctor.contactInfo.email }}">{{ doctor.contactInfo.email }}</a></p>
+        <p><strong>Dirección:</strong> {{ doctor.contactInfo.address }}</p>
+      </div>
+      <div class="map-container" *ngIf="doctor.contactInfo.googleMapsLink">
+        <iframe
+          [src]="doctor.contactInfo.googleMapsLink | safeHtml"
+          width="100%"
+          height="350"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="appointment-section">
+    <div class="section-content">
+      <h2>Agenda tu Cita</h2>
+      <app-appointment-form></app-appointment-form>
+    </div>
+  </section>
+
+</div>
