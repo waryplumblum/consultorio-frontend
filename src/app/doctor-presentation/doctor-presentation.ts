@@ -14,9 +14,9 @@ import { AppointmentForm } from '../appointment-form/appointment-form';
 export class DoctorPresentation {
 
   doctor = {
-    name: 'Dra. Ana García',
-    specialties: ['Cardiología', 'Medicina General'],
-    experience: 'La Dra. Ana García cuenta con más de 15 años de experiencia en el campo de la cardiología y la medicina general. Ha dedicado su carrera a brindar atención de calidad, enfocándose en la prevención y el tratamiento integral de enfermedades cardiovasculares y crónicas. Su compromiso con el bienestar de sus pacientes la impulsa a mantenerse actualizada con los últimos avances médicos.',
+    name: 'Dra. Samuel Hernández Lomelí',
+    specialties: ['Ginecología', 'Medicina General'],
+    experience: 'El Dr. Samuel Lomelí cuenta con más de 15 años de experiencia en el campo de la ginecología y la medicina general. Ha dedicado su carrera a brindar atención de calidad, enfocándose en la prevención y el tratamiento integral de enfermedades cardiovasculares y crónicas. Su compromiso con el bienestar de sus pacientes la impulsa a mantenerse actualizada con los últimos avances médicos.',
     services: [
       { name: 'Consulta General', description: 'Revisión médica completa y diagnóstico de diversas afecciones.' },
       { name: 'Electrocardiograma', description: 'Estudio no invasivo para evaluar la actividad eléctrica del corazón.' },
@@ -27,8 +27,11 @@ export class DoctorPresentation {
       phone: '+52 33 1234 5678',
       email: 'ana.garcia@consultorio.com',
       address: 'Av. Siempre Viva #123, Col. Centro, Guadalajara, Jalisco, México',
-      googleMapsLink: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3733.0039243048995!2d-103.34918738507346!3d20.6729999861614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8428b1e4f4a3a6b5%3A0x6a0a2a0a2a0a2a0a!2sAv.%20Siempre%20Viva%20123!5e0!3m2!1ses-419!2smx!4v1678901234567!5m2!1ses-419!2smx' // Ejemplo de embed map
+      googleMapsLink: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3712.0923781052247!2d-104.90621499717234!3d21.50410127754228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842736faefca6d13%3A0x424c43abe837e67!2sLoma%2042!5e0!3m2!1ses-419!2smx!4v1751754039995!5m2!1ses-419!2smx'
     }
   };
 
 }
+
+
+//<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3712.0923781052247!2d-104.90621499717234!3d21.50410127754228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842736faefca6d13%3A0x424c43abe837e67!2sLoma%2042!5e0!3m2!1ses-419!2smx!4v1751754039995!5m2!1ses-419!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
