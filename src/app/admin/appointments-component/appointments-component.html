@@ -53,9 +53,9 @@
           <td>{{ appointment.patientPhone }} <br> {{ appointment.patientEmail }}</td>
           <td>{{ appointment.reason }}</td>
           <td>
-            {{ appointment.scheduledDateTime | date:'yyyy-MM-dd' }}
+            {{ appointment.scheduledDateTime | date:'dd-MM-yyyy' }}
             <br>
-            {{ appointment.scheduledDateTime | date:'HH:mm':'UTC' }} </td>
+            {{ appointment.scheduledDateTime | date:'HH:mm'  }} </td>
           <td>
             <span class="status-badge status-{{ appointment.status }}">
               {{ appointment.status | titlecase }}

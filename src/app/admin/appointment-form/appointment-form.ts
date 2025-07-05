@@ -36,8 +36,8 @@ export class AdminAppointmentForm implements OnInit {
       patientPhone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]], // 10 dígitos
       patientEmail: ['', [Validators.required, Validators.email]],
       reason: ['', Validators.required],
-      preferredDate: ['', Validators.required],
-      preferredTime: ['', Validators.required],
+      preferredDateTime: ['', Validators.required],
+      scheduledDateTime: ['', Validators.required],
       status: ['pending', Validators.required]
     });
   }
@@ -57,22 +57,27 @@ export class AdminAppointmentForm implements OnInit {
     this.loading = true;
     this.appointmentsService.getAppointmentById(id).subscribe({
       next: (appointment: Appointment) => {
-        // Formatear las fechas a 'YYYY-MM-DDTHH:mm' para los inputs datetime-local
-        const preferredDateObj = new Date(appointment.preferredDateTime);
-        const preferredDate = preferredDateObj.toISOString().slice(0, 10); // 'YYYY-MM-DD'
-        const preferredTime = preferredDateObj.toISOString().slice(11, 16); // 'HH:mm'
+        // --- CONSOLE.LOG PARA VER DATOS RECIBIDOS DEL BACKEND ---
+        console.log('Frontend (loadAppointmentData): Datos de la cita recibidos del backend:', appointment);
+        console.log('Frontend (loadAppointmentData): Tipo de preferredDateTime recibido:', typeof appointment.preferredDateTime, appointment.preferredDateTime);
+        console.log('Frontend (loadAppointmentData): Tipo de scheduledDateTime recibido:', typeof appointment.scheduledDateTime, appointment.scheduledDateTime);
+        // --- FIN CONSOLE.LOG ---
 
+        const preferredDateTime = new Date(appointment.preferredDateTime).toISOString().slice(0, 16);
+        const scheduledDateTime = new Date(appointment.scheduledDateTime).toISOString().slice(0, 16);
 
-        //const preferredDate = new Date(appointment.preferredDate).toISOString().slice(0, 16);
-        //const preferredTime = new Date(appointment.preferredTime).toISOString().slice(0, 16);
+        // --- CONSOLE.LOG PARA VER DATOS FORMATEADOS PARA EL INPUT HTML ---
+        console.log('Frontend (loadAppointmentData): preferredDateTime formateado para input:', preferredDateTime);
+        console.log('Frontend (loadAppointmentData): scheduledDateTime formateado para input:', scheduledDateTime);
+        // --- FIN CONSOLE.LOG ---
 
         this.appointmentForm.patchValue({
           patientName: appointment.patientName,
           patientPhone: appointment.patientPhone,
           patientEmail: appointment.patientEmail,
           reason: appointment.reason,
-          preferredDate: preferredDate,
-          preferredTime: preferredTime,
+          preferredDateTime: preferredDateTime,
+          scheduledDateTime: scheduledDateTime,
           status: appointment.status
         });
         this.loading = false;
@@ -91,17 +96,34 @@ export class AdminAppointmentForm implements OnInit {
 
     if (this.appointmentForm.invalid) {
       this.errorMessage = 'Por favor, completa todos los campos requeridos y corrige los errores.';
-      this.appointmentForm.markAllAsTouched(); // Marca todos los campos como tocados para mostrar validación
+      this.appointmentForm.markAllAsTouched();
       return;
     }
 
     this.loading = true;
     const formData = this.appointmentForm.value;
 
-    // Convertir los strings de fecha/hora de los inputs a objetos Date
-    // Es CRÍTICO que estos sean objetos Date para el backend
-    formData.preferredDate = new Date(formData.preferredDate);
-    formData.preferredTime = new Date(formData.preferredTime);
+
+      const datePart = formData.preferredDateTime; // Ej: "2024-07-10"
+      const timePart = formData.scheduledDateTime; // Ej: "15:30"
+
+      const combinedDateTimeString = `${datePart}T${timePart}:00`;
+      const preferredDateTime = new Date(combinedDateTimeString);
+
+      const preferredDateTimeISO = preferredDateTime.toISOString();
+      const scheduledDateTimeISO = preferredDateTimeISO;
+
+      console.log("preferredDateTimeISO: ", preferredDateTimeISO);
+      console.log("scheduledDateTimeISO: ", scheduledDateTimeISO);
+
+      formData.preferredDateTime = preferredDateTimeISO;
+      formData.scheduledDateTime = scheduledDateTimeISO;
+
+    // --- CONSOLE.LOG PARA VER LOS DATOS ENVIADOS AL BACKEND ---
+    console.log('Frontend (onSubmit): Datos finales a enviar al backend:', formData);
+    console.log('Frontend (onSubmit): Tipo de preferredDateTime a enviar:', typeof formData.preferredDateTime, formData.preferredDateTime);
+    console.log('Frontend (onSubmit): Tipo de scheduledDateTime a enviar:', typeof formData.scheduledDateTime, formData.scheduledDateTime);
+    // --- FIN CONSOLE.LOG ---
 
     let operation: Observable<Appointment>;
 
@@ -113,16 +135,24 @@ export class AdminAppointmentForm implements OnInit {
 
     operation.subscribe({
       next: (res) => {
+        console.log('Frontend (onSubmit): Respuesta del backend (éxito):', res); // Log de la respuesta del backend
         this.submitMessage = `Cita ${this.isEditMode ? 'actualizada' : 'creada'} exitosamente.`;
         this.loading = false;
-        // Redirigir al listado de citas después de un breve mensaje
         setTimeout(() => {
           this.router.navigate(['/admin/appointments']);
         }, 2000);
       },
       error: (err) => {
-        console.error(`Error al ${this.isEditMode ? 'actualizar' : 'crear'} la cita:`, err);
-        this.errorMessage = `No se pudo ${this.isEditMode ? 'actualizar' : 'crear'} la cita. Por favor, inténtalo de nuevo.`;
+        console.error(`Frontend (onSubmit): Error al ${this.isEditMode ? 'actualizar' : 'crear'} la cita:`, err); // Log del error
+        if (err.error && err.error.message) {
+          if (Array.isArray(err.error.message)) {
+            this.errorMessage = err.error.message.join(', ');
+          } else {
+            this.errorMessage = err.error.message;
+          }
+        } else {
+          this.errorMessage = `No se pudo ${this.isEditMode ? 'actualizar' : 'crear'} la cita. Por favor, inténtalo de nuevo.`;
+        }
         this.loading = false;
       }
     });

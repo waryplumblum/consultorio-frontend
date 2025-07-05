@@ -35,18 +35,18 @@
     </div>
 
     <div class="form-group">
-      <label for="preferredDate">Fecha Preferida:</label>
-      <input type="date" id="preferredDate" formControlName="preferredDate">
-      <div *ngIf="getControlErrorMessage('preferredDate')" class="error-message">
-        {{ getControlErrorMessage('preferredDate') }}
+      <label for="preferredDateTime">Fecha Preferida:</label>
+      <input type="date" id="preferredDateTime" formControlName="preferredDateTime">
+      <div *ngIf="getControlErrorMessage('preferredDateTime')" class="error-message">
+        {{ getControlErrorMessage('preferredDateTime') }}
       </div>
     </div>
 
     <div class="form-group">
-      <label for="preferredTime">Hora Preferida:</label>
-      <input type="time" id="preferredTime" formControlName="preferredTime">
-      <div *ngIf="getControlErrorMessage('preferredTime')" class="error-message">
-        {{ getControlErrorMessage('preferredTime') }}
+      <label for="scheduledDateTime">Hora Preferida:</label>
+      <input type="time" id="scheduledDateTime" formControlName="scheduledDateTime">
+      <div *ngIf="getControlErrorMessage('scheduledDateTime')" class="error-message">
+        {{ getControlErrorMessage('scheduledDateTime') }}
       </div>
     </div>
 

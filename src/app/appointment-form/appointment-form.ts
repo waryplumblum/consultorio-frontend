@@ -61,7 +61,7 @@ export class AppointmentForm {
         scheduledDateTime: scheduledDateTimeISO
       };
 
-      //console.log(appointmentData);
+      console.log(appointmentData);
 
       // URL de tu backend NestJS
       const apiUrl = 'http://localhost:3000/appointments';

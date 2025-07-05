@@ -7,7 +7,7 @@
 
   <div class="summary-cards" *ngIf="!loadingData && !errorMessage">
     <div class="card">
-      <h3>Total de Citas</h3>
+      <h3>Total de Citas Creadas</h3>
       <p class="data-number">{{ totalAppointments }}</p>
     </div>
     </div>
@@ -16,8 +16,8 @@
     <h3>Próximas Citas</h3>
     <ul>
       <li *ngFor="let appointment of upcomingAppointments">
-        <span class="appointment-date">{{ appointment.scheduledDateTime | date:'yyyy-MM-dd' }}</span> -
-        <span class="appointment-time">{{ appointment.scheduledDateTime | date:'HH:mm':'UTC' }}</span> -
+        <span class="appointment-date">{{ appointment.scheduledDateTime | date:'dd-MM-yyyy' }}</span> -
+        <span class="appointment-time">{{ appointment.scheduledDateTime | date:'HH:mm' }}</span> -
         <span class="appointment-client">{{ appointment.patientName }}</span> -
         <span class="appointment-status status-{{ appointment.status }}">{{ appointment.status }}</span>
       </li>
