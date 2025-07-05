@@ -15,7 +15,7 @@
         El teléfono es requerido.
       </div>
       <div *ngIf="formSubmitted && appointmentForm.controls['patientPhone'].errors?.['pattern']" class="error-message">
-        Formato de teléfono inválido (ej. +521234567890).
+        Formato de teléfono inválido (10 dígitos sin espacios).
       </div>
     </div>
 

@@ -25,8 +25,8 @@ export class AppointmentForm {
   ngOnInit(): void {
     this.appointmentForm = this.fb.group({
       patientName: ['', Validators.required],
-      patientPhone: ['', [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)]],
-      patientEmail: ['', [Validators.email, Validators.required]],
+      patientPhone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]], 
+      patientEmail: ['', [Validators.required, Validators.email]],
       reason: ['', Validators.required],
       preferredDate: ['', Validators.required],
       preferredTime: ['', Validators.required]
