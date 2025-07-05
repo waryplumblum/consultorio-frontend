@@ -7,6 +7,7 @@ import { DashboardComponent } from './admin/dashboard-component/dashboard-compon
 
 import { AuthGuard } from './guards/auth-guard';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout';
+import { AppointmentsComponent } from './admin/appointments-component/appointments-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/doctor-info', pathMatch: 'full' },
@@ -14,15 +15,14 @@ export const routes: Routes = [
   { path: 'agendar-cita', component: AppointmentForm },
   { path: 'admin/login', component: LoginComponent },
   {
-    path: 'admin', // Ruta principal para el área de administración
-    component: AdminLayoutComponent, // Este componente será el layout
-    canActivate: [AuthGuard], // Protege todo el área de administración
-    children: [ // Las rutas hijas se renderizarán dentro del <router-outlet> del layout
+    path: 'admin', 
+    component: AdminLayoutComponent, 
+    canActivate: [AuthGuard],
+    children: [ 
       { path: 'dashboard', component: DashboardComponent },
-      // Aquí irán las rutas para Gestión de Citas y Gestión de Usuarios
-      // { path: 'appointments', component: AdminAppointmentsComponent },
+     { path: 'appointments', component: AppointmentsComponent },
       // { path: 'users', component: AdminUsersComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' } // Redirige /admin a /admin/dashboard
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   // Aquí puedes añadir una ruta para "No autorizado" si lo deseas

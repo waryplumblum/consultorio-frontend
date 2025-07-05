@@ -1,0 +1,90 @@
+<div class="appointments-container">
+  <h2>Gestión de Citas</h2>
+
+  <div *ngIf="loading" class="loading-message">Cargando citas...</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label for="patientName">Nombre del Paciente:</label>
+      <input type="text" id="patientName" [(ngModel)]="filterPatientName" placeholder="Buscar por nombre">
+    </div>
+
+    <div class="filter-group">
+      <label for="status">Estado:</label>
+      <select id="status" [(ngModel)]="filterStatus">
+        <option value="">Todos</option>
+        <option *ngFor="let status of statusOptions" [value]="status">{{ status | titlecase }}</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="dateFrom">Fecha Desde:</label>
+      <input type="date" id="dateFrom" [(ngModel)]="filterDateFrom">
+    </div>
+
+    <div class="filter-group">
+      <label for="dateTo">Fecha Hasta:</label>
+      <input type="date" id="dateTo" [(ngModel)]="filterDateTo">
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn btn-primary" (click)="applyFilters()">Aplicar Filtros</button>
+      <button class="btn btn-secondary" (click)="clearFilters()">Limpiar Filtros</button>
+      <button class="btn btn-success" routerLink="/admin/appointments/new">Crear Nueva Cita</button>
+    </div>
+  </div>
+
+  <div class="appointments-table" *ngIf="!loading && !errorMessage && appointments.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Contacto</th>
+          <th>Motivo</th>
+          <th>Fecha Agendada</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments">
+          <td>{{ appointment.patientName }}</td>
+          <td>{{ appointment.patientPhone }} <br> {{ appointment.patientEmail }}</td>
+          <td>{{ appointment.reason }}</td>
+          <td>
+            {{ appointment.scheduledDateTime | date:'yyyy-MM-dd' }}
+            <br>
+            {{ appointment.scheduledDateTime | date:'HH:mm':'UTC' }} </td>
+          <td>
+            <span class="status-badge status-{{ appointment.status }}">
+              {{ appointment.status | titlecase }}
+            </span>
+          </td>
+          <td class="actions-column">
+            <button class="btn btn-edit" (click)="editAppointment(appointment._id)">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-delete" (click)="deleteAppointment(appointment._id)">
+              <i class="fas fa-trash-alt"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && !errorMessage && appointments.length === 0" class="no-appointments-found">
+    <p>No se encontraron citas con los filtros aplicados.</p>
+  </div>
+
+  <div class="pagination-controls" *ngIf="!loading && !errorMessage && totalAppointments > itemsPerPage">
+    <button class="btn" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">Anterior</button>
+    <button class="btn page-number" *ngFor="let pageNum of getPagesArray()"
+            [class.active]="pageNum === currentPage"
+            (click)="onPageChange(pageNum)">
+      {{ pageNum }}
+    </button>
+    <button class="btn" [disabled]="currentPage === getTotalPages()" (click)="onPageChange(currentPage + 1)">Siguiente</button>
+  </div>
+</div>
