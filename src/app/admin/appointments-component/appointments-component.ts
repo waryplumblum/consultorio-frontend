@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Appointment, AppointmentsResponse } from '../../models/appointment.model';
 import { AppointmentService } from '../../services/appointment-service';
 
@@ -22,16 +22,17 @@ export class AppointmentsComponent implements OnInit {
   loading: boolean = true;
   errorMessage: string | null = null;
 
-  // Propiedades para los filtros
   filterPatientName: string = '';
   filterStatus: string = '';
-  filterDateFrom: string = ''; // Usar string para input type="date"
-  filterDateTo: string = '';   // Usar string para input type="date"
+  filterDateFrom: string = '';
+  filterDateTo: string = '';
 
-  // Opciones para el filtro de estado
   statusOptions: string[] = ['pending', 'confirmed', 'cancelled', 'completed'];
 
-  constructor(private appointmentsService: AppointmentService) { }
+  constructor(
+    private appointmentsService: AppointmentService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadAppointments();
@@ -41,12 +42,11 @@ export class AppointmentsComponent implements OnInit {
     this.loading = true;
     this.errorMessage = null;
 
-    // Construir los parámetros de la consulta
     const queryParams: any = {
       page: this.currentPage,
       limit: this.itemsPerPage,
-      sortBy: 'scheduledDateTime', // O el campo que quieras por defecto
-      sortOrder: 'desc' // O el orden que quieras por defecto
+      sortBy: 'scheduledDateTime',
+      sortOrder: 'desc'
     };
 
     if (this.filterPatientName) {
@@ -56,13 +56,10 @@ export class AppointmentsComponent implements OnInit {
       queryParams.status = this.filterStatus;
     }
     if (this.filterDateFrom) {
-      // Convertir la fecha a formato ISO string UTC para el backend
-      // El backend esperará un string ISO 8601 que pueda convertir a Date
-      // Aquí solo tomamos la fecha sin hora, el backend se encargará del $gte para el día completo
+
       queryParams.dateFrom = new Date(this.filterDateFrom).toISOString();
     }
     if (this.filterDateTo) {
-      // Igual para dateTo
       queryParams.dateTo = new Date(this.filterDateTo).toISOString();
     }
 
@@ -70,7 +67,6 @@ export class AppointmentsComponent implements OnInit {
       next: (response: AppointmentsResponse) => {
         this.appointments = response.data.map(app => ({
           ...app,
-          // Convertir los strings de fecha/hora a objetos Date para el frontend si se necesita manipulación de fecha
           scheduledDateTime: new Date(app.scheduledDateTime),
           preferredDateTime: new Date(app.preferredDateTime)
         }));
@@ -85,7 +81,6 @@ export class AppointmentsComponent implements OnInit {
     });
   }
 
-  // Manejar el cambio de página
   onPageChange(page: number): void {
     if (page >= 1 && page <= this.getTotalPages()) {
       this.currentPage = page;
@@ -93,24 +88,20 @@ export class AppointmentsComponent implements OnInit {
     }
   }
 
-  // Obtener el número total de páginas
   getTotalPages(): number {
     return Math.ceil(this.totalAppointments / this.itemsPerPage);
   }
 
-  // Crear un array para iterar en la paginación (ej. [1, 2, 3, ...])
   getPagesArray(): number[] {
     const totalPages = this.getTotalPages();
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  // Aplicar filtros
   applyFilters(): void {
-    this.currentPage = 1; // Reiniciar a la primera página al aplicar nuevos filtros
+    this.currentPage = 1;
     this.loadAppointments();
   }
 
-  // Limpiar filtros
   clearFilters(): void {
     this.filterPatientName = '';
     this.filterStatus = '';
@@ -120,11 +111,8 @@ export class AppointmentsComponent implements OnInit {
     this.loadAppointments();
   }
 
-  // Métodos para acciones de la tabla (futuras)
   editAppointment(id: string): void {
-    // Implementar lógica de navegación a la página de edición
-    console.log('Editar cita con ID:', id);
-    // this.router.navigate(['/admin/appointments/edit', id]); // Cuando tengamos la ruta de edición
+    this.router.navigate(['/admin/appointments/edit', id]);
   }
 
   deleteAppointment(id: string): void {
@@ -132,7 +120,7 @@ export class AppointmentsComponent implements OnInit {
       this.appointmentsService.deleteAppointment(id).subscribe({
         next: () => {
           console.log('Cita eliminada:', id);
-          this.loadAppointments(); // Recargar la lista después de eliminar
+          this.loadAppointments();
         },
         error: (err) => {
           console.error('Error al eliminar cita:', err);
