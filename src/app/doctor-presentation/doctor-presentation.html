@@ -25,6 +25,7 @@
         </button>
         <div class="services-slider" #servicesSlider>
           <div *ngFor="let service of doctor.services" class="service-card">
+            <div class="service-icon" [innerHTML]="service.icon | safeHtml"></div>
             <h3>{{ service.name }}</h3>
             <p>{{ service.description }}</p>
           </div>
@@ -48,7 +49,7 @@
       </div>
       <div class="map-container" *ngIf="doctor.contactInfo.googleMapsLink">
         <iframe
-          [src]="doctor.contactInfo.googleMapsLink | safeHtml"
+          [src]="doctor.contactInfo.googleMapsLink | safeHtml:'resourceUrl'"
           width="100%"
           height="350"
           style="border:0;"
@@ -66,5 +67,4 @@
       <app-appointment-form></app-appointment-form>
     </div>
   </section>
-
 </div>

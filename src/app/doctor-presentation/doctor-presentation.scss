@@ -92,6 +92,18 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   display: flex; /* Use flexbox for internal layout */
   flex-direction: column; /* Stack title and description vertically */
+  align-items: center; /* Centrar contenido horizontalmente */
+
+  .service-icon {
+    margin-bottom: 15px; /* Espacio entre el icono y el título */
+    color: #AF9B60; /* Color del icono */
+    svg {
+      width: 48px; /* Tamaño del icono */
+      height: 48px;
+      stroke-width: 1.5; /* Grosor de la línea del SVG */
+    }
+  }
+
   h3 {
     color: #D4A5A5;
     margin-top: 0;
