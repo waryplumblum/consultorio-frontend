@@ -5,7 +5,7 @@
 }
 
 .hero-section {
-  background-color: #5B385B; 
+  background-color: #5B385B;
   color: white;
   padding: 60px 20px;
   text-align: center;
@@ -59,28 +59,91 @@
   }
 }
 
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.services-slider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden; // Hide overflow from arrows
+  padding: 0 40px; // Padding for arrows to not cover content
+}
+
+.services-slider {
+  display: flex;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
   gap: 25px;
-  .service-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    h3 {
-      color: #D4A5A5;
-      margin-top: 0;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 0.95em;
-      color: #555;
-      text-align: left;
-    }
+  padding-bottom: 10px; /* Space for potential scrollbar if it appears */
+}
+
+.service-card {
+  flex: 0 0 auto; /* Prevent cards from shrinking */
+  width: 300px; /* Fixed width for cards, adjust as needed */
+  scroll-snap-align: start; /* Snap to the start of each card */
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  display: flex; /* Use flexbox for internal layout */
+  flex-direction: column; /* Stack title and description vertically */
+  h3 {
+    color: #D4A5A5;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: center; /* Centrar el título */
+    min-height: 2.4em; /* Asegura espacio para dos líneas (ajusta según font-size y line-height) */
+    line-height: 1.2em; /* Ajusta la altura de línea si es necesario */
+    display: -webkit-box; /* Para multilínea */
+    -webkit-line-clamp: 2; /* Limita a 2 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  p {
+    font-size: 0.95em;
+    color: #555;
+    text-align: justify; /* Justificar la descripción */
+    flex-grow: 1; /* Permite que la descripción ocupe el espacio restante */
   }
 }
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(91, 56, 91, 0.7); /* #5B385B with opacity */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #5B385B;
+  }
+  &.left-arrow {
+    left: 0;
+  }
+  &.right-arrow {
+    right: 0;
+  }
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 
 .contact-info {
   margin-bottom: 30px;
@@ -109,4 +172,55 @@
     padding-top: 60px;
     padding-bottom: 60px;
     background-color: #FBF8F5; // Un fondo suave para diferenciar la sección
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2em;
+  }
+  .hero-section .specialties {
+    font-size: 1em;
+  }
+  .info-section h2, .services-section h2, .contact-section h2, .appointment-section h2 {
+    font-size: 1.8em;
+  }
+  .service-card {
+    width: 250px; /* Adjust card width for smaller screens */
+  }
+  .services-slider-container {
+    padding: 0 20px; /* Reduce padding for arrows */
+  }
+  .slider-arrow {
+    width: 35px;
+    height: 35px;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 40px 15px;
+  }
+  .info-section, .services-section, .contact-section, .appointment-section {
+    padding: 30px 15px;
+  }
+  .service-card {
+    width: 90vw; /* Make cards almost full width on very small screens */
+    margin: 0 auto; /* Center cards */
+  }
+  .services-slider-container {
+    padding: 0 10px; /* Minimal padding for arrows */
+  }
+  .slider-arrow {
+    width: 30px;
+    height: 30px;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
 }

@@ -17,11 +17,23 @@
   <section class="services-section">
     <div class="section-content">
       <h2>Mis Servicios</h2>
-      <div class="services-grid">
-        <div *ngFor="let service of doctor.services" class="service-card">
-          <h3>{{ service.name }}</h3>
-          <p>{{ service.description }}</p>
+      <div class="services-slider-container">
+        <button class="slider-arrow left-arrow" (click)="scrollServices('left')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <path fill-rule="evenodd" d="M11.72 3.53a.75.75 0 0 1 0 1.06L7.56 9.75h10.94a.75.75 0 0 1 0 1.5H7.56l4.16 5.16a.75.75 0 0 1-1.06 1.06l-5.5-6.75a.75.75 0 0 1 0-1.06l5.5-6.75a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <div class="services-slider" #servicesSlider>
+          <div *ngFor="let service of doctor.services" class="service-card">
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+          </div>
         </div>
+        <button class="slider-arrow right-arrow" (click)="scrollServices('right')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <path fill-rule="evenodd" d="M12.28 2.53a.75.75 0 0 0 0 1.06L16.44 9.75H5.5a.75.75 0 0 0 0 1.5h10.94l-4.16 5.16a.75.75 0 0 0 1.06 1.06l5.5-6.75a.75.75 0 0 0 0-1.06l-5.5-6.75a.75.75 0 0 0-1.06 0Z" clip-rule="evenodd" />
+          </svg>
+        </button>
       </div>
     </div>
   </section>

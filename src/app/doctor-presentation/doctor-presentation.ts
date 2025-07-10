@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
 import { SafeHtmlPipe } from '../pipes/safe-html.pipe';
 import { CommonModule } from '@angular/common';
@@ -11,13 +11,15 @@ import { AppointmentForm } from '../appointment-form/appointment-form';
   styleUrl: './doctor-presentation.scss',
   standalone: true,
 })
-export class DoctorPresentation {
+export class DoctorPresentation implements AfterViewInit {
+  @ViewChild('servicesSlider') servicesSlider!: ElementRef<HTMLDivElement>;
+
 
   doctor = {
     name: 'Dr. Samuel Hernández Lomelí',
     specialties: ['Ginecología y Obstetricia', 'Salud Reproductiva'],
     experience: 'El Dr. Samuel Lomelí es una ginecólogo certificado con más de 30 años de experiencia, dedicada a la **salud integral de la mujer**. Su práctica se enfoca en el **cuidado preventivo**, el **manejo de embarazos** de bajo y alto riesgo, y el tratamiento de diversas condiciones ginecológicas. Comprometida con una atención empática y basada en la evidencia, el Dr. Samuel busca educar y empoderar a sus pacientes para que tomen decisiones informadas sobre su bienestar.',
-services: [
+    services: [
       {
         name: 'Consulta Ginecológica Integral',
         description:
@@ -57,6 +59,10 @@ services: [
     }
   };
 
+  ngAfterViewInit(): void {
+    
+  }
+
   scrollToAppointmentForm(): void {
     const element = document.getElementById('appointment-form-section');
     if (element) {
@@ -67,6 +73,16 @@ services: [
           (firstInput as HTMLElement).focus();
         }
       }, 300);
+    }
+  }
+
+  scrollServices(direction: 'left' | 'right'): void {
+    const slider = this.servicesSlider.nativeElement;
+    const scrollAmount = slider.clientWidth / 2;
+    if (direction === 'left') {
+      slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   }
 
