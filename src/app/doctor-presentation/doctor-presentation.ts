@@ -6,7 +6,7 @@ import { AppointmentForm } from '../appointment-form/appointment-form';
 
 @Component({
   selector: 'app-doctor-presentation',
-  imports: [AppointmentForm, SafeHtmlPipe, CommonModule,  ],
+  imports: [AppointmentForm, SafeHtmlPipe, CommonModule,],
   templateUrl: './doctor-presentation.html',
   styleUrl: './doctor-presentation.scss',
   standalone: true,
@@ -31,7 +31,19 @@ export class DoctorPresentation {
     }
   };
 
+  scrollToAppointmentForm(): void {
+    const element = document.getElementById('appointment-form-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        const firstInput = element.querySelector('input, select, textarea');
+        if (firstInput) {
+          (firstInput as HTMLElement).focus();
+        }
+      }, 300);
+    }
+  }
+
 }
 
 
-//<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3712.0923781052247!2d-104.90621499717234!3d21.50410127754228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842736faefca6d13%3A0x424c43abe837e67!2sLoma%2042!5e0!3m2!1ses-419!2smx!4v1751754039995!5m2!1ses-419!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

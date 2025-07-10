@@ -3,7 +3,7 @@
     <div class="hero-content">
       <h1>{{ doctor.name }}</h1>
       <p class="specialties">{{ doctor.specialties.join(' | ') }}</p>
-      <a routerLink="/agendar-cita" class="btn-primary">Agendar Cita</a>
+      <a (click)="scrollToAppointmentForm()" class="btn-primary">Agendar Cita</a>
     </div>
   </header>
 
@@ -48,7 +48,7 @@
     </div>
   </section>
 
-  <section class="appointment-section">
+  <section class="appointment-section" id="appointment-form-section">
     <div class="section-content">
       <h2>Agenda tu Cita</h2>
       <app-appointment-form></app-appointment-form>
