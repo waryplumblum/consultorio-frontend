@@ -14,14 +14,40 @@ import { AppointmentForm } from '../appointment-form/appointment-form';
 export class DoctorPresentation {
 
   doctor = {
-    name: 'Dra. Samuel Hernández Lomelí',
-    specialties: ['Ginecología', 'Medicina General'],
-    experience: 'El Dr. Samuel Lomelí cuenta con más de 15 años de experiencia en el campo de la ginecología y la medicina general. Ha dedicado su carrera a brindar atención de calidad, enfocándose en la prevención y el tratamiento integral de enfermedades cardiovasculares y crónicas. Su compromiso con el bienestar de sus pacientes la impulsa a mantenerse actualizada con los últimos avances médicos.',
-    services: [
-      { name: 'Consulta General', description: 'Revisión médica completa y diagnóstico de diversas afecciones.' },
-      { name: 'Electrocardiograma', description: 'Estudio no invasivo para evaluar la actividad eléctrica del corazón.' },
-      { name: 'Control de Presión Arterial', description: 'Seguimiento y manejo de pacientes con hipertensión.' },
-      { name: 'Chequeo Cardiovascular Preventivo', description: 'Evaluación de riesgos y recomendaciones para la salud del corazón.' }
+    name: 'Dr. Samuel Hernández Lomelí',
+    specialties: ['Ginecología y Obstetricia', 'Salud Reproductiva'],
+    experience: 'El Dr. Samuel Lomelí es una ginecólogo certificado con más de 30 años de experiencia, dedicada a la **salud integral de la mujer**. Su práctica se enfoca en el **cuidado preventivo**, el **manejo de embarazos** de bajo y alto riesgo, y el tratamiento de diversas condiciones ginecológicas. Comprometida con una atención empática y basada en la evidencia, el Dr. Samuel busca educar y empoderar a sus pacientes para que tomen decisiones informadas sobre su bienestar.',
+services: [
+      {
+        name: 'Consulta Ginecológica Integral',
+        description:
+          'Evaluación completa de la salud femenina, incluye historial clínico, exploración física y resolución de dudas.',
+      },
+      {
+        name: 'Control Prenatal y Embarazo',
+        description:
+          'Seguimiento médico especializado desde la concepción hasta el parto, garantizando la salud de madre y bebé.',
+      },
+      {
+        name: 'Detección Oportuna de Cáncer (Papanicolaou y Colposcopia)',
+        description:
+          'Estudios cruciales para la prevención y detección temprana de lesiones cervicales y otros padecimientos.',
+      },
+      {
+        name: 'Asesoría y Métodos Anticonceptivos',
+        description:
+          'Orientación personalizada sobre las opciones de planificación familiar más adecuadas para cada paciente.',
+      },
+      {
+        name: 'Manejo de Menopausia y Climaterio',
+        description:
+          'Acompañamiento y tratamiento para los síntomas y cambios asociados a esta etapa de la vida de la mujer.',
+      },
+      {
+        name: 'Cirugía Ginecológica (mínimamente invasiva)',
+        description:
+          'Procedimientos quirúrgicos avanzados para el tratamiento de quistes, miomas, y otras condiciones con menor tiempo de recuperación.',
+      },
     ],
     contactInfo: {
       phone: '+52 33 1234 5678',
