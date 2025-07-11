@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, throwError } from 'rxjs';
+import { AppointmentService } from '../services/appointment-service';
+import { Appointment, AppointmentsResponse } from '../models/appointment.model';
 
 
 @Component({
   selector: 'app-appointment-form',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule,],
   templateUrl: './appointment-form.html',
   styleUrl: './appointment-form.scss',
   standalone: true,
 })
-export class AppointmentForm {
+export class AppointmentForm implements OnInit {
 
   appointmentForm!: FormGroup;
   formSubmitted = false;
@@ -20,15 +21,15 @@ export class AppointmentForm {
   submissionError = false;
   errorMessage: string = '';
 
-  // Nuevas propiedades para manejar disponibilidad
+  // Propiedades para manejar disponibilidad
   availableDates: string[] = []; // Fechas con al menos un horario disponible
   availableTimesForSelectedDate: string[] = []; // Horarios disponibles para la fecha seleccionada
   allPossibleTimes: string[] = []; // Todos los horarios que el doctor ofrece en un día
   bookedSlots: { [date: string]: string[] } = {}; // Horarios ya tomados por fecha
   minDate: string; // Para deshabilitar fechas pasadas
 
-
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  // Inyectar AppointmentService en lugar de HttpClient
+  constructor(private fb: FormBuilder, private appointmentService: AppointmentService) {
     // Establecer la fecha mínima para el input de fecha (hoy o mañana si hoy ya pasó la hora)
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
@@ -54,14 +55,14 @@ export class AppointmentForm {
   }
 
   /**
- * Genera una lista de todos los posibles horarios de cita en intervalos de 30 minutos.
- * Asume un horario de 9:00 a 17:00.
- */
+   * Genera una lista de todos los posibles horarios de cita en intervalos de 30 minutos.
+   * Asume un horario de 9:00 a 17:00.
+   */
   private generateAllPossibleTimes(): void {
-    for (let hour = 9; hour <= 17; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
+    for (let hour = 14; hour <= 20; hour++) {
+      for (let minute = 0; minute < 60; minute += 60) {
         const time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-        // No incluir 17:30 si la última cita es a las 17:00
+        // No incluir 17:30 si la última cita es a las 17:00 (ajusta según el último horario disponible real)
         if (hour === 17 && minute > 0) {
           continue;
         }
@@ -71,26 +72,31 @@ export class AppointmentForm {
   }
 
   /**
- * Obtiene las citas agendadas desde el backend y las procesa para determinar la disponibilidad.
- */
+   * Obtiene las citas agendadas desde el backend usando el AppointmentService
+   * y las procesa para determinar la disponibilidad.
+   */
   private fetchBookedAppointments(): void {
-    const apiUrl = 'http://localhost:3000/appointments'; // Asegúrate de que esta URL sea correcta
-
-    this.http.get<any[]>(apiUrl)
+    this.appointmentService.getAllAppointments() // Usar el servicio para obtener todas las citas
       .pipe(
         catchError(error => {
           console.error('Error al cargar las citas existentes:', error);
-          // Podrías mostrar un mensaje al usuario aquí si la carga falla
-          return throwError(() => new Error('No se pudieron cargar los horarios disponibles.'));
+          this.errorMessage = 'No se pudieron cargar los horarios disponibles. Por favor, intente de nuevo más tarde.';
+          this.submissionError = true;
+          return throwError(() => new Error(this.errorMessage));
         })
       )
-      .subscribe(appointments => {
+      .subscribe((response: AppointmentsResponse) => { // Especificar el tipo de respuesta
         this.bookedSlots = {}; // Reiniciar los slots reservados
 
         // Procesar solo las citas que NO estén canceladas
-        appointments.filter(app => app.status !== 'cancelled').forEach(app => {
-          const date = new Date(app.preferredDateTime.$date).toISOString().split('T')[0];
-          const time = new Date(app.preferredDateTime.$date).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
+        // Corrección 1: Usar response.data
+        // Corrección 2: Tipar 'app' como Appointment
+        response.data.filter((app: Appointment) => app.status !== 'cancelled').forEach((app: Appointment) => {
+          // preferredDateTime ahora es directamente un objeto Date
+          // Asegurarse de que app.preferredDateTime sea un objeto Date válido
+          const date = new Date(app.preferredDateTime).toISOString().split('T')[0];
+          // Usar toLocaleTimeString con opciones para asegurar el formato HH:MM (24 horas)
+          const time = new Date(app.preferredDateTime).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
 
           if (!this.bookedSlots[date]) {
             this.bookedSlots[date] = [];
@@ -116,7 +122,7 @@ export class AppointmentForm {
     today.setHours(0, 0, 0, 0); // Normalizar a inicio del día
 
     this.availableDates = [];
-    // Generar un rango de fechas futuras (ej. los próximos 30 días)
+    // Generar un rango de fechas futuras (ej. los próximos 60 días)
     for (let i = 0; i < 60; i++) { // Generar fechas para los próximos 60 días
       const futureDate = new Date(today);
       futureDate.setDate(today.getDate() + i);
@@ -126,7 +132,7 @@ export class AppointmentForm {
       const bookedTimesForDate = this.bookedSlots[dateString] || [];
       const hasAvailableTime = this.allPossibleTimes.some(time => {
         // Si es hoy, solo considerar horarios futuros
-        if (dateString === this.minDate) {
+        if (dateString === this.minDate) { // Usar this.minDate para comparar con la fecha actual
           const [hour, minute] = time.split(':').map(Number);
           const currentTime = new Date();
           const slotTime = new Date();
@@ -144,10 +150,10 @@ export class AppointmentForm {
 
 
   /**
- * Se llama cuando la fecha preferida cambia.
- * Filtra los horarios disponibles para la fecha seleccionada.
- * @param selectedDate La fecha seleccionada en formato YYYY-MM-DD.
- */
+   * Se llama cuando la fecha preferida cambia.
+   * Filtra los horarios disponibles para la fecha seleccionada.
+   * @param selectedDate La fecha seleccionada en formato YYYY-MM-DD.
+   */
   onDateChange(selectedDate: string): void {
     if (!selectedDate) {
       this.availableTimesForSelectedDate = [];
@@ -177,8 +183,8 @@ export class AppointmentForm {
     }
   }
 
-  onSubmit(): void {
 
+  onSubmit(): void {
     this.formSubmitted = true;
     this.submissionSuccess = false;
     this.submissionError = false;
@@ -190,27 +196,23 @@ export class AppointmentForm {
       const datePart = formValue.preferredDate; // Ej: "2024-07-10"
       const timePart = formValue.preferredTime; // Ej: "15:30"
 
-      const combinedDateTimeString = `${datePart}T${timePart}:00`;
-      const preferredDateTime = new Date(combinedDateTimeString);
+      // Crear la fecha y hora combinadas como objeto Date
+      const preferredDateTime = new Date(`${datePart}T${timePart}:00`);
 
-      const preferredDateTimeISO = preferredDateTime.toISOString();
-      const scheduledDateTimeISO = preferredDateTimeISO;
-
-      const appointmentData = {
+      const appointmentData: Partial<Appointment> = { // Tipar appointmentData
         patientName: formValue.patientName,
         patientPhone: formValue.patientPhone,
         patientEmail: formValue.patientEmail,
         reason: formValue.reason,
-        preferredDateTime: preferredDateTimeISO,
-        scheduledDateTime: scheduledDateTimeISO
+        preferredDateTime: preferredDateTime, // Asignar el objeto Date directamente
+        scheduledDateTime: preferredDateTime, // Asignar el objeto Date directamente
+        status: 'pending' // Asegurarse de que el status inicial sea 'pending'
       };
 
       console.log('Datos de la cita a enviar:', appointmentData);
 
-      // URL de tu backend NestJS
-      const apiUrl = 'http://localhost:3000/appointments';
-
-      this.http.post(apiUrl, appointmentData)
+      // Usar el servicio para crear la cita
+      this.appointmentService.createAppointment(appointmentData)
         .pipe(
           catchError(error => {
             console.error('Error al enviar la cita:', error);
@@ -231,6 +233,7 @@ export class AppointmentForm {
           this.submissionSuccess = true;
           this.appointmentForm.reset();
           this.formSubmitted = false;
+          // Volver a cargar las citas para actualizar la disponibilidad
           this.fetchBookedAppointments();
           setTimeout(() => {
             this.submissionSuccess = false;
