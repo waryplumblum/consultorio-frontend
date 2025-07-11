@@ -19,13 +19,14 @@
     input[type="email"],
     input[type="date"],
     input[type="time"],
-    textarea {
-      width: calc(100% - 20px);
+    textarea,
+    select {
+      width: 100%; /* Ajuste aquí: Cambiado de calc(100% - 20px) a 100% */
       padding: 12px 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 1em;
-      box-sizing: border-box; /* Incluye padding en el ancho */
+      box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
       &:focus {
         border-color: #007bff;
         outline: none;
