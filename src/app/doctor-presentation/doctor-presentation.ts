@@ -18,7 +18,7 @@ export class DoctorPresentation implements AfterViewInit {
   doctor = {
     name: 'Dr. Samuel Hernández Lomelí',
     specialties: ['Ginecología y Obstetricia', 'Salud Reproductiva'],
-    experience: 'El Dr. Samuel Lomelí es una ginecólogo certificado con más de 30 años de experiencia, dedicada a la **salud integral de la mujer**. Su práctica se enfoca en el **cuidado preventivo**, el **manejo de embarazos** de bajo y alto riesgo, y el tratamiento de diversas condiciones ginecológicas. Comprometida con una atención empática y basada en la evidencia, el Dr. Samuel busca educar y empoderar a sus pacientes para que tomen decisiones informadas sobre su bienestar.',
+    experience: 'El Dr. Samuel Lomelí es un ginecólogo certificado con más de 20 años de experiencia, dedicada a la **salud integral de la mujer**. Su práctica se enfoca en el **cuidado preventivo**, el **manejo de embarazos** de bajo y alto riesgo, y el tratamiento de diversas condiciones ginecológicas. Comprometida con una atención empática y basada en la evidencia, el Dr. Samuel busca educar y empoderar a sus pacientes para que tomen decisiones informadas sobre su bienestar.',
     services: [
       {
         name: 'Consulta Ginecológica Integral',
@@ -27,13 +27,13 @@ export class DoctorPresentation implements AfterViewInit {
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>'
       },
       {
-        name: 'Control Prenatal y Embarazo',
+        name: 'Control Prenatal y Embarazo de Alto Riesgo',
         description:
-          'Seguimiento médico especializado desde la concepción hasta el parto, garantizando la salud de madre y bebé.',
+          'Seguimiento médico especializado desde la concepción hasta el parto, velando por la salud y bienestar de madre y bebé.',
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-pulse"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.2 12.8H6a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2h7.8"/></svg>'
       },
       {
-        name: 'Detección Oportuna de Cáncer (Papanicolaou y Colposcopia)',
+        name: 'Detección Oportuna de Cáncer (Papanicolaou)',
         description:
           'Estudios cruciales para la prevención y detección temprana de lesiones cervicales y otros padecimientos.',
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>'
@@ -42,18 +42,16 @@ export class DoctorPresentation implements AfterViewInit {
         name: 'Asesoría y Métodos Anticonceptivos',
         description:
           'Orientación personalizada sobre las opciones de planificación familiar más adecuadas para cada paciente.',
-        // Icono actualizado para anticonceptivos: Escudo con marca de verificación
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67 0C6.5 20.5 3 18 3 13V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 12 2 2 4-4"/></svg>'
       },
       {
         name: 'Manejo de Menopausia y Climaterio',
         description:
           'Acompañamiento y tratamiento para los síntomas y cambios asociados a esta etapa de la vida de la mujer.',
-        // Icono actualizado para menopausia/climaterio: Sol (ciclos, cambios)
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="8"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>'
       },
       {
-        name: 'Cirugía Ginecológica (mínimamente invasiva)',
+        name: 'Cirugía Ginecológica',
         description:
           'Procedimientos quirúrgicos avanzados para el tratamiento de quistes, miomas, y otras condiciones con menor tiempo de recuperación.',
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>'
@@ -67,8 +65,48 @@ export class DoctorPresentation implements AfterViewInit {
     }
   };
 
-  ngAfterViewInit(): void {
+  carouselImages: string[] = [
+    'assets/images/carrousele_1.jpeg',
+    'assets/images/carrousele_2.jpeg',
+    'assets/images/carrousele_3.jpeg',
+    'assets/images/carrousele_4.jpeg',
+    'assets/images/carrousele_5.jpeg',
+  ];
+  currentIndex: number = 0;
+  private carouselInterval: any;
 
+  constructor() { } 
+
+  ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
+    this.startCarouselAutoPlay();
+  }
+
+  ngOnDestroy(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
+  }
+
+  startCarouselAutoPlay(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
+    this.carouselInterval = setInterval(() => {
+      this.nextSlide();
+    }, 3000); 
+  }
+
+  nextSlide(): void {
+    this.currentIndex = (this.currentIndex + 1) % this.carouselImages.length;
+  }
+
+  goToSlide(index: number): void {
+    this.currentIndex = index;
+    this.startCarouselAutoPlay();
   }
 
   scrollToAppointmentForm(): void {

@@ -59,14 +59,33 @@ export class AppointmentForm implements OnInit {
    * Asume un horario de 9:00 a 17:00.
    */
   private generateAllPossibleTimes(): void {
-    for (let hour = 14; hour <= 20; hour++) {
-      for (let minute = 0; minute < 60; minute += 60) {
-        const time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-        // No incluir 17:30 si la última cita es a las 17:00 (ajusta según el último horario disponible real)
-        if (hour === 17 && minute > 0) {
-          continue;
-        }
-        this.allPossibleTimes.push(time);
+    this.allPossibleTimes = []; // Limpiar horarios existentes
+    const startHour = 16; // 4 PM
+    const startMinute = 30; // 4:30 PM
+    const endHour = 20; // 8 PM
+    const endMinute = 0; // 8:00 PM
+
+    let currentHour = startHour;
+    let currentMinute = startMinute;
+
+    while (true) {
+      // Formatear la hora con ceros iniciales si es necesario
+      const time = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
+      this.allPossibleTimes.push(time);
+
+      // Incrementar los minutos en 30
+      currentMinute += 30;
+
+      // Si los minutos llegan o superan 60, resetear minutos y avanzar la hora
+      if (currentMinute >= 60) {
+        currentMinute -= 60;
+        currentHour++;
+      }
+
+      // Condición de parada: si la hora actual excede la hora final, o si es la hora final
+      // y los minutos actuales exceden los minutos finales.
+      if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
+        break;
       }
     }
   }

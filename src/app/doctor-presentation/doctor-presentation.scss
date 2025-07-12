@@ -1,3 +1,87 @@
+/* Estilos generales del contenedor del carrusel */
+.image-carousel-section {
+  width: 100%;
+  max-width: 800px;
+  /* ¡Ajustado aquí! Limita el ancho máximo del carrusel */
+  margin: 2rem auto;
+  /* ¡Ajustado aquí! Centra el carrusel y mantiene los márgenes */
+  overflow: hidden; // Oculta las imágenes que no están en la vista
+  position: relative; // Para posicionar los puntos de navegación
+  background-color: #f0f0f0; // Un color de fondo para el carrusel
+  padding: 1rem 0; // Padding vertical
+}
+
+.carousel-container {
+  width: 100%;
+  padding-bottom: 56.25%;
+  /* Relación de aspecto 16:9 (altura es 56.25% del ancho) */
+  height: 0;
+  /* Necesario para que padding-bottom funcione como altura */
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  position: absolute;
+  /* Ocupa todo el espacio del contenedor */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out; // Suaviza la transición entre imágenes
+}
+
+.carousel-image {
+  min-width: 100%; // Cada imagen ocupa el 100% del ancho del contenedor
+  width: 100%;
+  /* Asegura que la imagen ocupe el 100% del track */
+  height: 100%;
+  /* Asegura que la imagen ocupe el 100% del track */
+  object-fit: contain;
+  /* Asegura que la imagen completa sea visible */
+  display: block; // Elimina espacio extra que puede aparecer con inline-block
+  background-color: #ffffff;
+  /* Color de fondo si la imagen no llena el espacio (letterboxing) */
+}
+
+/* Estilos para los puntos de navegación */
+.carousel-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px; // Espacio entre los puntos
+}
+
+.carousel-dots span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.7); // Color de los puntos
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.3); // Borde para visibilidad
+}
+
+.carousel-dots span.active {
+  background-color: var(--primary-color, #007bff); // Color del punto activo
+  border-color: var(--primary-color, #007bff);
+}
+
+
+/* Aquí van tus estilos existentes para .doctor-presentation-container, .hero-section, etc. */
+/* No olvides añadir las variables de color si no las tienes */
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --text-color: #333;
+  --background-light: #f8f9fa;
+  --white: #fff;
+}
+
 .doctor-presentation-container {
   font-family: 'Arial', sans-serif;
   color: #333;
@@ -9,19 +93,23 @@
   color: white;
   padding: 60px 20px;
   text-align: center;
+
   .hero-content {
     max-width: 800px;
     margin: 0 auto;
   }
+
   h1 {
     font-size: 2.8em;
     margin-bottom: 10px;
   }
+
   .specialties {
     font-size: 1.2em;
     opacity: 0.9;
     margin-bottom: 25px;
   }
+
   .btn-primary {
     display: inline-block;
     background-color: #AF9B60;
@@ -31,28 +119,36 @@
     text-decoration: none;
     font-size: 1.1em;
     transition: background-color 0.3s ease;
+
     &:hover {
       background-color: #218838;
     }
   }
 }
 
-.info-section, .services-section, .contact-section, .appointment-section {
+.info-section,
+.services-section,
+.contact-section,
+.appointment-section {
   padding: 40px 20px;
   border-bottom: 1px solid #eee;
+
   &:last-child {
     border-bottom: none;
   }
+
   .section-content {
     max-width: 900px;
     margin: 0 auto;
   }
+
   h2 {
     font-size: 2em;
     color: #5B385B;
     margin-bottom: 25px;
     text-align: center;
   }
+
   p {
     margin-bottom: 15px;
     text-align: justify;
@@ -72,35 +168,52 @@
   overflow-x: scroll;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
-  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
+  /* For smoother scrolling on iOS */
+  scrollbar-width: none;
+
+  /* Firefox */
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
   }
+
   gap: 25px;
-  padding-bottom: 10px; /* Space for potential scrollbar if it appears */
+  padding-bottom: 10px;
+  /* Space for potential scrollbar if it appears */
 }
 
 .service-card {
-  flex: 0 0 auto; /* Prevent cards from shrinking */
-  width: 300px; /* Fixed width for cards, adjust as needed */
-  scroll-snap-align: start; /* Snap to the start of each card */
+  flex: 0 0 auto;
+  /* Prevent cards from shrinking */
+  width: 300px;
+  /* Fixed width for cards, adjust as needed */
+  scroll-snap-align: start;
+  /* Snap to the start of each card */
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  display: flex; /* Use flexbox for internal layout */
-  flex-direction: column; /* Stack title and description vertically */
-  align-items: center; /* Centrar contenido horizontalmente */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  /* Use flexbox for internal layout */
+  flex-direction: column;
+  /* Stack title and description vertically */
+  align-items: center;
+  /* Centrar contenido horizontalmente */
 
   .service-icon {
-    margin-bottom: 15px; /* Espacio entre el icono y el título */
-    color: #AF9B60; /* Color del icono */
+    margin-bottom: 15px;
+    /* Espacio entre el icono y el título */
+    color: #AF9B60;
+
+    /* Color del icono */
     svg {
-      width: 48px; /* Tamaño del icono */
+      width: 48px;
+      /* Tamaño del icono */
       height: 48px;
-      stroke-width: 1.5; /* Grosor de la línea del SVG */
+      stroke-width: 1.5;
+      /* Grosor de la línea del SVG */
     }
   }
 
@@ -108,20 +221,25 @@
     color: #D4A5A5;
     margin-top: 0;
     margin-bottom: 10px;
-    text-align: center; /* Centrar el título */
-    min-height: 2.4em; /* Asegura espacio para dos líneas (ajusta según font-size y line-height) */
-    line-height: 1.2em; /* Ajusta la altura de línea si es necesario */
-    display: -webkit-box; /* Para multilínea */
-    -webkit-line-clamp: 2; /* Limita a 2 líneas */
+    text-align: center;
+    min-height: 2.4em;
+    /* Asegura espacio para dos líneas (ajusta según font-size y line-height) */
+    line-height: 1.2em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   p {
     font-size: 0.95em;
     color: #555;
-    text-align: justify; /* Justificar la descripción */
-    flex-grow: 1; /* Permite que la descripción ocupe el espacio restante */
+    text-align: justify;
+    /* Justificar la descripción */
+    flex-grow: 1;
+    /* Permite que la descripción ocupe el espacio restante */
   }
 }
 
@@ -129,7 +247,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(91, 56, 91, 0.7); /* #5B385B with opacity */
+  background-color: rgba(91, 56, 91, 0.7);
+  /* #5B385B with opacity */
   color: white;
   border: none;
   border-radius: 50%;
@@ -141,15 +260,19 @@
   cursor: pointer;
   z-index: 10;
   transition: background-color 0.3s ease;
+
   &:hover {
     background-color: #5B385B;
   }
+
   &.left-arrow {
     left: 0;
   }
+
   &.right-arrow {
     right: 0;
   }
+
   svg {
     width: 24px;
     height: 24px;
@@ -160,9 +283,11 @@
 .contact-info {
   margin-bottom: 30px;
   text-align: center;
+
   a {
     color: #5B385B;
     text-decoration: none;
+
     &:hover {
       text-decoration: underline;
     }
@@ -173,7 +298,8 @@
   background-color: #e9e9e9;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
   iframe {
     display: block; // Eliminar espacio debajo del iframe
   }
@@ -181,31 +307,42 @@
 
 // Estilos básicos para el formulario de citas si lo pones directamente aquí
 .appointment-section {
-    padding-top: 60px;
-    padding-bottom: 60px;
-    background-color: #FBF8F5; // Un fondo suave para diferenciar la sección
+  padding-top: 60px;
+  padding-bottom: 60px;
+  background-color: #FBF8F5; // Un fondo suave para diferenciar la sección
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .hero-section h1 {
-    font-size: 2em;
+  .hero-content h1 {
+    font-size: 2.5em;
   }
-  .hero-section .specialties {
-    font-size: 1em;
+
+  .hero-content .specialties {
+    font-size: 1.2em;
   }
-  .info-section h2, .services-section h2, .contact-section h2, .appointment-section h2 {
+
+  .info-section h2,
+  .services-section h2,
+  .contact-section h2,
+  .appointment-section h2 {
     font-size: 1.8em;
   }
+
   .service-card {
-    width: 250px; /* Adjust card width for smaller screens */
+    width: 250px;
+    /* Adjust card width for smaller screens */
   }
+
   .services-slider-container {
-    padding: 0 20px; /* Reduce padding for arrows */
+    padding: 0 20px;
+    /* Reduce padding for arrows */
   }
+
   .slider-arrow {
     width: 35px;
     height: 35px;
+
     svg {
       width: 20px;
       height: 20px;
@@ -214,22 +351,39 @@
 }
 
 @media (max-width: 480px) {
-  .hero-section {
-    padding: 40px 15px;
+  .hero-content h1 {
+    font-size: 2em;
   }
-  .info-section, .services-section, .contact-section, .appointment-section {
-    padding: 30px 15px;
+
+  .hero-content .specialties {
+    font-size: 1em;
   }
+
+  .btn-primary {
+    padding: 0.6em 1.2em;
+    font-size: 0.9em;
+  }
+
+  h2 {
+    font-size: 1.8em;
+  }
+
   .service-card {
-    width: 90vw; /* Make cards almost full width on very small screens */
-    margin: 0 auto; /* Center cards */
+    width: 90vw;
+    /* Make cards almost full width on very small screens */
+    margin: 0 auto;
+    /* Center cards */
   }
+
   .services-slider-container {
-    padding: 0 10px; /* Minimal padding for arrows */
+    padding: 0 10px;
+    /* Minimal padding for arrows */
   }
+
   .slider-arrow {
     width: 30px;
     height: 30px;
+
     svg {
       width: 18px;
       height: 18px;
