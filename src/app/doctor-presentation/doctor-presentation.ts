@@ -58,9 +58,9 @@ export class DoctorPresentation implements AfterViewInit {
       },
     ],
     contactInfo: {
-      phone: '+52 33 1234 5678',
-      email: 'ana.garcia@consultorio.com',
-      address: 'Av. Siempre Viva #123, Col. Centro, Guadalajara, Jalisco, México',
+      phone: '+52 33 3333 3333',
+      email: 'Consultorio.lomeli@gmail.com',
+      address: 'Querétaro 26 sur centro',
       googleMapsLink: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3712.0923781052247!2d-104.90621499717234!3d21.50410127754228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842736faefca6d13%3A0x424c43abe837e67!2sLoma%2042!5e0!3m2!1ses-419!2smx!4v1751754039995!5m2!1ses-419!2smx'
     }
   };
