@@ -93,36 +93,47 @@
   color: white;
   padding: 60px 20px;
   text-align: center;
+  display: flex; // Usar flexbox
+  flex-direction: column; // Por defecto en columna para móviles
+  align-items: center; // Centrar elementos
+  justify-content: center; // Centrar verticalmente
+
+  @media (min-width: 768px) { // En pantallas más grandes, cambiar a fila
+    flex-direction: row;
+    text-align: left;
+    padding: 80px 40px; // Más padding para escritorio
+    justify-content: space-around; // Espacio entre contenido e imagen
+    align-items: center;
+  }
 
   .hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    font-size: 2.8em;
-    margin-bottom: 10px;
-  }
-
-  .specialties {
-    font-size: 1.2em;
-    opacity: 0.9;
-    margin-bottom: 25px;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    background-color: #AF9B60;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #218838;
+    max-width: 600px; // Limitar ancho del texto
+    margin-bottom: 30px; // Espacio entre texto e imagen en móvil
+    @media (min-width: 768px) {
+      margin-bottom: 0; // Sin margen inferior en escritorio
+      margin-right: 50px; // Espacio a la derecha del texto en escritorio
     }
+  }
+
+  .doctor-image-container {
+    width: 180px; // Tamaño del contenedor de la imagen
+    height: 180px;
+    border-radius: 50%; // Hacer la imagen redonda
+    overflow: hidden; // Recortar la imagen si es necesario
+    border: 5px solid rgba(255, 255, 255, 0.2); // Borde suave
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); // Sombra sutil
+
+    @media (min-width: 768px) {
+      width: 250px; // Tamaño más grande en escritorio
+      height: 250px;
+    }
+  }
+
+  .doctor-profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // Asegura que la imagen cubra el área sin distorsionarse
+    display: block; // Elimina el espacio extra bajo la imagen
   }
 }
 
@@ -200,8 +211,11 @@
   flex-direction: column;
   /* Stack title and description vertically */
   align-items: center;
-  /* Centrar contenido horizontalmente */
-
+  transition: transform 0.3s ease, box-shadow 0.3s ease; // Añadir transición
+  &:hover {
+    transform: translateY(-5px); // Pequeño levantamiento
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); // Sombra más pronunciada
+  }
   .service-icon {
     margin-bottom: 15px;
     /* Espacio entre el icono y el título */

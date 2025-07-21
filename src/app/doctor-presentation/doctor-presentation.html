@@ -1,11 +1,14 @@
 <div class="doctor-presentation-container">
-  <header class="hero-section">
-    <div class="hero-content">
-      <h1>{{ doctor.name }}</h1>
-      <p class="specialties">{{ doctor.specialties.join(' | ') }}</p>
-      <a (click)="scrollToAppointmentForm()" class="btn-primary">Agendar Cita</a>
-    </div>
-  </header>
+<header class="hero-section">
+  <div class="hero-content">
+    <h1>{{ doctor.name }}</h1>
+    <p class="specialties">{{ doctor.specialties.join(' | ') }}</p>
+    <a (click)="scrollToAppointmentForm()" class="btn-primary">Agendar Cita</a>
+  </div>
+  <div class="doctor-image-container">
+    <img [src]="doctor.profilePicture" alt="Foto del Dr. {{ doctor.name }}" class="doctor-profile-picture">
+  </div>
+</header>
 
   <section class="info-section">
     <div class="section-content">

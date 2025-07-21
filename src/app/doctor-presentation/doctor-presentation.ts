@@ -17,6 +17,7 @@ export class DoctorPresentation implements AfterViewInit {
 
   doctor = {
     name: 'Dr. Samuel Hernández Lomelí',
+    profilePicture: 'assets/images/dr-samuel-hernandez.jpg',
     specialties: ['Ginecología y Obstetricia', 'Salud Reproductiva'],
     experience: 'El Dr. Samuel Lomelí es un ginecólogo certificado con más de 20 años de experiencia, dedicada a la **salud integral de la mujer**. Su práctica se enfoca en el **cuidado preventivo**, el **manejo de embarazos** de bajo y alto riesgo, y el tratamiento de diversas condiciones ginecológicas. Comprometida con una atención empática y basada en la evidencia, el Dr. Samuel busca educar y empoderar a sus pacientes para que tomen decisiones informadas sobre su bienestar.',
     services: [
