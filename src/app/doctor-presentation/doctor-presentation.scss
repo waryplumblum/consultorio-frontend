@@ -1,177 +1,245 @@
-/* Estilos generales del contenedor del carrusel */
+/* Estilos generales del contenedor */
+.doctor-presentation-container {
+  font-family: "Montserrat", sans-serif; /* Fuente más moderna */
+  color: var(--text-color);
+  line-height: 1.7;
+  background-color: var(--background-light);
+  overflow-x: hidden; /* Previene desbordamientos por animaciones */
+}
+
+/* --- Hero Section --- */
+.hero-section {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    #4a2e4a 100%
+  ); /* Gradiente sutil */
+  color: var(--white);
+  padding: 80px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Para posibles efectos de fondo */
+  overflow: hidden; /* Recorte para animaciones */
+}
+
+.hero-content {
+  max-width: 600px;
+  margin-bottom: 40px;
+  z-index: 2; /* Asegura que el contenido esté sobre cualquier fondo animado */
+}
+
+.hero-content h1 {
+  font-size: 3.2em;
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px var(--shadow-medium);
+}
+
+.hero-content .specialties {
+  font-size: 1.4em;
+  font-weight: 300;
+  margin-bottom: 30px;
+  opacity: 1;
+  color: var(--secondary-color);
+}
+
+.btn-primary {
+  display: inline-block;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  padding: 15px 30px;
+  border-radius: 50px; /* Botón más redondeado */
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1em;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 10px var(--shadow-light);
+}
+
+.btn-primary:hover {
+  background-color: #a09055; /* Tono más oscuro al pasar el ratón */
+  transform: translateY(-3px); /* Efecto de levantamiento */
+  box-shadow: 0 6px 15px var(--shadow-medium);
+}
+
+.doctor-image-container {
+  /* Increase default (mobile-first) size */
+  width: 180px; /* Was 160px for max-width: 768px, now default larger */
+  height: 180px; /* Was 160px for max-width: 768px, now default larger */
+  border-radius: 50%;
+  overflow: hidden;
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 25px var(--shadow-medium);
+  flex-shrink: 0;
+  z-index: 1;
+  margin-top: 30px; /* Keep this for mobile layout */
+}
+
+.doctor-profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Responsive Hero Section */
+@media (min-width: 768px) {
+  .hero-section {
+    flex-direction: row;
+    text-align: left;
+    padding: 100px 40px;
+    justify-content: space-around;
+  }
+
+  .hero-content {
+    margin-bottom: 0;
+    margin-right: 60px;
+  }
+
+  .hero-content h1 {
+    font-size: 4em;
+  }
+
+  .doctor-image-container {
+    width: 350px; /* Increased from 280px */
+    height: 350px; /* Increased from 280px */
+    margin-top: 0; /* Reset margin for desktop layout */
+  }
+}
+
+/* --- General Section Styling --- */
+.info-section,
+.services-section,
+.contact-section,
+.appointment-section {
+  padding: 60px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: var(--white);
+}
+
+.info-section {
+  background-color: var(--background-light); /* Fondo diferente para About Me */
+}
+
+.info-section:last-child,
+.services-section:last-child,
+.contact-section:last-child,
+.appointment-section:last-child {
+  border-bottom: none;
+}
+
+.section-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 2.8em;
+  color: var(--primary-color);
+  margin-bottom: 40px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: var(--secondary-color);
+  border-radius: 2px;
+}
+
+p {
+  margin-bottom: 20px;
+  text-align: justify;
+  font-size: 1.1em;
+  color: #555;
+}
+
+/* --- Image Carousel Section --- */
 .image-carousel-section {
   width: 100%;
-  max-width: 800px;
-  /* ¡Ajustado aquí! Limita el ancho máximo del carrusel */
-  margin: 2rem auto;
-  /* ¡Ajustado aquí! Centra el carrusel y mantiene los márgenes */
-  overflow: hidden; // Oculta las imágenes que no están en la vista
-  position: relative; // Para posicionar los puntos de navegación
-  background-color: #f0f0f0; // Un color de fondo para el carrusel
-  padding: 1rem 0; // Padding vertical
+  max-width: 1000px; /* Aumenta el ancho máximo del carrusel */
+  margin: 4rem auto;
+  overflow: hidden;
+  position: relative;
+  background-color: #f5f5f5; /* Fondo más claro */
+  padding: 2rem 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px var(--shadow-light);
 }
 
 .carousel-container {
   width: 100%;
   padding-bottom: 56.25%;
-  /* Relación de aspecto 16:9 (altura es 56.25% del ancho) */
   height: 0;
-  /* Necesario para que padding-bottom funcione como altura */
   position: relative;
   overflow: hidden;
+  border-radius: 10px; /* Bordes redondeados para el carrusel */
 }
 
 .carousel-track {
   display: flex;
   position: absolute;
-  /* Ocupa todo el espacio del contenedor */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  transition: transform 0.5s ease-in-out; // Suaviza la transición entre imágenes
+  transition: transform 0.6s ease-in-out; /* Transición más suave */
 }
 
 .carousel-image {
-  min-width: 100%; // Cada imagen ocupa el 100% del ancho del contenedor
+  min-width: 100%;
   width: 100%;
-  /* Asegura que la imagen ocupe el 100% del track */
   height: 100%;
-  /* Asegura que la imagen ocupe el 100% del track */
-  object-fit: contain;
-  /* Asegura que la imagen completa sea visible */
-  display: block; // Elimina espacio extra que puede aparecer con inline-block
-  background-color: #ffffff;
-  /* Color de fondo si la imagen no llena el espacio (letterboxing) */
+  object-fit: cover; /* Cambiado a cover para llenar el espacio */
+  display: block;
+  background-color: var(--white);
 }
 
-/* Estilos para los puntos de navegación */
 .carousel-dots {
   position: absolute;
-  bottom: 10px;
+  bottom: 20px; /* Más espacio abajo */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 8px; // Espacio entre los puntos
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.4); /* Fondo para los puntos */
+  padding: 8px 15px;
+  border-radius: 20px;
 }
 
 .carousel-dots span {
-  display: block;
-  width: 10px;
-  height: 10px;
-  background-color: rgba(255, 255, 255, 0.7); // Color de los puntos
+  width: 12px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.6);
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.3); // Borde para visibilidad
+  transition: background-color 0.4s ease, transform 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .carousel-dots span.active {
-  background-color: var(--primary-color, #007bff); // Color del punto activo
-  border-color: var(--primary-color, #007bff);
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  transform: scale(1.2); /* Efecto de escala al activo */
 }
 
-
-/* Aquí van tus estilos existentes para .doctor-presentation-container, .hero-section, etc. */
-/* No olvides añadir las variables de color si no las tienes */
-:root {
-  --primary-color: #007bff;
-  --secondary-color: #6c757d;
-  --text-color: #333;
-  --background-light: #f8f9fa;
-  --white: #fff;
-}
-
-.doctor-presentation-container {
-  font-family: 'Arial', sans-serif;
-  color: #333;
-  line-height: 1.6;
-}
-
-.hero-section {
-  background-color: #5B385B;
-  color: white;
-  padding: 60px 20px;
-  text-align: center;
-  display: flex; // Usar flexbox
-  flex-direction: column; // Por defecto en columna para móviles
-  align-items: center; // Centrar elementos
-  justify-content: center; // Centrar verticalmente
-
-  @media (min-width: 768px) { // En pantallas más grandes, cambiar a fila
-    flex-direction: row;
-    text-align: left;
-    padding: 80px 40px; // Más padding para escritorio
-    justify-content: space-around; // Espacio entre contenido e imagen
-    align-items: center;
-  }
-
-  .hero-content {
-    max-width: 600px; // Limitar ancho del texto
-    margin-bottom: 30px; // Espacio entre texto e imagen en móvil
-    @media (min-width: 768px) {
-      margin-bottom: 0; // Sin margen inferior en escritorio
-      margin-right: 50px; // Espacio a la derecha del texto en escritorio
-    }
-  }
-
-  .doctor-image-container {
-    width: 180px; // Tamaño del contenedor de la imagen
-    height: 180px;
-    border-radius: 50%; // Hacer la imagen redonda
-    overflow: hidden; // Recortar la imagen si es necesario
-    border: 5px solid rgba(255, 255, 255, 0.2); // Borde suave
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); // Sombra sutil
-
-    @media (min-width: 768px) {
-      width: 250px; // Tamaño más grande en escritorio
-      height: 250px;
-    }
-  }
-
-  .doctor-profile-picture {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; // Asegura que la imagen cubra el área sin distorsionarse
-    display: block; // Elimina el espacio extra bajo la imagen
-  }
-}
-
-.info-section,
-.services-section,
-.contact-section,
-.appointment-section {
-  padding: 40px 20px;
-  border-bottom: 1px solid #eee;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  .section-content {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  h2 {
-    font-size: 2em;
-    color: #5B385B;
-    margin-bottom: 25px;
-    text-align: center;
-  }
-
-  p {
-    margin-bottom: 15px;
-    text-align: justify;
-  }
-}
-
+/* --- Services Section --- */
 .services-slider-container {
   position: relative;
   display: flex;
   align-items: center;
-  overflow: hidden; // Hide overflow from arrows
-  padding: 0 40px; // Padding for arrows to not cover content
+  overflow: hidden;
+  padding: 0 50px; /* Más padding para las flechas */
 }
 
 .services-slider {
@@ -180,227 +248,360 @@
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  /* For smoother scrolling on iOS */
   scrollbar-width: none;
-
-  /* Firefox */
   &::-webkit-scrollbar {
     display: none;
-    /* Chrome, Safari, Opera */
   }
-
-  gap: 25px;
-  padding-bottom: 10px;
-  /* Space for potential scrollbar if it appears */
+  gap: 30px; /* Más espacio entre tarjetas */
+  padding-bottom: 15px;
 }
 
 .service-card {
   flex: 0 0 auto;
-  /* Prevent cards from shrinking */
-  width: 300px;
-  /* Fixed width for cards, adjust as needed */
+  width: 320px; /* Ancho ajustado para tarjetas */
   scroll-snap-align: start;
-  /* Snap to the start of each card */
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  background-color: var(--white);
+  border: 1px solid #eee;
+  border-radius: 12px; /* Bordes más redondeados */
+  padding: 25px;
+  box-shadow: 0 5px 15px var(--shadow-light);
   display: flex;
-  /* Use flexbox for internal layout */
   flex-direction: column;
-  /* Stack title and description vertically */
   align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; // Añadir transición
-  &:hover {
-    transform: translateY(-5px); // Pequeño levantamiento
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); // Sombra más pronunciada
-  }
-  .service-icon {
-    margin-bottom: 15px;
-    /* Espacio entre el icono y el título */
-    color: #AF9B60;
+  text-align: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease,
+    background-color 0.3s ease;
+}
 
-    /* Color del icono */
-    svg {
-      width: 48px;
-      /* Tamaño del icono */
-      height: 48px;
-      stroke-width: 1.5;
-      /* Grosor de la línea del SVG */
-    }
-  }
+.service-card:hover {
+  transform: translateY(-8px) scale(1.02); /* Efecto más pronunciado */
+  box-shadow: 0 12px 25px var(--shadow-medium);
+  background-color: #fefefe; /* Un ligero cambio de fondo */
+}
 
-  h3 {
-    color: #D4A5A5;
-    margin-top: 0;
-    margin-bottom: 10px;
-    text-align: center;
-    min-height: 2.4em;
-    /* Asegura espacio para dos líneas (ajusta según font-size y line-height) */
-    line-height: 1.2em;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.service-icon {
+  margin-bottom: 20px;
+  color: var(--secondary-color);
+  background-color: rgba(
+    var(--secondary-color-rgb, 175, 155, 96),
+    0.1
+  ); /* Fondo suave para el icono */
+  border-radius: 50%;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
 
-  p {
-    font-size: 0.95em;
-    color: #555;
-    text-align: justify;
-    /* Justificar la descripción */
-    flex-grow: 1;
-    /* Permite que la descripción ocupe el espacio restante */
-  }
+.service-card:hover .service-icon {
+  transform: rotate(10deg) scale(1.1); /* Rotación y escala del icono al hover */
+}
+
+.service-icon svg {
+  width: 55px; /* Icono más grande */
+  height: 55px;
+  stroke-width: 1.8;
+}
+
+.service-card h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.4em;
+  font-weight: 600;
+  min-height: 2.8em;
+  line-height: 1.3em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.service-card p {
+  font-size: 1em;
+  color: #666;
+  text-align: center; /* Centrar descripción */
+  flex-grow: 1;
 }
 
 .slider-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(91, 56, 91, 0.7);
-  /* #5B385B with opacity */
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--white);
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 45px; /* Flechas más grandes */
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #5B385B;
-  }
-
-  &.left-arrow {
-    left: 0;
-  }
-
-  &.right-arrow {
-    right: 0;
-  }
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 8px var(--shadow-medium);
 }
 
+.slider-arrow:hover {
+  background-color: #4a2e4a;
+  transform: translateY(-50%) scale(1.05); /* Efecto de escala al hover */
+}
+
+.slider-arrow.left-arrow {
+  left: 10px; /* Distancia del borde */
+}
+
+.slider-arrow.right-arrow {
+  right: 10px; /* Distancia del borde */
+}
+
+.slider-arrow svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* --- Contact Section --- */
+.contact-section {
+  background-color: var(--background-light);
+}
 
 .contact-info {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   text-align: center;
+  font-size: 1.1em;
+}
 
-  a {
-    color: #5B385B;
-    text-decoration: none;
+.contact-info p {
+  margin-bottom: 10px;
+}
 
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+.contact-info strong {
+  color: var(--primary-color);
+}
+
+.contact-info a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
 }
 
 .map-container {
   background-color: #e9e9e9;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 15px var(--shadow-light);
+  border: 1px solid #ddd;
+}
 
-  iframe {
-    display: block; // Eliminar espacio debajo del iframe
+.map-container iframe {
+  display: block;
+}
+
+/* --- Appointment Section --- */
+.appointment-section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  background-color: var(--white);
+}
+
+/* --- General Animations --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-// Estilos básicos para el formulario de citas si lo pones directamente aquí
-.appointment-section {
-  padding-top: 60px;
-  padding-bottom: 60px;
-  background-color: #FBF8F5; // Un fondo suave para diferenciar la sección
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-/* Responsive adjustments */
+@keyframes slideInRight {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Apply animations */
+.fade-in {
+  animation: fadeIn 1s ease-out forwards;
+  opacity: 0; /* Hidden by default */
+}
+
+.slide-in-left {
+  animation: slideInLeft 1s ease-out forwards;
+  opacity: 0;
+}
+
+.slide-in-right {
+  animation: slideInRight 1s ease-out forwards;
+  opacity: 0;
+}
+
+.zoom-in {
+  animation: zoomIn 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+/* Delay for sequential animations */
+.delay-1 {
+  animation-delay: 0.2s;
+}
+.delay-2 {
+  animation-delay: 0.4s;
+}
+.delay-3 {
+  animation-delay: 0.6s;
+}
+.delay-4 {
+  animation-delay: 0.8s;
+}
+
+/* Animation on scroll (Requires Intersection Observer in TS/JS) */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.animate-on-scroll.is-visible.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+.animate-on-scroll.is-visible.zoom-in {
+  animation: zoomIn 0.8s ease-out forwards;
+}
+
+/* Responsive Adjustments (Mantienen tus ajustes existentes y puedes afinarlos) */
 @media (max-width: 768px) {
   .hero-content h1 {
-    font-size: 2.5em;
+    font-size: 2.8em;
   }
 
   .hero-content .specialties {
     font-size: 1.2em;
+    color: var(--secondary-color);
+  }
+
+  .doctor-image-container {
+    width: 160px;
+    height: 160px;
+    margin-top: 30px; /* Espacio superior para móvil */
   }
 
   .info-section h2,
   .services-section h2,
   .contact-section h2,
   .appointment-section h2 {
-    font-size: 1.8em;
+    font-size: 2.2em;
   }
 
   .service-card {
-    width: 250px;
-    /* Adjust card width for smaller screens */
+    width: 280px;
   }
 
   .services-slider-container {
     padding: 0 20px;
-    /* Reduce padding for arrows */
   }
 
   .slider-arrow {
-    width: 35px;
-    height: 35px;
-
+    width: 38px;
+    height: 38px;
     svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
     }
   }
 }
 
 @media (max-width: 480px) {
+  .hero-section {
+    padding: 60px 15px;
+  }
   .hero-content h1 {
-    font-size: 2em;
+    font-size: 2.2em;
   }
 
   .hero-content .specialties {
     font-size: 1em;
+    color: var(--secondary-color);
   }
 
   .btn-primary {
-    padding: 0.6em 1.2em;
-    font-size: 0.9em;
+    padding: 12px 25px;
+    font-size: 1em;
   }
 
   h2 {
-    font-size: 1.8em;
+    font-size: 1.9em;
   }
 
   .service-card {
-    width: 90vw;
-    /* Make cards almost full width on very small screens */
+    width: 85vw; /* Casi todo el ancho para pantallas muy pequeñas */
     margin: 0 auto;
-    /* Center cards */
   }
 
   .services-slider-container {
     padding: 0 10px;
-    /* Minimal padding for arrows */
   }
 
   .slider-arrow {
-    width: 30px;
-    height: 30px;
-
+    width: 32px;
+    height: 32px;
     svg {
       width: 18px;
       height: 18px;
     }
+  }
+
+  .carousel-dots {
+    bottom: 10px;
+    padding: 5px 10px;
+  }
+  .carousel-dots span {
+    width: 10px;
+    height: 10px;
+  }
+
+  .doctor-image-container {
+    width: 150px;
+    height: 150px;
   }
 }

@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Variables de color actualizadas */
+:root {
+  --primary-color: #5B385B; /* Un color principal más oscuro y elegante */
+  --secondary-color: #AF9B60; /* Un color secundario que complementa */
+  --accent-color: #D4A5A5; /* Un color de acento más suave */
+  --text-color: #333;
+  --background-light: #FBF8F5; /* Fondo más cálido y suave */
+  --white: #fff;
+  --shadow-light: rgba(0, 0, 0, 0.08);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --secondary-color-rgb: 175, 155, 96; // This is crucial for your rgba(var(--secondary-color-rgb)...)
+}
+
+// You can also put the font import here for global availability
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
