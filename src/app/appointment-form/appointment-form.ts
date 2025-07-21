@@ -69,33 +69,24 @@ export class AppointmentForm implements OnInit {
     let currentMinute = startMinute;
 
     while (true) {
-      // Formatear la hora con ceros iniciales si es necesario
       const time = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
       this.allPossibleTimes.push(time);
 
-      // Incrementar los minutos en 30
       currentMinute += 30;
 
-      // Si los minutos llegan o superan 60, resetear minutos y avanzar la hora
       if (currentMinute >= 60) {
         currentMinute -= 60;
         currentHour++;
       }
 
-      // Condición de parada: si la hora actual excede la hora final, o si es la hora final
-      // y los minutos actuales exceden los minutos finales.
       if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
         break;
       }
     }
   }
 
-  /**
-   * Obtiene las citas agendadas desde el backend usando el AppointmentService
-   * y las procesa para determinar la disponibilidad.
-   */
   private fetchBookedAppointments(): void {
-    this.appointmentService.getAllAppointments() // Usar el servicio para obtener todas las citas
+    this.appointmentService.getFutureAppointmentsPublic()
       .pipe(
         catchError(error => {
           console.error('Error al cargar las citas existentes:', error);
@@ -104,17 +95,11 @@ export class AppointmentForm implements OnInit {
           return throwError(() => new Error(this.errorMessage));
         })
       )
-      .subscribe((response: AppointmentsResponse) => { // Especificar el tipo de respuesta
-        this.bookedSlots = {}; // Reiniciar los slots reservados
+      .subscribe((appointments: Appointment[]) => { 
+        this.bookedSlots = {}; 
 
-        // Procesar solo las citas que NO estén canceladas
-        // Corrección 1: Usar response.data
-        // Corrección 2: Tipar 'app' como Appointment
-        response.data.filter((app: Appointment) => app.status !== 'cancelled').forEach((app: Appointment) => {
-          // preferredDateTime ahora es directamente un objeto Date
-          // Asegurarse de que app.preferredDateTime sea un objeto Date válido
+        appointments.filter((app: Appointment) => app.status !== 'cancelled').forEach((app: Appointment) => {
           const date = new Date(app.preferredDateTime).toISOString().split('T')[0];
-          // Usar toLocaleTimeString con opciones para asegurar el formato HH:MM (24 horas)
           const time = new Date(app.preferredDateTime).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
 
           if (!this.bookedSlots[date]) {
@@ -123,8 +108,7 @@ export class AppointmentForm implements OnInit {
           this.bookedSlots[date].push(time);
         });
 
-        this.updateAvailableDates(); // Actualizar las fechas disponibles después de cargar las citas
-        // Si ya hay una fecha seleccionada, actualizar los horarios para esa fecha
+        this.updateAvailableDates();
         const selectedDate = this.appointmentForm.get('preferredDate')?.value;
         if (selectedDate) {
           this.onDateChange(selectedDate);
@@ -132,13 +116,9 @@ export class AppointmentForm implements OnInit {
       });
   }
 
-  /**
-   * Actualiza la lista de fechas disponibles basándose en los horarios reservados.
-   * Solo incluye fechas futuras que tengan al menos un horario disponible.
-   */
   private updateAvailableDates(): void {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalizar a inicio del día
+    today.setHours(0, 0, 0, 0);
 
     this.availableDates = [];
     // Generar un rango de fechas futuras (ej. los próximos 60 días)
@@ -167,12 +147,6 @@ export class AppointmentForm implements OnInit {
     }
   }
 
-
-  /**
-   * Se llama cuando la fecha preferida cambia.
-   * Filtra los horarios disponibles para la fecha seleccionada.
-   * @param selectedDate La fecha seleccionada en formato YYYY-MM-DD.
-   */
   onDateChange(selectedDate: string): void {
     if (!selectedDate) {
       this.availableTimesForSelectedDate = [];
@@ -201,7 +175,6 @@ export class AppointmentForm implements OnInit {
       this.appointmentForm.get('preferredTime')?.setValue('');
     }
   }
-
 
   onSubmit(): void {
     this.formSubmitted = true;
@@ -252,7 +225,6 @@ export class AppointmentForm implements OnInit {
           this.submissionSuccess = true;
           this.appointmentForm.reset();
           this.formSubmitted = false;
-          // Volver a cargar las citas para actualizar la disponibilidad
           this.fetchBookedAppointments();
           setTimeout(() => {
             this.submissionSuccess = false;
