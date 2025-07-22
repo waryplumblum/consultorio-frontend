@@ -10,9 +10,11 @@ import { catchError, throwError } from 'rxjs';
 import { AppointmentService } from '../services/appointment-service';
 import { Appointment, AppointmentsResponse } from '../models/appointment.model';
 
+import { PhoneNumberFormatterDirective } from '../shared/phone-number-formatter';
+
 @Component({
   selector: 'app-appointment-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, PhoneNumberFormatterDirective,],
   templateUrl: './appointment-form.html',
   styleUrl: './appointment-form.scss',
   standalone: true,

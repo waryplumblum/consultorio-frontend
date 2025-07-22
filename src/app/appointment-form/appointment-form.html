@@ -33,6 +33,7 @@
         pattern="[0-9]*"
         maxlength="10"
         (keypress)="onPhoneKeyPress($event)"
+        appPhoneNumberFormatter 
       >
       <div
         *ngIf="formSubmitted && appointmentForm.controls['patientPhone'].errors"
