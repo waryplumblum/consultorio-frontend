@@ -1,46 +1,110 @@
 <div class="appointment-form-container">
-  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="appointment-form">
+  <form
+    [formGroup]="appointmentForm"
+    (ngSubmit)="onSubmit()"
+    class="appointment-form"
+  >
     <div class="form-group">
       <label for="patientName">Nombre Completo:</label>
-      <input type="text" id="patientName" formControlName="patientName" placeholder="Tu nombre completo">
-      <div *ngIf="formSubmitted && appointmentForm.controls['patientName'].errors" class="error-message">
-        <div *ngIf="appointmentForm.controls['patientName'].errors['required']">El nombre es obligatorio.</div>
+      <input
+        type="text"
+        id="patientName"
+        formControlName="patientName"
+        placeholder="Tu nombre completo"
+      />
+      <div
+        *ngIf="formSubmitted && appointmentForm.controls['patientName'].errors"
+        class="error-message"
+      >
+        <div *ngIf="appointmentForm.controls['patientName'].errors['required']">
+          El nombre es obligatorio.
+        </div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="patientPhone">Teléfono (10 dígitos):</label>
-      <input type="tel" id="patientPhone" formControlName="patientPhone" placeholder="Ej. 3312345678">
-      <div *ngIf="formSubmitted && appointmentForm.controls['patientPhone'].errors" class="error-message">
-        <div *ngIf="appointmentForm.controls['patientPhone'].errors['required']">El teléfono es obligatorio.</div>
-        <div *ngIf="appointmentForm.controls['patientPhone'].errors['pattern']">Formato de teléfono inválido (10
-          dígitos).</div>
+      <input
+        type="tel"
+        id="patientPhone"
+        formControlName="patientPhone"
+        placeholder="Ej. 3312345678"
+      />
+      <div
+        *ngIf="formSubmitted && appointmentForm.controls['patientPhone'].errors"
+        class="error-message"
+      >
+        <div
+          *ngIf="appointmentForm.controls['patientPhone'].errors['required']"
+        >
+          El teléfono es obligatorio.
+        </div>
+        <div *ngIf="appointmentForm.controls['patientPhone'].errors['pattern']">
+          Formato de teléfono inválido (10 dígitos).
+        </div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="patientEmail">Email:</label>
-      <input type="email" id="patientEmail" formControlName="patientEmail" placeholder="tu.email@ejemplo.com">
-      <div *ngIf="formSubmitted && appointmentForm.controls['patientEmail'].errors" class="error-message">
-        <div *ngIf="appointmentForm.controls['patientEmail'].errors['required']">El email es obligatorio.</div>
-        <div *ngIf="appointmentForm.controls['patientEmail'].errors['email']">Formato de email inválido.</div>
+      <input
+        type="email"
+        id="patientEmail"
+        formControlName="patientEmail"
+        placeholder="tu.email@ejemplo.com"
+      />
+      <div
+        *ngIf="formSubmitted && appointmentForm.controls['patientEmail'].errors"
+        class="error-message"
+      >
+        <div
+          *ngIf="appointmentForm.controls['patientEmail'].errors['required']"
+        >
+          El email es obligatorio.
+        </div>
+        <div *ngIf="appointmentForm.controls['patientEmail'].errors['email']">
+          Formato de email inválido.
+        </div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="reason">Motivo de la Cita:</label>
-      <textarea id="reason" formControlName="reason" rows="3"
-        placeholder="Describe brevemente el motivo de tu consulta."></textarea>
-      <div *ngIf="formSubmitted && appointmentForm.controls['reason'].errors" class="error-message">
-        <div *ngIf="appointmentForm.controls['reason'].errors['required']">El motivo es obligatorio.</div>
+      <textarea
+        id="reason"
+        formControlName="reason"
+        rows="3"
+        placeholder="Describe brevemente el motivo de tu consulta."
+      ></textarea>
+      <div
+        *ngIf="formSubmitted && appointmentForm.controls['reason'].errors"
+        class="error-message"
+      >
+        <div *ngIf="appointmentForm.controls['reason'].errors['required']">
+          El motivo es obligatorio.
+        </div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="preferredDate">Fecha Preferida:</label>
-      <input type="date" id="preferredDate" formControlName="preferredDate" [min]="minDate">
-      <div *ngIf="formSubmitted && appointmentForm.controls['preferredDate'].errors" class="error-message">
-        <div *ngIf="appointmentForm.controls['preferredDate'].errors['required']">La fecha es obligatoria.</div>
+      <input
+        type="date"
+        id="preferredDate"
+        formControlName="preferredDate"
+        [min]="minDate"
+      />
+      <div
+        *ngIf="
+          formSubmitted && appointmentForm.controls['preferredDate'].errors
+        "
+        class="error-message"
+      >
+        <div
+          *ngIf="appointmentForm.controls['preferredDate'].errors['required']"
+        >
+          La fecha es obligatoria.
+        </div>
       </div>
     </div>
 
@@ -48,18 +112,51 @@
       <label for="preferredTime">Hora Preferida:</label>
       <select id="preferredTime" formControlName="preferredTime">
         <option value="" disabled>Selecciona una hora</option>
-        <option *ngIf="!appointmentForm.get('preferredDate')?.value" value="" disabled>Selecciona una fecha primero
+        <option
+          *ngIf="!appointmentForm.get('preferredDate')?.value"
+          value=""
+          disabled
+        >
+          Selecciona una fecha primero
         </option>
-        <option *ngFor="let time of availableTimesForSelectedDate" [value]="time">{{ time }}</option>
-        <option *ngIf="availableTimesForSelectedDate.length === 0 && appointmentForm.get('preferredDate')?.value"
-          value="" disabled>No hay horarios disponibles para esta fecha.</option>
+        <option
+          *ngFor="let time of availableTimesForSelectedDate"
+          [value]="time"
+        >
+          {{ time }}
+        </option>
+        <option
+          *ngIf="
+            availableTimesForSelectedDate.length === 0 &&
+            appointmentForm.get('preferredDate')?.value
+          "
+          value=""
+          disabled
+        >
+          No hay horarios disponibles para esta fecha.
+        </option>
       </select>
-      <div *ngIf="formSubmitted && appointmentForm.controls['preferredTime'].errors" class="error-message">
-        <div *ngIf="appointmentForm.controls['preferredTime'].errors['required']">La hora es obligatoria.</div>
+      <div
+        *ngIf="
+          formSubmitted && appointmentForm.controls['preferredTime'].errors
+        "
+        class="error-message"
+      >
+        <div
+          *ngIf="appointmentForm.controls['preferredTime'].errors['required']"
+        >
+          La hora es obligatoria.
+        </div>
       </div>
     </div>
 
-    <button type="submit" class="btn-submit" [disabled]="formSubmitted && appointmentForm.invalid">Agendar Cita</button>
+    <button
+      type="submit"
+      class="btn-submit"
+      [disabled]="formSubmitted && appointmentForm.invalid"
+    >
+      Agendar Cita
+    </button>
 
     <div *ngIf="submissionSuccess" class="success-message">
       ¡Cita agendada con éxito! Nos pondremos en contacto contigo pronto.
