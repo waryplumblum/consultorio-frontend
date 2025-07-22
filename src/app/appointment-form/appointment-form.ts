@@ -1,20 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { catchError, throwError } from 'rxjs';
 import { AppointmentService } from '../services/appointment-service';
 import { Appointment, AppointmentsResponse } from '../models/appointment.model';
 
-
 @Component({
   selector: 'app-appointment-form',
-  imports: [CommonModule, ReactiveFormsModule,],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './appointment-form.html',
   styleUrl: './appointment-form.scss',
   standalone: true,
 })
 export class AppointmentForm implements OnInit {
-
   appointmentForm!: FormGroup;
   formSubmitted = false;
   submissionSuccess = false;
@@ -29,7 +32,10 @@ export class AppointmentForm implements OnInit {
   minDate: string; // Para deshabilitar fechas pasadas
 
   // Inyectar AppointmentService en lugar de HttpClient
-  constructor(private fb: FormBuilder, private appointmentService: AppointmentService) {
+  constructor(
+    private fb: FormBuilder,
+    private appointmentService: AppointmentService
+  ) {
     // Establecer la fecha mínima para el input de fecha (hoy o mañana si hoy ya pasó la hora)
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
@@ -42,16 +48,51 @@ export class AppointmentForm implements OnInit {
       patientEmail: ['', [Validators.required, Validators.email]],
       reason: ['', Validators.required],
       preferredDate: ['', Validators.required],
-      preferredTime: ['', Validators.required]
+      preferredTime: ['', Validators.required],
     });
 
     this.generateAllPossibleTimes(); // Generar los horarios base
     this.fetchBookedAppointments(); // Cargar las citas existentes al iniciar
 
     // Suscribirse a cambios en la fecha preferida para actualizar los horarios disponibles
-    this.appointmentForm.get('preferredDate')?.valueChanges.subscribe(date => {
-      this.onDateChange(date);
-    });
+    this.appointmentForm
+      .get('preferredDate')
+      ?.valueChanges.subscribe((date) => {
+        this.onDateChange(date);
+      });
+  }
+
+  /**
+   * Permite solo la entrada de dígitos numéricos y controla el largo del campo.
+   * @param event El evento de teclado.
+   */
+  onPhoneKeyPress(event: KeyboardEvent): void {
+    const inputChar = String.fromCharCode(event.charCode);
+    const phoneNumberControl = this.appointmentForm.get('patientPhone');
+    const currentValue = phoneNumberControl?.value || '';
+
+    // Permitir solo dígitos (0-9)
+    const isNumeric = /^[0-9]$/.test(inputChar);
+
+    // Permitir teclas de control (backspace, delete, flechas, tab, etc.)
+    const isControlKey =
+      event.keyCode === 8 ||
+      event.keyCode === 46 || // Backspace, Delete
+      event.keyCode === 37 ||
+      event.keyCode === 39 || // Left, Right arrows
+      event.keyCode === 9; // Tab
+
+    // Si no es numérico y no es una tecla de control, prevenir la entrada
+    if (!isNumeric && !isControlKey) {
+      event.preventDefault();
+      return;
+    }
+
+    // Limitar a 10 dígitos (aunque maxlength="10" ya lo hace en HTML, esto es una capa extra)
+    // Solo si la tecla presionada es un número y ya tenemos 10 dígitos
+    if (isNumeric && currentValue.length >= 10) {
+      event.preventDefault();
+    }
   }
 
   /**
@@ -69,7 +110,9 @@ export class AppointmentForm implements OnInit {
     let currentMinute = startMinute;
 
     while (true) {
-      const time = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
+      const time = `${String(currentHour).padStart(2, '0')}:${String(
+        currentMinute
+      ).padStart(2, '0')}`;
       this.allPossibleTimes.push(time);
 
       currentMinute += 30;
@@ -79,34 +122,46 @@ export class AppointmentForm implements OnInit {
         currentHour++;
       }
 
-      if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
+      if (
+        currentHour > endHour ||
+        (currentHour === endHour && currentMinute > endMinute)
+      ) {
         break;
       }
     }
   }
 
   private fetchBookedAppointments(): void {
-    this.appointmentService.getFutureAppointmentsPublic()
+    this.appointmentService
+      .getFutureAppointmentsPublic()
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           console.error('Error al cargar las citas existentes:', error);
-          this.errorMessage = 'No se pudieron cargar los horarios disponibles. Por favor, intente de nuevo más tarde.';
+          this.errorMessage =
+            'No se pudieron cargar los horarios disponibles. Por favor, intente de nuevo más tarde.';
           this.submissionError = true;
           return throwError(() => new Error(this.errorMessage));
         })
       )
-      .subscribe((appointments: Appointment[]) => { 
-        this.bookedSlots = {}; 
+      .subscribe((appointments: Appointment[]) => {
+        this.bookedSlots = {};
 
-        appointments.filter((app: Appointment) => app.status !== 'cancelled').forEach((app: Appointment) => {
-          const date = new Date(app.preferredDateTime).toISOString().split('T')[0];
-          const time = new Date(app.preferredDateTime).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
+        appointments
+          .filter((app: Appointment) => app.status !== 'cancelled')
+          .forEach((app: Appointment) => {
+            const date = new Date(app.preferredDateTime)
+              .toISOString()
+              .split('T')[0];
+            const time = new Date(app.preferredDateTime).toLocaleTimeString(
+              'es-MX',
+              { hour: '2-digit', minute: '2-digit', hour12: false }
+            );
 
-          if (!this.bookedSlots[date]) {
-            this.bookedSlots[date] = [];
-          }
-          this.bookedSlots[date].push(time);
-        });
+            if (!this.bookedSlots[date]) {
+              this.bookedSlots[date] = [];
+            }
+            this.bookedSlots[date].push(time);
+          });
 
         this.updateAvailableDates();
         const selectedDate = this.appointmentForm.get('preferredDate')?.value;
@@ -122,16 +177,18 @@ export class AppointmentForm implements OnInit {
 
     this.availableDates = [];
     // Generar un rango de fechas futuras (ej. los próximos 60 días)
-    for (let i = 0; i < 60; i++) { // Generar fechas para los próximos 60 días
+    for (let i = 0; i < 60; i++) {
+      // Generar fechas para los próximos 60 días
       const futureDate = new Date(today);
       futureDate.setDate(today.getDate() + i);
       const dateString = futureDate.toISOString().split('T')[0];
 
       // Filtrar los horarios para esta fecha y ver si hay alguno disponible
       const bookedTimesForDate = this.bookedSlots[dateString] || [];
-      const hasAvailableTime = this.allPossibleTimes.some(time => {
+      const hasAvailableTime = this.allPossibleTimes.some((time) => {
         // Si es hoy, solo considerar horarios futuros
-        if (dateString === this.minDate) { // Usar this.minDate para comparar con la fecha actual
+        if (dateString === this.minDate) {
+          // Usar this.minDate para comparar con la fecha actual
           const [hour, minute] = time.split(':').map(Number);
           const currentTime = new Date();
           const slotTime = new Date();
@@ -158,20 +215,34 @@ export class AppointmentForm implements OnInit {
     const now = new Date();
     const todayString = now.toISOString().split('T')[0];
 
-    this.availableTimesForSelectedDate = this.allPossibleTimes.filter(time => {
-      // Si la fecha seleccionada es hoy, solo mostrar horarios futuros
-      if (selectedDate === todayString) {
-        const [hour, minute] = time.split(':').map(Number);
-        const slotDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
-        return slotDateTime > now && !bookedTimesForSelectedDate.includes(time);
+    this.availableTimesForSelectedDate = this.allPossibleTimes.filter(
+      (time) => {
+        // Si la fecha seleccionada es hoy, solo mostrar horarios futuros
+        if (selectedDate === todayString) {
+          const [hour, minute] = time.split(':').map(Number);
+          const slotDateTime = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hour,
+            minute
+          );
+          return (
+            slotDateTime > now && !bookedTimesForSelectedDate.includes(time)
+          );
+        }
+        // Para fechas futuras, solo filtrar por los horarios ya reservados
+        return !bookedTimesForSelectedDate.includes(time);
       }
-      // Para fechas futuras, solo filtrar por los horarios ya reservados
-      return !bookedTimesForSelectedDate.includes(time);
-    });
+    );
 
     // Si el horario previamente seleccionado ya no está disponible, resetearlo
-    const currentSelectedTime = this.appointmentForm.get('preferredTime')?.value;
-    if (currentSelectedTime && !this.availableTimesForSelectedDate.includes(currentSelectedTime)) {
+    const currentSelectedTime =
+      this.appointmentForm.get('preferredTime')?.value;
+    if (
+      currentSelectedTime &&
+      !this.availableTimesForSelectedDate.includes(currentSelectedTime)
+    ) {
       this.appointmentForm.get('preferredTime')?.setValue('');
     }
   }
@@ -191,25 +262,28 @@ export class AppointmentForm implements OnInit {
       // Crear la fecha y hora combinadas como objeto Date
       const preferredDateTime = new Date(`${datePart}T${timePart}:00`);
 
-      const appointmentData: Partial<Appointment> = { // Tipar appointmentData
+      const appointmentData: Partial<Appointment> = {
+        // Tipar appointmentData
         patientName: formValue.patientName,
         patientPhone: formValue.patientPhone,
         patientEmail: formValue.patientEmail,
         reason: formValue.reason,
         preferredDateTime: preferredDateTime, // Asignar el objeto Date directamente
         scheduledDateTime: preferredDateTime, // Asignar el objeto Date directamente
-        status: 'pending' // Asegurarse de que el status inicial sea 'pending'
+        status: 'pending', // Asegurarse de que el status inicial sea 'pending'
       };
 
       console.log('Datos de la cita a enviar:', appointmentData);
 
       // Usar el servicio para crear la cita
-      this.appointmentService.createAppointment(appointmentData)
+      this.appointmentService
+        .createAppointment(appointmentData)
         .pipe(
-          catchError(error => {
+          catchError((error) => {
             console.error('Error al enviar la cita:', error);
             this.submissionError = true;
-            this.errorMessage = 'Hubo un error al agendar su cita. Por favor, intente de nuevo.';
+            this.errorMessage =
+              'Hubo un error al agendar su cita. Por favor, intente de nuevo.';
             if (error.error && error.error.message) {
               if (Array.isArray(error.error.message)) {
                 this.errorMessage = error.error.message.join(', ');
@@ -220,7 +294,7 @@ export class AppointmentForm implements OnInit {
             return throwError(() => new Error(this.errorMessage));
           })
         )
-        .subscribe(response => {
+        .subscribe((response) => {
           console.log('Cita agendada con éxito:', response);
           this.submissionSuccess = true;
           this.appointmentForm.reset();
@@ -233,7 +307,8 @@ export class AppointmentForm implements OnInit {
     } else {
       console.log('Formulario inválido. Revise los campos.');
       this.submissionError = true;
-      this.errorMessage = 'Por favor, complete todos los campos obligatorios y corrija los errores.';
+      this.errorMessage =
+        'Por favor, complete todos los campos obligatorios y corrija los errores.';
     }
   }
 }

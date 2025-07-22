@@ -29,7 +29,11 @@
         id="patientPhone"
         formControlName="patientPhone"
         placeholder="Ej. 3312345678"
-      />
+        inputmode="numeric"
+        pattern="[0-9]*"
+        maxlength="10"
+        (keypress)="onPhoneKeyPress($event)"
+      >
       <div
         *ngIf="formSubmitted && appointmentForm.controls['patientPhone'].errors"
         class="error-message"
