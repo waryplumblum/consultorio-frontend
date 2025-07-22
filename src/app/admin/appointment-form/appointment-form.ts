@@ -7,7 +7,7 @@ import { Appointment } from '../../models/appointment.model';
 import { AppointmentService } from '../../services/appointment-service';
 
 @Component({
-  selector: 'app-appointment-form',
+  selector: 'app-admin-appointment-form',
   templateUrl: './appointment-form.html',
   styleUrl: './appointment-form.scss',
   standalone: true,
