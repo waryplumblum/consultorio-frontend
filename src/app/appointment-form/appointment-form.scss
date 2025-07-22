@@ -1,87 +1,188 @@
+/* appointment-form.component.scss */
+
 .appointment-form-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 30px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 40px; /* Aumentar el padding para más espacio interno */
+  background-color: var(--white); /* Usar la variable blanca */
+  border-radius: 12px; /* Bordes más redondeados */
+  box-shadow: 0 8px 20px var(--shadow-medium); /* Sombra más pronunciada y elegante */
+  border: 1px solid #e0e0e0; /* Un borde muy sutil para definición */
+}
 
-  .form-group {
-    margin-bottom: 20px;
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #333;
-    }
-    input[type="text"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="date"],
-    input[type="time"],
-    textarea,
-    select {
-      width: 100%; /* Ajuste aquí: Cambiado de calc(100% - 20px) a 100% */
-      padding: 12px 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1em;
-      box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
-      &:focus {
-        border-color: #007bff;
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-      }
-    }
-    textarea {
-      resize: vertical; // Permite redimensionar verticalmente
-      min-height: 80px;
-    }
+.appointment-form {
+  display: flex; /* Usar flexbox para mejor control del layout */
+  flex-direction: column;
+  gap: 20px; /* Espacio entre los grupos de formulario */
+}
+
+.form-group {
+  margin-bottom: 0; /* Reiniciar el margin-bottom porque usamos gap en el formulario */
+
+  label {
+    display: block;
+    margin-bottom: 10px; /* Más espacio entre label e input */
+    font-weight: 600; /* Un poco más de peso para las etiquetas */
+    color: var(--primary-color); /* Color primario para las etiquetas */
+    font-size: 1.05em; /* Ligeramente más grande */
   }
 
-  button[type="submit"] {
-    display: block;
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="date"],
+  input[type="time"],
+  textarea,
+  select {
     width: 100%;
-    padding: 15px;
-    background-color: #AF9B60;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: #218838;
+    padding: 14px 15px; /* Más padding para los inputs */
+    border: 1px solid var(--accent-color); /* Un borde con el color de acento, más suave */
+    border-radius: 8px; /* Bordes más redondeados para los inputs */
+    font-size: 1.05em; /* Texto un poco más grande dentro de los inputs */
+    color: var(--text-color); /* Color de texto estándar */
+    background-color: var(--background-light); /* Fondo suave para los inputs */
+    transition: all 0.3s ease; /* Transición para focus y hover */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06); /* Sombra interna sutil */
+    box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+
+    &:focus {
+      border-color: var(--secondary-color); /* Borde secundario al enfocar */
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(var(--secondary-color-rgb), 0.25); /* Sombra de enfoque más elegante */
+      background-color: var(--white); /* Fondo blanco al enfocar */
     }
+
+    &::placeholder {
+      color: #999; /* Color para el placeholder */
+    }
+
     &:disabled {
-      background-color: #cccccc;
+      background-color: #f2f2f2;
       cursor: not-allowed;
     }
   }
 
-  .error-message {
-    color: #dc3545; // Rojo para errores
-    font-size: 0.85em;
-    margin-top: 5px;
+  textarea {
+    resize: vertical;
+    min-height: 100px; /* Aumentar la altura mínima del textarea */
   }
-  .success-message {
-    color: #28a745; // Verde para éxito
-    font-size: 1em;
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    text-align: center;
+
+  /* Estilos específicos para select (para que se vea más consistente) */
+  select {
+    appearance: none; /* Eliminar estilo nativo del select */
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%01-25.7%200L146.2%20178.6%2030.5%2069.4c-6.2-6.2-16.4-6.2-22.6%200-3.1%203.1-4.7%207.2-4.7%2011.3%200%204.1%201.6%208.2%204.7%2011.3l133.3%20133.3c6.2%206.2%2016.4%206.2%2022.6%200L287%2092.7c6.2-6.2%206.2-16.4%200-22.6z%22%2F%3E%3C%2Fsvg%3E'); /* Flecha personalizada */
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 12px auto;
+    // --- MODIFICACIÓN CLAVE AQUÍ ---
+    padding-right: 45px; /* Aumenta el padding derecho para dar espacio a la flecha y alinear el texto */
+    // -------------------------------
   }
-  .general-error-message {
-    color: #dc3545;
+}
+
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 16px; /* Aumentar padding del botón */
+  background-color: var(--primary-color); /* Color primario para el botón */
+  color: var(--white);
+  border: none;
+  border-radius: 8px; /* Bordes más redondeados */
+  font-size: 1.3em; /* Texto del botón más grande */
+  font-weight: 700; /* Botón más negrita */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* Transición para todos los cambios */
+  box-shadow: 0 4px 15px var(--shadow-light); /* Sombra para el botón */
+  margin-top: 15px; /* Espacio extra encima del botón */
+
+  &:hover {
+    background-color: #4a2e4a; /* Un tono más oscuro de primary al pasar el ratón */
+    transform: translateY(-2px); /* Efecto de levantamiento */
+    box-shadow: 0 6px 20px var(--shadow-medium); /* Sombra al hover */
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.error-message {
+  color: #e74c3c; /* Un rojo más vibrante para errores */
+  font-size: 0.9em; /* Ligeramente más grande */
+  margin-top: 6px; /* Más espacio */
+  padding-left: 5px; /* Pequeño indentado */
+}
+
+.success-message {
+  color: #27ae60; /* Verde más oscuro para éxito */
+  font-size: 1.05em; /* Ligeramente más grande */
+  margin-top: 25px; /* Más espacio */
+  padding: 18px; /* Más padding */
+  background-color: #e8f5e9; /* Fondo verde muy claro */
+  border: 1px solid #a8d5af; /* Borde verde claro */
+  border-radius: 8px; /* Bordes redondeados */
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Sombra sutil */
+}
+
+.general-error-message {
+  color: #e74c3c; /* Rojo para errores generales */
+  font-size: 1.05em;
+  margin-top: 25px;
+  padding: 18px;
+  background-color: #fcebeb; /* Fondo rojo muy claro */
+  border: 1px solid #efc2c4; /* Borde rojo claro */
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Consideraciones responsive para el formulario */
+@media (max-width: 768px) {
+  .appointment-form-container {
+    padding: 25px; /* Menos padding en móviles */
+    margin: 0 15px; /* Margen a los lados para que no toque los bordes de la pantalla */
+  }
+
+  .form-group label {
     font-size: 1em;
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px;
-    text-align: center;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="date"],
+  input[type="time"],
+  textarea,
+  select {
+    font-size: 0.95em;
+    padding: 12px 10px; /* Padding actual de 10px a la derecha */
+  }
+
+  // --- MODIFICACIÓN CLAVE TAMBIÉN AQUÍ PARA MÓVILES ---
+  select {
+    padding-right: 35px; /* Ajusta este valor para móviles, compensando la flecha */
+  }
+  // ----------------------------------------------------
+
+  .btn-submit {
+    font-size: 1.1em;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .appointment-form-container {
+    padding: 20px;
+    margin: 0 10px;
+  }
+
+  .form-group label {
+    font-size: 0.95em;
   }
 }
