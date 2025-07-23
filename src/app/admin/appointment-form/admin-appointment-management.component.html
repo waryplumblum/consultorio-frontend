@@ -1,0 +1,17 @@
+<div class="appointment-form-container">
+  <app-appointment-form
+    [formTitle]="isEditMode ? 'Editar Cita' : 'Crear Nueva Cita'"
+    [submitButtonText]="isEditMode ? 'Actualizar Cita' : 'Crear Cita'"
+    [isEditMode]="isEditMode"
+    [showStatusField]="true" [initialData]="initialFormData"
+    [externalLoading]="loading" (formSubmit)="onFormSubmittedFromChild($event)" >
+    <button form-actions-extra type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+  </app-appointment-form>
+
+  <div *ngIf="submitMessage" class="submit-success-message">
+    {{ submitMessage }}
+  </div>
+  <div *ngIf="errorMessage && !submitMessage" class="submit-error-message">
+    {{ errorMessage }}
+  </div>
+</div>

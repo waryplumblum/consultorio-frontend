@@ -8,6 +8,17 @@
   border-radius: 12px; /* Bordes más redondeados */
   box-shadow: 0 8px 20px var(--shadow-medium); /* Sombra más pronunciada y elegante */
   border: 1px solid #e0e0e0; /* Un borde muy sutil para definición */
+
+  h2 {
+    color: var(
+      --primary-color
+    ); // O el color que desees para los títulos del formulario
+    font-size: 1.8em; // Ajusta el tamaño según tu diseño
+    margin-bottom: 30px; // Espacio debajo del título
+    text-align: center; // Centrar el título
+    font-weight: 700; // Negrita
+    // Otros estilos que consideres apropiados para un título de formulario
+  }
 }
 
 .appointment-form {
@@ -71,7 +82,7 @@
   select {
     appearance: none; /* Eliminar estilo nativo del select */
     -webkit-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%01-25.7%200L146.2%20178.6%2030.5%2069.4c-6.2-6.2-16.4-6.2-22.6%200-3.1%203.1-4.7%207.2-4.7%2011.3%200%204.1%201.6%208.2%204.7%2011.3l133.3%20133.3c6.2%206.2%2016.4%206.2%2022.6%200L287%2092.7c6.2-6.2%206.2-16.4%200-22.6z%22%2F%3E%3C%2Fsvg%3E'); /* Flecha personalizada */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%01-25.7%200L146.2%20178.6%2030.5%2069.4c-6.2-6.2-16.4-6.2-22.6%200-3.1%203.1-4.7%207.2-4.7%2011.3%200%204.1%201.6%208.2%204.7%2011.3l133.3%20133.3c6.2%206.2%2016.4%206.2%2022.6%200L287%2092.7c6.2-6.2%206.2-16.4%200-22.6z%22%2F%3E%3C%2Fsvg%3E"); /* Flecha personalizada */
     background-repeat: no-repeat;
     background-position: right 15px top 50%;
     background-size: 12px auto;

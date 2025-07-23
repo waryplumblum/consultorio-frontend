@@ -8,7 +8,7 @@ import { DashboardComponent } from './admin/dashboard-component/dashboard-compon
 import { AuthGuard } from './guards/auth-guard';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout';
 import { AppointmentsComponent } from './admin/appointments-component/appointments-component';
-import { AdminAppointmentForm } from './admin/appointment-form/appointment-form';
+import { AdminAppointmentManagementComponent } from './admin/appointment-form/appointment-form';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/doctor-info', pathMatch: 'full' },
@@ -23,8 +23,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'appointments', component: AppointmentsComponent },
       // Rutas para el formulario de citas:
-      { path: 'appointments/new', component: AdminAppointmentForm },
-      { path: 'appointments/edit/:id', component: AdminAppointmentForm },
+      { path: 'appointments/new', component: AdminAppointmentManagementComponent },
+      { path: 'appointments/edit/:id', component: AdminAppointmentManagementComponent },
       // { path: 'users', component: AdminUsersComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
