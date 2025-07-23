@@ -92,36 +92,6 @@
   }
 }
 
-.btn-submit {
-  display: block;
-  width: 100%;
-  padding: 16px; /* Aumentar padding del botón */
-  background-color: var(--primary-color); /* Color primario para el botón */
-  color: var(--white);
-  border: none;
-  border-radius: 8px; /* Bordes más redondeados */
-  font-size: 1.3em; /* Texto del botón más grande */
-  font-weight: 700; /* Botón más negrita */
-  cursor: pointer;
-  transition: all 0.3s ease-in-out; /* Transición para todos los cambios */
-  box-shadow: 0 4px 15px var(--shadow-light); /* Sombra para el botón */
-  margin-top: 15px; /* Espacio extra encima del botón */
-
-  &:hover {
-    background-color: #4a2e4a; /* Un tono más oscuro de primary al pasar el ratón */
-    transform: translateY(-2px); /* Efecto de levantamiento */
-    box-shadow: 0 6px 20px var(--shadow-medium); /* Sombra al hover */
-  }
-
-  &:disabled {
-    background-color: #cccccc;
-    color: #888;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-  }
-}
-
 .error-message {
   color: #e74c3c; /* Un rojo más vibrante para errores */
   font-size: 0.9em; /* Ligeramente más grande */
@@ -153,7 +123,83 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Consideraciones responsive para el formulario */
+/* ---------------------------------------------------------------------- */
+/* AJUSTES CLAVE AQUÍ PARA LOS BOTONES DE ACCIÓN */
+/* ---------------------------------------------------------------------- */
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  justify-content: flex-end; /* Alinea los botones a la derecha por defecto */
+  align-items: center;
+  flex-wrap: wrap;
+
+  // --- MODIFICACIÓN CLAVE: Lógica para un solo botón vs. múltiples botones ---
+  // Por defecto, si hay solo un botón, queremos que ocupe todo el ancho.
+  // Si hay más de uno, que se comporten como ya lo hacen (justificados a la derecha).
+
+  // Esta regla se aplicará cuando el contenedor .form-actions SOLO tenga UN HIJO directo.
+  &:has(> *:only-child) {
+    justify-content: center; /* Centra el botón único */
+    // Puedes incluso forzarlo a ocupar todo el ancho si lo prefieres, pero 'center'
+    // junto con los estilos base de btn-submit que le daremos, ya lo harán grande.
+  }
+}
+
+// Estilos BASE para TODOS los botones dentro de .form-actions
+// Esto asegura que padding, border-radius, font-size, etc., sean consistentes
+.form-actions .btn-submit,
+.form-actions .btn-secondary,
+.form-actions button[type="button"] {
+  padding: 16px 25px;
+  border-radius: 8px;
+  font-size: 1.15em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  flex-shrink: 0;
+  text-align: center;
+  box-sizing: border-box;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // Hacemos que los botones se puedan expandir por defecto.
+  flex-grow: 1; /* Permite que el botón crezca para ocupar espacio disponible */
+  max-width: 280px; /* Un ancho máximo razonable para un botón individual, ajusta según necesites */
+
+  // Cuando hay más de un botón (o específicamente .btn-secondary está presente),
+  // limitamos su crecimiento para que no ocupen todo el ancho y se ajusten a la derecha.
+  .form-actions:not(:has(> *:only-child)) & {
+    flex-grow: 0; /* Deshabilita el crecimiento cuando hay múltiples botones */
+    max-width: 220px; /* Un ancho más contenido cuando hay dos, ajusta si es necesario */
+  }
+}
+
+// Estilos específicos para el botón principal (btn-submit)
+.btn-submit {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  box-shadow: 0 4px 15px var(--shadow-light);
+
+  &:hover {
+    background-color: #4a2e4a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-medium);
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
 @media (max-width: 768px) {
   .appointment-form-container {
     padding: 25px; /* Menos padding en móviles */

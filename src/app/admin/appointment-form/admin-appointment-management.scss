@@ -1,0 +1,60 @@
+/* src/app/admin/appointment-management/admin-appointment-management.component.scss */
+
+// Estilos para el contenedor del formulario si los necesitas aquí
+.appointment-form-container {
+  // Puedes añadir estilos específicos para este contenedor si difieren del base
+  // Por ejemplo, un padding diferente o un margin-top/bottom
+  padding: 20px; // Ejemplo, ajusta según necesites
+  margin-top: 30px; // Ejemplo
+}
+
+// Estilos para los botones que se proyectan (como el de Cancelar)
+// Estos estilos se aplicarán al botón con la clase .btn-secondary
+.btn-secondary {
+  /* Asegúrate de que estos paddings, font-size y font-weight coincidan
+     con los estilos base que definiste en appointment-form.component.scss
+     para los botones dentro de .form-actions, para que tengan la misma altura. */
+  padding: 16px 25px; // Ajusta para que coincida con .form-actions button en el otro SCSS
+  border-radius: 8px;
+  font-size: 1.15em; // Ajusta para que coincida
+  font-weight: 700; // Ajusta para que coincida
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  flex-shrink: 0;
+  text-align: center;
+  box-sizing: border-box;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // Colores específicos para el botón de Cancelar
+  background-color: #dc3545; /* ¡ROJO! */
+  color: white; /* Letras blancas */
+  border: 1px solid #dc3545; /* Borde del mismo color */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Sombra más sutil */
+
+  &:hover {
+    background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
+    border-color: #bd2130;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* Media queries para responsividad en este componente */
+@media (max-width: 768px) {
+  .btn-secondary {
+    font-size: 1em; // Ajusta para móviles
+    padding: 14px 20px; // Ajusta para móviles
+    width: 100%; // Para que ocupe todo el ancho en móvil si está en una columna flex
+    max-width: none;
+  }
+}
