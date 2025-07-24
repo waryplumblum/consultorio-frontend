@@ -33,7 +33,6 @@ import { PhoneNumberFormatterDirective } from '../shared/phone-number-formatter'
   standalone: true,
 })
 export class AppointmentForm implements OnInit, OnChanges {
-
   @Input() formTitle: string = '';
   @Input() submitButtonText: string = 'Agendar Cita';
   @Input() isEditMode: boolean = false;
@@ -70,7 +69,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       reason: ['', Validators.required],
       preferredDate: ['', Validators.required],
       preferredTime: ['', Validators.required],
-      status: ['pending'], 
+      status: ['pending'],
     });
   }
 
@@ -141,10 +140,10 @@ export class AppointmentForm implements OnInit, OnChanges {
     this.errorMessage = '';
 
     if (this.appointmentForm.invalid) {
-      this.appointmentForm.markAllAsTouched(); 
+      this.appointmentForm.markAllAsTouched();
       this.errorMessage =
         'Por favor, completa todos los campos requeridos y corrige los errores.';
-      this.formSubmit.emit({ isValid: false, data: null }); 
+      this.formSubmit.emit({ isValid: false, data: null });
       return;
     }
 
@@ -163,7 +162,6 @@ export class AppointmentForm implements OnInit, OnChanges {
     delete formattedData.preferredDate;
     delete formattedData.preferredTime;
 
-
     if (!this.showStatusField) {
       delete formattedData.status;
     }
@@ -180,7 +178,7 @@ export class AppointmentForm implements OnInit, OnChanges {
     });
 
     if (!this.isEditMode) {
-      this.fetchBookedAppointments(); 
+      this.fetchBookedAppointments();
     }
 
     this.formReset.emit();
@@ -342,7 +340,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       event.keyCode === 46 ||
       event.keyCode === 37 ||
       event.keyCode === 39 ||
-      event.keyCode === 9; 
+      event.keyCode === 9;
 
     if (!isNumeric && !isControlKey) {
       event.preventDefault();
