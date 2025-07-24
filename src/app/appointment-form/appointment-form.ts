@@ -53,7 +53,13 @@ export class AppointmentForm implements OnInit, OnChanges {
   allPossibleTimes: string[] = [];
   bookedSlots: { [date: string]: string[] } = {};
   minDate: string;
-  statusOptions: string[] = ['pending', 'confirmed', 'cancelled', 'completed'];
+
+  statusOptionsTranslated: { value: string; label: string }[] = [
+    { value: 'pending', label: 'Pendiente' },
+    { value: 'confirmed', label: 'Confirmada' },
+    { value: 'cancelled', label: 'Cancelada' },
+    { value: 'completed', label: 'Completada' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -61,7 +67,11 @@ export class AppointmentForm implements OnInit, OnChanges {
   ) {
     const today = new Date();
     // Aseguramos que minDate sea la fecha local de hoy al inicio del día
-    const localToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const localToday = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
     this.minDate = localToday.toISOString().split('T')[0];
     console.log('Constructor - minDate (today - LOCAL):', this.minDate);
 
@@ -281,16 +291,27 @@ export class AppointmentForm implements OnInit, OnChanges {
           .forEach((app: Appointment) => {
             // Convertir la fecha/hora de UTC (del backend) a LOCAL para la lógica del frontend
             const appDateTime = new Date(app.preferredDateTime); // Esto crea un Date object en la zona horaria LOCAL del cliente
-            
-            const date = `${appDateTime.getFullYear()}-${String(appDateTime.getMonth() + 1).padStart(2, '0')}-${String(appDateTime.getDate()).padStart(2, '0')}`;
-            const time = `${String(appDateTime.getHours()).padStart(2, '0')}:${String(appDateTime.getMinutes()).padStart(2, '0')}`;
+
+            const date = `${appDateTime.getFullYear()}-${String(
+              appDateTime.getMonth() + 1
+            ).padStart(2, '0')}-${String(appDateTime.getDate()).padStart(
+              2,
+              '0'
+            )}`;
+            const time = `${String(appDateTime.getHours()).padStart(
+              2,
+              '0'
+            )}:${String(appDateTime.getMinutes()).padStart(2, '0')}`;
 
             if (!this.bookedSlots[date]) {
               this.bookedSlots[date] = [];
             }
             this.bookedSlots[date].push(time);
           });
-        console.log('Booked slots after processing (LOCAL dates/times):', this.bookedSlots);
+        console.log(
+          'Booked slots after processing (LOCAL dates/times):',
+          this.bookedSlots
+        );
 
         this.updateAvailableDates();
         this.onDateChange(
@@ -307,7 +328,9 @@ export class AppointmentForm implements OnInit, OnChanges {
       today.getMonth(),
       today.getDate()
     );
-    const todayString = `${todayStartOfDay.getFullYear()}-${String(todayStartOfDay.getMonth() + 1).padStart(2, '0')}-${String(todayStartOfDay.getDate()).padStart(2, '0')}`;
+    const todayString = `${todayStartOfDay.getFullYear()}-${String(
+      todayStartOfDay.getMonth() + 1
+    ).padStart(2, '0')}-${String(todayStartOfDay.getDate()).padStart(2, '0')}`;
 
     console.log(
       'updateAvailableDates - Current date (start of day - LOCAL):',
@@ -323,8 +346,9 @@ export class AppointmentForm implements OnInit, OnChanges {
       const futureDate = new Date(todayStartOfDay);
       futureDate.setDate(todayStartOfDay.getDate() + i);
       // Formatear la fecha futura para que coincida con el formato de `bookedSlots`
-      const dateString = `${futureDate.getFullYear()}-${String(futureDate.getMonth() + 1).padStart(2, '0')}-${String(futureDate.getDate()).padStart(2, '0')}`;
-
+      const dateString = `${futureDate.getFullYear()}-${String(
+        futureDate.getMonth() + 1
+      ).padStart(2, '0')}-${String(futureDate.getDate()).padStart(2, '0')}`;
 
       const bookedTimesForDate = this.bookedSlots[dateString] || [];
       const hasAvailableTime = this.allPossibleTimes.some((time) => {
@@ -356,7 +380,10 @@ export class AppointmentForm implements OnInit, OnChanges {
         this.availableDates.push(dateString);
       }
     }
-    console.log('updateAvailableDates - Available Dates (LOCAL):', this.availableDates);
+    console.log(
+      'updateAvailableDates - Available Dates (LOCAL):',
+      this.availableDates
+    );
   }
 
   onDateChange(selectedDate: string): void {
@@ -371,14 +398,20 @@ export class AppointmentForm implements OnInit, OnChanges {
     const now = new Date(); // La hora actual del cliente
 
     // Obtener la fecha de HOY sin la hora (inicio del día, LOCAL)
-    const todayStartOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
+    const todayStartOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
     // Crear objeto Date para la fecha seleccionada al inicio del día (LOCAL).
     const [selYear, selMonth, selDay] = selectedDate.split('-').map(Number);
     const selectedDateObject = new Date(selYear, selMonth - 1, selDay);
 
-
-    console.log('onDateChange - current time (now - LOCAL):', now.toLocaleTimeString());
+    console.log(
+      'onDateChange - current time (now - LOCAL):',
+      now.toLocaleTimeString()
+    );
     console.log(
       'onDateChange - todayStartOfDay (LOCAL):',
       todayStartOfDay.toLocaleString()
