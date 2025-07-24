@@ -60,8 +60,10 @@ export class AppointmentForm implements OnInit, OnChanges {
     private appointmentService: AppointmentService
   ) {
     const today = new Date();
-    this.minDate = today.toISOString().split('T')[0];
-    // console.log('Constructor - minDate (today):', this.minDate);
+    // Aseguramos que minDate sea la fecha local de hoy al inicio del día
+    const localToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    this.minDate = localToday.toISOString().split('T')[0];
+    console.log('Constructor - minDate (today - LOCAL):', this.minDate);
 
     this.appointmentForm = this.fb.group({
       patientName: ['', Validators.required],
@@ -82,7 +84,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       this.appointmentForm
         .get('preferredDate')
         ?.valueChanges.subscribe((date) => {
-          // console.log('preferredDate changed to:', date);
+          console.log('preferredDate changed to:', date);
           this.onDateChange(date);
           if (
             this.appointmentForm.get('preferredTime')?.value &&
@@ -90,7 +92,7 @@ export class AppointmentForm implements OnInit, OnChanges {
               this.appointmentForm.get('preferredTime')?.value
             )
           ) {
-            // console.log('Resetting preferredTime due to date change.');
+            console.log('Resetting preferredTime due to date change.');
             this.appointmentForm.get('preferredTime')?.setValue('');
           }
         });
@@ -113,7 +115,7 @@ export class AppointmentForm implements OnInit, OnChanges {
         patientEmail: data.patientEmail,
         reason: data.reason,
         preferredDate: data.preferredDateTime
-          ? new Date(data.preferredDateTime).toISOString().split('T')[0]
+          ? new Date(data.preferredDateTime).toISOString().split('T')[0] // Se mantiene ISO para inicialización desde data existente (viene de backend)
           : '',
         preferredTime: data.preferredDateTime
           ? new Date(data.preferredDateTime).toLocaleTimeString('es-MX', {
@@ -124,10 +126,10 @@ export class AppointmentForm implements OnInit, OnChanges {
           : '',
         status: data.status || 'pending',
       });
-      // console.log(
-      //   'ngOnChanges - initialData patched:',
-      //   this.appointmentForm.value
-      // );
+      console.log(
+        'ngOnChanges - initialData patched:',
+        this.appointmentForm.value
+      );
     }
 
     if (changes['showStatusField'] && this.appointmentForm) {
@@ -150,31 +152,37 @@ export class AppointmentForm implements OnInit, OnChanges {
       this.errorMessage =
         'Por favor, completa todos los campos requeridos y corrige los errores.';
       this.formSubmit.emit({ isValid: false, data: null });
-      // console.log('Form is invalid. Errors:', this.appointmentForm.errors);
+      console.log('Form is invalid. Errors:', this.appointmentForm.errors);
       return;
     }
 
     const rawData = this.appointmentForm.value;
 
-    const datePart = rawData.preferredDate;
-    const timePart = rawData.preferredTime;
-    const combinedDateTime = new Date(`${datePart}T${timePart}:00`);
+    const datePart = rawData.preferredDate; // Ej: "2025-07-24"
+    const timePart = rawData.preferredTime; // Ej: "18:00"
 
-    // console.log('onInternalSubmit - raw preferredDate:', datePart);
-    // console.log('onInternalSubmit - raw preferredTime:', timePart);
-    // console.log(
-    //   'onInternalSubmit - combinedDateTime (Local):',
-    //   combinedDateTime
-    // );
-    // console.log(
-    //   'onInternalSubmit - combinedDateTime (ISO):',
-    //   combinedDateTime.toISOString()
-    // );
+    // Crear una fecha/hora en la zona horaria LOCAL del usuario
+    const [year, month, day] = datePart.split('-').map(Number);
+    const [hour, minute] = timePart.split(':').map(Number);
+
+    // Los meses en Date son 0-indexados (0=Enero, 6=Julio)
+    const localDateTime = new Date(year, month - 1, day, hour, minute);
+
+    console.log('onInternalSubmit - raw preferredDate:', datePart);
+    console.log('onInternalSubmit - raw preferredTime:', timePart);
+    console.log(
+      'onInternalSubmit - localDateTime (LOCAL):',
+      localDateTime.toLocaleString() // Muestra la fecha/hora en formato local legible
+    );
+    console.log(
+      'onInternalSubmit - localDateTime (ISO, which is UTC):',
+      localDateTime.toISOString() // Esta es la que se enviará, es en UTC
+    );
 
     const formattedData = {
       ...rawData,
-      preferredDateTime: combinedDateTime.toISOString(),
-      scheduledDateTime: combinedDateTime.toISOString(),
+      preferredDateTime: localDateTime.toISOString(), // Envía en ISO (UTC) al backend
+      scheduledDateTime: localDateTime.toISOString(), // Envía en ISO (UTC) al backend
     };
 
     delete formattedData.preferredDate;
@@ -199,7 +207,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       this.fetchBookedAppointments();
     }
 
-    // console.log('Form has been reset.');
+    console.log('Form has been reset.');
     this.formReset.emit();
   }
 
@@ -249,7 +257,7 @@ export class AppointmentForm implements OnInit, OnChanges {
         break;
       }
     }
-    // console.log('Generated all possible times:', this.allPossibleTimes);
+    console.log('Generated all possible times:', this.allPossibleTimes);
   }
 
   private fetchBookedAppointments(): void {
@@ -266,25 +274,23 @@ export class AppointmentForm implements OnInit, OnChanges {
       )
       .subscribe((appointments: Appointment[]) => {
         this.bookedSlots = {};
-        // console.log('Fetched appointments:', appointments);
+        console.log('Fetched appointments (raw from backend):', appointments);
 
         appointments
           .filter((app: Appointment) => app.status !== 'cancelled')
           .forEach((app: Appointment) => {
-            const date = new Date(app.preferredDateTime)
-              .toISOString()
-              .split('T')[0];
-            const time = new Date(app.preferredDateTime).toLocaleTimeString(
-              'es-MX',
-              { hour: '2-digit', minute: '2-digit', hour12: false }
-            );
+            // Convertir la fecha/hora de UTC (del backend) a LOCAL para la lógica del frontend
+            const appDateTime = new Date(app.preferredDateTime); // Esto crea un Date object en la zona horaria LOCAL del cliente
+            
+            const date = `${appDateTime.getFullYear()}-${String(appDateTime.getMonth() + 1).padStart(2, '0')}-${String(appDateTime.getDate()).padStart(2, '0')}`;
+            const time = `${String(appDateTime.getHours()).padStart(2, '0')}:${String(appDateTime.getMinutes()).padStart(2, '0')}`;
 
             if (!this.bookedSlots[date]) {
               this.bookedSlots[date] = [];
             }
             this.bookedSlots[date].push(time);
           });
-        // console.log('Booked slots after processing:', this.bookedSlots);
+        console.log('Booked slots after processing (LOCAL dates/times):', this.bookedSlots);
 
         this.updateAvailableDates();
         this.onDateChange(
@@ -295,33 +301,36 @@ export class AppointmentForm implements OnInit, OnChanges {
 
   private updateAvailableDates(): void {
     const today = new Date();
+    // Obtener la fecha de HOY al inicio del día en la zona horaria local
     const todayStartOfDay = new Date(
       today.getFullYear(),
       today.getMonth(),
       today.getDate()
     );
-    const todayString = todayStartOfDay.toISOString().split('T')[0];
+    const todayString = `${todayStartOfDay.getFullYear()}-${String(todayStartOfDay.getMonth() + 1).padStart(2, '0')}-${String(todayStartOfDay.getDate()).padStart(2, '0')}`;
 
-    // console.log(
-    //   'updateAvailableDates - Current date (start of day):',
-    //   todayStartOfDay.toISOString()
-    // );
-    // console.log(
-    //   'updateAvailableDates - todayString for comparison:',
-    //   todayString
-    // );
+    console.log(
+      'updateAvailableDates - Current date (start of day - LOCAL):',
+      todayStartOfDay.toLocaleString()
+    );
+    console.log(
+      'updateAvailableDates - todayString for comparison (LOCAL):',
+      todayString
+    );
 
     this.availableDates = [];
     for (let i = 0; i < 60; i++) {
       const futureDate = new Date(todayStartOfDay);
       futureDate.setDate(todayStartOfDay.getDate() + i);
-      const dateString = futureDate.toISOString().split('T')[0];
+      // Formatear la fecha futura para que coincida con el formato de `bookedSlots`
+      const dateString = `${futureDate.getFullYear()}-${String(futureDate.getMonth() + 1).padStart(2, '0')}-${String(futureDate.getDate()).padStart(2, '0')}`;
+
 
       const bookedTimesForDate = this.bookedSlots[dateString] || [];
       const hasAvailableTime = this.allPossibleTimes.some((time) => {
         if (dateString === todayString) {
           const [hour, minute] = time.split(':').map(Number);
-          const currentTime = new Date();
+          const currentTime = new Date(); // Hora actual LOCAL
 
           const slotTime = new Date(
             currentTime.getFullYear(),
@@ -347,47 +356,46 @@ export class AppointmentForm implements OnInit, OnChanges {
         this.availableDates.push(dateString);
       }
     }
-    // console.log('updateAvailableDates - Available Dates:', this.availableDates);
+    console.log('updateAvailableDates - Available Dates (LOCAL):', this.availableDates);
   }
 
   onDateChange(selectedDate: string): void {
-    // console.log('onDateChange called with selectedDate:', selectedDate);
+    console.log('onDateChange called with selectedDate:', selectedDate);
     if (!selectedDate) {
       this.availableTimesForSelectedDate = [];
-      // console.log('onDateChange - No selected date, clearing times.');
+      console.log('onDateChange - No selected date, clearing times.');
       return;
     }
 
     const bookedTimesForSelectedDate = this.bookedSlots[selectedDate] || [];
     const now = new Date(); // La hora actual del cliente
 
-    // *** MODIFICACIÓN CLAVE AQUÍ ***
-    // Obtener la fecha de HOY sin la hora (inicio del día)
-    const todayStartOfDay = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    );
-    const selectedDateObject = new Date(selectedDate + 'T00:00:00'); // Crear objeto Date para la fecha seleccionada al inicio del día.
+    // Obtener la fecha de HOY sin la hora (inicio del día, LOCAL)
+    const todayStartOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    // Crear objeto Date para la fecha seleccionada al inicio del día (LOCAL).
+    const [selYear, selMonth, selDay] = selectedDate.split('-').map(Number);
+    const selectedDateObject = new Date(selYear, selMonth - 1, selDay);
 
-    // console.log('onDateChange - current time (now):', now.toLocaleTimeString());
-    // console.log(
-    //   'onDateChange - todayStartOfDay:',
-    //   todayStartOfDay.toISOString().split('T')[0]
-    // );
-    // console.log(
-    //   'onDateChange - selectedDateObject:',
-    //   selectedDateObject.toISOString().split('T')[0]
-    // );
-    // console.log(
-    //   'onDateChange - bookedTimesForSelectedDate:',
-    //   bookedTimesForSelectedDate
-    // );
+
+    console.log('onDateChange - current time (now - LOCAL):', now.toLocaleTimeString());
+    console.log(
+      'onDateChange - todayStartOfDay (LOCAL):',
+      todayStartOfDay.toLocaleString()
+    );
+    console.log(
+      'onDateChange - selectedDateObject (LOCAL):',
+      selectedDateObject.toLocaleString()
+    );
+    console.log(
+      'onDateChange - bookedTimesForSelectedDate:',
+      bookedTimesForSelectedDate
+    );
 
     this.availableTimesForSelectedDate = this.allPossibleTimes.filter(
       (time) => {
         // Comparamos si la fecha seleccionada es el MISMO DÍA que "hoy" (sin importar la hora)
-        // Usamos getTime() para comparar los milisegundos desde el epoch para fechas limpias
+        // Usamos getTime() para comparar los milisegundos desde el epoch para fechas limpias LOCALES
         if (selectedDateObject.getTime() === todayStartOfDay.getTime()) {
           const [hour, minute] = time.split(':').map(Number);
           const slotDateTime = new Date(
@@ -397,30 +405,30 @@ export class AppointmentForm implements OnInit, OnChanges {
             hour,
             minute
           );
-          // console.log(
-          //   `onDateChange - Checking slot ${time} for selected date (TODAY - ${selectedDate}): slotDateTime=${slotDateTime.toLocaleTimeString()}, now=${now.toLocaleTimeString()}, booked=${bookedTimesForSelectedDate.includes(
-          //     time
-          //   )}`
-          // );
+          console.log(
+            `onDateChange - Checking slot ${time} for selected date (TODAY - ${selectedDate}): slotDateTime=${slotDateTime.toLocaleTimeString()}, now=${now.toLocaleTimeString()}, booked=${bookedTimesForSelectedDate.includes(
+              time
+            )}`
+          );
           // Si es hoy, solo mostramos los slots futuros y no reservados
           return (
             slotDateTime > now && !bookedTimesForSelectedDate.includes(time)
           );
         } else {
           // Si es CUALQUIER OTRO DÍA (futuro), mostramos todos los slots no reservados
-          // console.log(
-          //   `onDateChange - Checking slot ${time} for future date (${selectedDate}): booked=${bookedTimesForSelectedDate.includes(
-          //     time
-          //   )}`
-          // );
+          console.log(
+            `onDateChange - Checking slot ${time} for future date (${selectedDate}): booked=${bookedTimesForSelectedDate.includes(
+              time
+            )}`
+          );
           return !bookedTimesForSelectedDate.includes(time);
         }
       }
     );
-    // console.log(
-    //   'onDateChange - Available times for selected date:',
-    //   this.availableTimesForSelectedDate
-    // );
+    console.log(
+      'onDateChange - Available times for selected date:',
+      this.availableTimesForSelectedDate
+    );
   }
 
   onPhoneKeyPress(event: KeyboardEvent): void {
