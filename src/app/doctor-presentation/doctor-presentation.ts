@@ -15,6 +15,7 @@ import { AppointmentForm } from '../appointment-form/appointment-form';
 import { AppointmentService } from '../services/appointment-service';
 import { Appointment } from '../models/appointment.model';
 import { NotificationService } from '../services/notification.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-doctor-presentation',
@@ -97,13 +98,17 @@ export class DoctorPresentation implements OnInit, AfterViewInit, OnDestroy {
   currentIndex: number = 0;
   private carouselInterval: any;
 
+  formattedExperience: SafeHtml = '';
+
   constructor(
     private appointmentService: AppointmentService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
     this.startCarouselAutoPlay();
+    this.formattedExperience = this.getFormattedExperience();
   }
 
   ngAfterViewInit(): void {
@@ -218,5 +223,11 @@ export class DoctorPresentation implements OnInit, AfterViewInit, OnDestroy {
         this.loadingAppointment = false;
       },
     });
+  }
+
+  private getFormattedExperience(): SafeHtml {
+    let htmlText = this.doctor.experience;
+    htmlText = htmlText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    return this.sanitizer.bypassSecurityTrustHtml(htmlText);
   }
 }
