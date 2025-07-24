@@ -92,6 +92,9 @@ export class AdminAppointmentManagementComponent implements OnInit {
           `Cita ${this.isEditMode ? 'actualizada' : 'creada'} exitosamente.`
         );
         this.loading = false;
+        setTimeout(() => {
+          this.router.navigate(['/admin/appointments']);
+        }, 1000);
       },
       error: (err) => {
         console.error(
