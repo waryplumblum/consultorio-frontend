@@ -5,7 +5,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   color: #333;
 
   h2 {
@@ -15,16 +15,28 @@
     font-size: 2em;
   }
 
-  .loading-message, .error-message, .no-appointments-found {
+  .loading-message,
+  .error-message,
+  .no-appointments-found {
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 5px;
     font-weight: bold;
     text-align: center;
   }
-  .loading-message { background-color: #e2f0fb; color: #007bff; }
-  .error-message { background-color: #f8d7da; color: #dc3545; border: 1px solid #dc3545; }
-  .no-appointments-found { background-color: #f0f2f5; color: #6c757d; }
+  .loading-message {
+    background-color: #e2f0fb;
+    color: #007bff;
+  }
+  .error-message {
+    background-color: #f8d7da;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+  }
+  .no-appointments-found {
+    background-color: #f0f2f5;
+    color: #6c757d;
+  }
 
   .filters-section {
     display: flex;
@@ -47,7 +59,9 @@
         font-weight: bold;
         color: #555;
       }
-      input[type="text"], input[type="date"], select {
+      input[type="text"],
+      input[type="date"],
+      select {
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
@@ -71,9 +85,27 @@
         font-size: 1em;
         transition: background-color 0.3s ease;
       }
-      .btn-primary { background-color: #007bff; color: white; &:hover { background-color: #0056b3; } }
-      .btn-secondary { background-color: #6c757d; color: white; &:hover { background-color: #5a6268; } }
-      .btn-success { background-color: #28a745; color: white; &:hover { background-color: #218838; } }
+      .btn-primary {
+        background-color: #007bff;
+        color: white;
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        &:hover {
+          background-color: #5a6268;
+        }
+      }
+      .btn-success {
+        background-color: #28a745;
+        color: white;
+        &:hover {
+          background-color: #218838;
+        }
+      }
     }
   }
 
@@ -84,7 +116,8 @@
       border-collapse: collapse;
       margin-bottom: 20px;
 
-      th, td {
+      th,
+      td {
         border: 1px solid #ddd;
         padding: 12px 15px;
         text-align: left;
@@ -96,8 +129,12 @@
         text-transform: uppercase;
         font-size: 0.9em;
       }
-      tr:nth-child(even) { background-color: #f8f9fa; } // Alternar colores de fila
-      tr:hover { background-color: #e2f0fb; } // Resaltar fila al pasar el mouse
+      tr:nth-child(even) {
+        background-color: #f8f9fa;
+      } // Alternar colores de fila
+      tr:hover {
+        background-color: #e2f0fb;
+      } // Resaltar fila al pasar el mouse
 
       .status-badge {
         display: inline-block;
@@ -107,10 +144,19 @@
         font-weight: bold;
         color: white;
       }
-      .status-pending { background-color: #ffc107; color: #343a40; }
-      .status-confirmed { background-color: #28a745; }
-      .status-cancelled { background-color: #dc3545; }
-      .status-completed { background-color: #6c757d; }
+      .status-pending {
+        background-color: #ffc107;
+        color: #343a40;
+      }
+      .status-confirmed {
+        background-color: #28a745;
+      }
+      .status-cancelled {
+        background-color: #dc3545;
+      }
+      .status-completed {
+        background-color: #6c757d;
+      }
 
       .actions-column {
         white-space: nowrap; // Evita que los botones se envuelvan
@@ -122,10 +168,24 @@
           font-size: 0.9em;
           margin-right: 5px;
           transition: background-color 0.2s ease;
-          i { margin-right: 5px; }
+          i {
+            margin-right: 5px;
+          }
         }
-        .btn-edit { background-color: #17a2b8; color: white; &:hover { background-color: #138496; } }
-        .btn-delete { background-color: #dc3545; color: white; &:hover { background-color: #c82333; } }
+        .btn-edit {
+          background-color: #17a2b8;
+          color: white;
+          &:hover {
+            background-color: #138496;
+          }
+        }
+        .btn-delete {
+          background-color: #dc3545;
+          color: white;
+          &:hover {
+            background-color: #c82333;
+          }
+        }
       }
     }
   }

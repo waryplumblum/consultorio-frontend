@@ -8,8 +8,8 @@ import { AdminNavComponent } from '../admin-nav/admin-nav';
   standalone: true,
   imports: [CommonModule, RouterModule, AdminNavComponent, RouterOutlet],
   templateUrl: './admin-layout.html',
-  styleUrl: './admin-layout.scss'
+  styleUrl: './admin-layout.scss',
 })
 export class AdminLayoutComponent {
-  constructor() { }
+  constructor() {}
 }

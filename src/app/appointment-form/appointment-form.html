@@ -1,10 +1,20 @@
 <div class="appointment-form-container">
-  <h2>{{ formTitle }}</h2> <form [formGroup]="appointmentForm" (ngSubmit)="onInternalSubmit()" class="appointment-form">
+  <h2>{{ formTitle }}</h2>
+  <form
+    [formGroup]="appointmentForm"
+    (ngSubmit)="onInternalSubmit()"
+    class="appointment-form"
+  >
     <div class="form-group">
       <label for="patientName">Nombre del Paciente:</label>
-      <input type="text" id="patientName" formControlName="patientName" placeholder="Tu nombre completo">
+      <input
+        type="text"
+        id="patientName"
+        formControlName="patientName"
+        placeholder="Tu nombre completo"
+      />
       <div *ngIf="getControlErrorMessage('patientName')" class="error-message">
-        {{ getControlErrorMessage('patientName') }}
+        {{ getControlErrorMessage("patientName") }}
       </div>
     </div>
 
@@ -20,70 +30,112 @@
         maxlength="10"
         (keypress)="onPhoneKeyPress($event)"
         appPhoneNumberFormatter
-      >
+      />
       <div *ngIf="getControlErrorMessage('patientPhone')" class="error-message">
-        {{ getControlErrorMessage('patientPhone') }}
+        {{ getControlErrorMessage("patientPhone") }}
       </div>
     </div>
 
     <div class="form-group">
       <label for="patientEmail">Email:</label>
-      <input type="email" id="patientEmail" formControlName="patientEmail" placeholder="tu.email@ejemplo.com">
+      <input
+        type="email"
+        id="patientEmail"
+        formControlName="patientEmail"
+        placeholder="tu.email@ejemplo.com"
+      />
       <div *ngIf="getControlErrorMessage('patientEmail')" class="error-message">
-        {{ getControlErrorMessage('patientEmail') }}
+        {{ getControlErrorMessage("patientEmail") }}
       </div>
     </div>
 
     <div class="form-group">
       <label for="reason">Motivo de la Cita:</label>
-      <textarea id="reason" formControlName="reason" rows="3" placeholder="Describe brevemente el motivo de tu consulta."></textarea>
+      <textarea
+        id="reason"
+        formControlName="reason"
+        rows="3"
+        placeholder="Describe brevemente el motivo de tu consulta."
+      ></textarea>
       <div *ngIf="getControlErrorMessage('reason')" class="error-message">
-        {{ getControlErrorMessage('reason') }}
+        {{ getControlErrorMessage("reason") }}
       </div>
     </div>
 
     <div class="form-group">
       <label for="preferredDate">Fecha Preferida:</label>
-      <input type="date" id="preferredDate" formControlName="preferredDate" [min]="minDate">
-      <div *ngIf="getControlErrorMessage('preferredDate')" class="error-message">
-        {{ getControlErrorMessage('preferredDate') }}
+      <input
+        type="date"
+        id="preferredDate"
+        formControlName="preferredDate"
+        [min]="minDate"
+      />
+      <div
+        *ngIf="getControlErrorMessage('preferredDate')"
+        class="error-message"
+      >
+        {{ getControlErrorMessage("preferredDate") }}
       </div>
     </div>
 
     <div class="form-group">
       <label for="preferredTime">Hora Preferida:</label>
       <ng-container *ngIf="isEditMode; else publicTimeSelect">
-        <input type="time" id="preferredTime" formControlName="preferredTime">
+        <input type="time" id="preferredTime" formControlName="preferredTime" />
       </ng-container>
       <ng-template #publicTimeSelect>
         <select id="preferredTime" formControlName="preferredTime">
           <option value="" disabled>Selecciona una hora</option>
-          <option *ngIf="!appointmentForm.get('preferredDate')?.value" value="" disabled>Selecciona una fecha primero</option>
-          <option *ngFor="let time of availableTimesForSelectedDate" [value]="time">{{ time }}</option>
-          <option *ngIf="availableTimesForSelectedDate.length === 0 && appointmentForm.get('preferredDate')?.value" value="" disabled>No hay horarios disponibles para esta fecha.</option>
+          <option
+            *ngIf="!appointmentForm.get('preferredDate')?.value"
+            value=""
+            disabled
+          >
+            Selecciona una fecha primero
+          </option>
+          <option
+            *ngFor="let time of availableTimesForSelectedDate"
+            [value]="time"
+          >
+            {{ time }}
+          </option>
+          <option
+            *ngIf="
+              availableTimesForSelectedDate.length === 0 &&
+              appointmentForm.get('preferredDate')?.value
+            "
+            value=""
+            disabled
+          >
+            No hay horarios disponibles para esta fecha.
+          </option>
         </select>
       </ng-template>
-      <div *ngIf="getControlErrorMessage('preferredTime')" class="error-message">
-        {{ getControlErrorMessage('preferredTime') }}
+      <div
+        *ngIf="getControlErrorMessage('preferredTime')"
+        class="error-message"
+      >
+        {{ getControlErrorMessage("preferredTime") }}
       </div>
     </div>
 
     <div class="form-group" *ngIf="showStatusField">
       <label for="status">Estado de la Cita:</label>
       <select id="status" formControlName="status">
-        <option *ngFor="let status of statusOptions" [value]="status">{{ status | titlecase }}</option>
+        <option *ngFor="let status of statusOptions" [value]="status">
+          {{ status | titlecase }}
+        </option>
       </select>
       <div *ngIf="getControlErrorMessage('status')" class="error-message">
-        {{ getControlErrorMessage('status') }}
+        {{ getControlErrorMessage("status") }}
       </div>
     </div>
 
     <div class="form-actions">
-      <button type="submit"  class="btn-submit" [disabled]="externalLoading">
-        {{ externalLoading ? 'Guardando...' : submitButtonText }}
+      <button type="submit" class="btn-submit" [disabled]="externalLoading">
+        {{ externalLoading ? "Guardando..." : submitButtonText }}
       </button>
       <ng-content select="[form-actions-extra]"></ng-content>
     </div>
-
-    </form>
+  </form>
 </div>

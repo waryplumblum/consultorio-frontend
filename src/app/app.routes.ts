@@ -23,13 +23,19 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'appointments', component: AppointmentsComponent },
       // Rutas para el formulario de citas:
-      { path: 'appointments/new', component: AdminAppointmentManagementComponent },
-      { path: 'appointments/edit/:id', component: AdminAppointmentManagementComponent },
+      {
+        path: 'appointments/new',
+        component: AdminAppointmentManagementComponent,
+      },
+      {
+        path: 'appointments/edit/:id',
+        component: AdminAppointmentManagementComponent,
+      },
       // { path: 'users', component: AdminUsersComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    ],
   },
   // Aquí puedes añadir una ruta para "No autorizado" si lo deseas
   // { path: 'unauthorized', component: UnauthorizedComponent }
-  { path: '**', redirectTo: '/doctor-info' }
+  { path: '**', redirectTo: '/doctor-info' },
 ];

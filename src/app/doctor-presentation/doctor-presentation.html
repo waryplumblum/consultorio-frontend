@@ -152,12 +152,6 @@
         (formSubmit)="onFormSubmittedByPatient($event)"
         [externalLoading]="loadingAppointment"
       ></app-appointment-form>
-      <div *ngIf="submitMessage" class="submit-success-message">
-        {{ submitMessage }}
-      </div>
-      <div *ngIf="errorMessage && !submitMessage" class="submit-error-message">
-        {{ errorMessage }}
-      </div>
     </div>
   </section>
 </div>

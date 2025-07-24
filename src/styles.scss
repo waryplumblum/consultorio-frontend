@@ -2,11 +2,11 @@
 
 /* Variables de color actualizadas */
 :root {
-  --primary-color: #5B385B; /* Un color principal más oscuro y elegante */
-  --secondary-color: #AF9B60; /* Un color secundario que complementa */
-  --accent-color: #D4A5A5; /* Un color de acento más suave */
+  --primary-color: #5b385b; /* Un color principal más oscuro y elegante */
+  --secondary-color: #af9b60; /* Un color secundario que complementa */
+  --accent-color: #d4a5a5; /* Un color de acento más suave */
   --text-color: #333;
-  --background-light: #FBF8F5; /* Fondo más cálido y suave */
+  --background-light: #fbf8f5; /* Fondo más cálido y suave */
   --white: #fff;
   --shadow-light: rgba(0, 0, 0, 0.08);
   --shadow-medium: rgba(0, 0, 0, 0.15);
@@ -14,4 +14,4 @@
 }
 
 // You can also put the font import here for global availability
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap");

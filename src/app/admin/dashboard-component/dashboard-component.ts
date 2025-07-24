@@ -24,10 +24,9 @@ interface UpcomingAppointment {
   imports: [CommonModule, HttpClientModule],
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.scss',
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class DashboardComponent implements OnInit {
-
   totalAppointments: number = 0;
   upcomingAppointments: UpcomingAppointment[] = [];
   loadingData: boolean = true;
@@ -37,8 +36,8 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private appointmentService: AppointmentService,
-    private datePipe: DatePipe,
-  ) { }
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -51,17 +50,18 @@ export class DashboardComponent implements OnInit {
     this.appointmentService.getAppointmentsSummary().subscribe({
       next: (data) => {
         this.totalAppointments = data.totalAppointments;
-        this.upcomingAppointments = data.upcomingAppointments.map(app => ({
+        this.upcomingAppointments = data.upcomingAppointments.map((app) => ({
           ...app,
-          scheduledDateTime: new Date(app.scheduledDateTime) // Convierte a objeto Date
+          scheduledDateTime: new Date(app.scheduledDateTime), // Convierte a objeto Date
         }));
         this.loadingData = false;
       },
       error: (err) => {
         console.error('Error al cargar datos del dashboard:', err);
-        this.errorMessage = 'No se pudieron cargar los datos del dashboard. Inténtalo de nuevo.';
+        this.errorMessage =
+          'No se pudieron cargar los datos del dashboard. Inténtalo de nuevo.';
         this.loadingData = false;
-      }
+      },
     });
   }
 
@@ -69,5 +69,4 @@ export class DashboardComponent implements OnInit {
     this.authService.logout(); // Llama al método de logout del servicio
     this.router.navigate(['/admin/login']); // Redirige al usuario a la página de login
   }
-
 }

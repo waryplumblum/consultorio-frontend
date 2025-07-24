@@ -6,7 +6,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   text-align: center;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   color: #333;
 
   h2 {
@@ -20,7 +20,8 @@
     margin-bottom: 30px;
   }
 
-  .loading-message, .error-message {
+  .loading-message,
+  .error-message {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
@@ -92,9 +93,19 @@
       span {
         font-weight: 500;
       }
-      .appointment-date { color: #6c757d; font-size: 0.9em; }
-      .appointment-time { color: #343a40; font-weight: bold; }
-      .appointment-client { color: #0056b3; font-weight: bold; flex-grow: 1; } // Crece para ocupar espacio
+      .appointment-date {
+        color: #6c757d;
+        font-size: 0.9em;
+      }
+      .appointment-time {
+        color: #343a40;
+        font-weight: bold;
+      }
+      .appointment-client {
+        color: #0056b3;
+        font-weight: bold;
+        flex-grow: 1;
+      } // Crece para ocupar espacio
       .appointment-status {
         padding: 5px 10px;
         border-radius: 15px;
@@ -102,10 +113,19 @@
         font-weight: bold;
         color: white;
       }
-      .status-pending { background-color: #ffc107; color: #343a40; } // Amarillo
-      .status-confirmed { background-color: #28a745; } // Verde
-      .status-cancelled { background-color: #dc3545; } // Rojo
-      .status-completed { background-color: #6c757d; } // Gris
+      .status-pending {
+        background-color: #ffc107;
+        color: #343a40;
+      } // Amarillo
+      .status-confirmed {
+        background-color: #28a745;
+      } // Verde
+      .status-cancelled {
+        background-color: #dc3545;
+      } // Rojo
+      .status-completed {
+        background-color: #6c757d;
+      } // Gris
     }
   }
 

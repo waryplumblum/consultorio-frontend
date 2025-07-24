@@ -1,9 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
+import {
+  DomSanitizer,
+  SafeHtml,
+  SafeResourceUrl,
+  SafeScript,
+  SafeStyle,
+  SafeUrl,
+} from '@angular/platform-browser';
 
 @Pipe({
   name: 'safeHtml',
-  standalone: true 
+  standalone: true,
 })
 export class SafeHtmlPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
@@ -14,14 +21,23 @@ export class SafeHtmlPipe implements PipeTransform {
    * @param type El tipo de valor seguro ('html', 'style', 'script', 'url', 'resourceUrl').
    * @returns El valor sanitizado como un tipo seguro de Angular.
    */
-  transform(value: string, type: string = 'html'): SafeHtml | SafeResourceUrl | SafeScript | SafeStyle | SafeUrl {
+  transform(
+    value: string,
+    type: string = 'html'
+  ): SafeHtml | SafeResourceUrl | SafeScript | SafeStyle | SafeUrl {
     switch (type) {
-      case 'html': return this.sanitizer.bypassSecurityTrustHtml(value);
-      case 'style': return this.sanitizer.bypassSecurityTrustStyle(value);
-      case 'script': return this.sanitizer.bypassSecurityTrustScript(value);
-      case 'url': return this.sanitizer.bypassSecurityTrustUrl(value);
-      case 'resourceUrl': return this.sanitizer.bypassSecurityTrustResourceUrl(value);
-      default: throw new Error(`Tipo de seguridad inválido especificado: ${type}`);
+      case 'html':
+        return this.sanitizer.bypassSecurityTrustHtml(value);
+      case 'style':
+        return this.sanitizer.bypassSecurityTrustStyle(value);
+      case 'script':
+        return this.sanitizer.bypassSecurityTrustScript(value);
+      case 'url':
+        return this.sanitizer.bypassSecurityTrustUrl(value);
+      case 'resourceUrl':
+        return this.sanitizer.bypassSecurityTrustResourceUrl(value);
+      default:
+        throw new Error(`Tipo de seguridad inválido especificado: ${type}`);
     }
   }
 }

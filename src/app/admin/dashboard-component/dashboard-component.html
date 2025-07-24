@@ -2,7 +2,9 @@
   <h2>Bienvenido al Panel de Administración</h2>
   <p>Desde aquí podrás gestionar las citas y usuarios.</p>
 
-  <div *ngIf="loadingData" class="loading-message">Cargando datos del dashboard...</div>
+  <div *ngIf="loadingData" class="loading-message">
+    Cargando datos del dashboard...
+  </div>
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
   <div class="summary-cards" *ngIf="!loadingData && !errorMessage">
@@ -10,21 +12,35 @@
       <h3>Total de Citas Creadas</h3>
       <p class="data-number">{{ totalAppointments }}</p>
     </div>
-    </div>
+  </div>
 
-  <div class="upcoming-appointments" *ngIf="!loadingData && !errorMessage && upcomingAppointments.length > 0">
+  <div
+    class="upcoming-appointments"
+    *ngIf="!loadingData && !errorMessage && upcomingAppointments.length > 0"
+  >
     <h3>Próximas Citas</h3>
     <ul>
       <li *ngFor="let appointment of upcomingAppointments">
-        <span class="appointment-date">{{ appointment.scheduledDateTime | date:'dd-MM-yyyy' }}</span> -
-        <span class="appointment-time">{{ appointment.scheduledDateTime | date:'HH:mm' }}</span> -
+        <span class="appointment-date">{{
+          appointment.scheduledDateTime | date : "dd-MM-yyyy"
+        }}</span>
+        -
+        <span class="appointment-time">{{
+          appointment.scheduledDateTime | date : "HH:mm"
+        }}</span>
+        -
         <span class="appointment-client">{{ appointment.patientName }}</span> -
-        <span class="appointment-status status-{{ appointment.status }}">{{ appointment.status }}</span>
+        <span class="appointment-status status-{{ appointment.status }}">{{
+          appointment.status
+        }}</span>
       </li>
     </ul>
   </div>
 
-  <div *ngIf="!loadingData && !errorMessage && upcomingAppointments.length === 0" class="no-appointments">
+  <div
+    *ngIf="!loadingData && !errorMessage && upcomingAppointments.length === 0"
+    class="no-appointments"
+  >
     <p>No hay próximas citas.</p>
   </div>
 

@@ -8,20 +8,17 @@ import { AuthService } from '../../services/auth-service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './admin-nav.html',
-  styleUrl: './admin-nav.scss'
+  styleUrl: './admin-nav.scss',
 })
 export class AdminNavComponent implements OnInit {
   isAdmin: boolean = false;
   isLoggedIn: boolean = false; // Para ocultar/mostrar si no está logeado
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     // Suscribirse al estado de login para saber cuándo mostrar el menú
-    this.authService.isLoggedIn().subscribe(status => {
+    this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
       if (status) {
         this.checkUserRole(); // Si está logeado, verificar el rol

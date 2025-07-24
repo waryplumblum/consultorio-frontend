@@ -18,7 +18,7 @@ import { catchError, throwError } from 'rxjs';
 import { AppointmentService } from '../services/appointment-service';
 import { Appointment } from '../models/appointment.model';
 
-import { PhoneNumberFormatterDirective } from '../shared/phone-number-formatter';
+import { PhoneNumberFormatterDirective } from '../shared/components/formatter/phone-number-formatter';
 
 @Component({
   selector: 'app-appointment-form',

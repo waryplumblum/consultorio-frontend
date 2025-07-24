@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Appointment } from '../../models/appointment.model';
 import { AppointmentService } from '../../services/appointment-service';
 import { AppointmentForm } from '../../appointment-form/appointment-form';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-admin-appointment-management',
@@ -14,18 +15,16 @@ import { AppointmentForm } from '../../appointment-form/appointment-form';
   imports: [CommonModule, AppointmentForm],
 })
 export class AdminAppointmentManagementComponent implements OnInit {
-
   isEditMode: boolean = false;
   appointmentId: string | null = null;
   loading: boolean = false;
-  submitMessage: string | null = null;
-  errorMessage: string | null = null;
   initialFormData: Appointment | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private appointmentsService: AppointmentService
+    private appointmentsService: AppointmentService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -47,19 +46,19 @@ export class AdminAppointmentManagementComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar la cita:', err);
-        this.errorMessage = 'No se pudo cargar la cita para edición.';
+        this.notificationService.showError(
+          'No se pudo cargar la cita para edición.'
+        );
         this.loading = false;
       },
     });
   }
 
   onFormSubmittedFromChild(event: { isValid: boolean; data: any }): void {
-    this.submitMessage = null;
-    this.errorMessage = null;
-
     if (!event.isValid) {
-      this.errorMessage =
-        'Por favor, completa todos los campos requeridos y corrige los errores.';
+      this.notificationService.showError(
+        'Por favor, completa todos los campos requeridos y corrige los errores.'
+      );
       return;
     }
 
@@ -89,16 +88,10 @@ export class AdminAppointmentManagementComponent implements OnInit {
           res
         );
 
-        this.submitMessage = `Cita ${
-          this.isEditMode ? 'actualizada' : 'creada'
-        } exitosamente.`;
-
+        this.notificationService.showSuccess(
+          `Cita ${this.isEditMode ? 'actualizada' : 'creada'} exitosamente.`
+        );
         this.loading = false;
-
-
-        setTimeout(() => {
-          this.router.navigate(['/admin/appointments']);
-        }, 2000);
       },
       error: (err) => {
         console.error(
@@ -107,18 +100,22 @@ export class AdminAppointmentManagementComponent implements OnInit {
           } la cita:`,
           err
         );
+
+        let errorMsg = `No se pudo ${
+          this.isEditMode ? 'actualizar' : 'crear'
+        } la cita. Por favor, inténtalo de nuevo.`;
+
         if (err.error && err.error.message) {
           if (Array.isArray(err.error.message)) {
-            this.errorMessage = err.error.message.join(', ');
+            errorMsg = err.error.message.join(', ');
           } else {
-            this.errorMessage = err.error.message;
+            errorMsg = err.error.message;
           }
-        } else {
-          this.errorMessage = `No se pudo ${
-            this.isEditMode ? 'actualizar' : 'crear'
-          } la cita. Por favor, inténtalo de nuevo.`;
         }
-        this.loading = false; // Desactiva el loading
+
+        this.notificationService.showError(errorMsg);
+
+        this.loading = false;
       },
     });
   }

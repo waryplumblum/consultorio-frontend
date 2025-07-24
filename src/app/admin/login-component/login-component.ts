@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'; // Para la navegación después del login
 import { HttpClientModule } from '@angular/common/http'; // Asegúrate de importarlo aquí si es standalone
@@ -21,12 +26,12 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -48,11 +53,13 @@ export class LoginComponent implements OnInit {
           this.loading = false;
           console.error('Error en el login:', err);
           if (err.status === 401) {
-            this.errorMessage = 'Credenciales inválidas. Por favor, verifica tu email y contraseña.';
+            this.errorMessage =
+              'Credenciales inválidas. Por favor, verifica tu email y contraseña.';
           } else {
-            this.errorMessage = 'Ocurrió un error inesperado. Inténtalo de nuevo más tarde.';
+            this.errorMessage =
+              'Ocurrió un error inesperado. Inténtalo de nuevo más tarde.';
           }
-        }
+        },
       });
     } else {
       this.loading = false;
