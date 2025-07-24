@@ -33,31 +33,28 @@ import { PhoneNumberFormatterDirective } from '../shared/phone-number-formatter'
   standalone: true,
 })
 export class AppointmentForm implements OnInit, OnChanges {
-  // --- NUEVAS PROPIEDADES DE ENTRADA (@Input) ---
-  @Input() formTitle: string = ''; // Título predeterminado para el formulario público
-  @Input() submitButtonText: string = 'Agendar Cita'; // Texto predeterminado del botón
-  @Input() isEditMode: boolean = false; // Indica si el formulario está en modo edición (para administradores)
-  @Input() showStatusField: boolean = false; // Controla la visibilidad del campo 'status'
-  @Input() initialData: Appointment | null = null; // Datos para precargar el formulario en modo edición
-  @Input() externalLoading: boolean = false; // Para controlar el estado 'cargando' desde el padre
 
-  // --- NUEVAS PROPIEDADES DE SALIDA (@Output) ---
-  @Output() formReset = new EventEmitter<void>(); // Emite un evento sin datos cuando el formulario debe ser reseteado
-  @Output() formSubmit = new EventEmitter<{ isValid: boolean; data: any }>(); // Emite los datos del formulario
+  @Input() formTitle: string = '';
+  @Input() submitButtonText: string = 'Agendar Cita';
+  @Input() isEditMode: boolean = false;
+  @Input() showStatusField: boolean = false;
+  @Input() initialData: Appointment | null = null;
+  @Input() externalLoading: boolean = false;
 
-  // Propiedades existentes
-  appointmentForm!: FormGroup; // Se inicializa en constructor/ngOnInit
+  @Output() formReset = new EventEmitter<void>();
+  @Output() formSubmit = new EventEmitter<{ isValid: boolean; data: any }>();
+
+  appointmentForm!: FormGroup;
   submissionSuccess = false;
   submissionError = false;
   errorMessage: string = '';
 
-  // Propiedades para la lógica de disponibilidad (específicas del formulario público)
   availableDates: string[] = [];
   availableTimesForSelectedDate: string[] = [];
   allPossibleTimes: string[] = [];
   bookedSlots: { [date: string]: string[] } = {};
   minDate: string;
-  statusOptions: string[] = ['pending', 'confirmed', 'cancelled', 'completed']; // Opciones de estado
+  statusOptions: string[] = ['pending', 'confirmed', 'cancelled', 'completed'];
 
   constructor(
     private fb: FormBuilder,
@@ -66,20 +63,18 @@ export class AppointmentForm implements OnInit, OnChanges {
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
 
-    // Inicializa el formulario aquí, pero los valores iniciales se sobreescribirán en ngOnChanges
     this.appointmentForm = this.fb.group({
       patientName: ['', Validators.required],
       patientPhone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       patientEmail: ['', [Validators.required, Validators.email]],
       reason: ['', Validators.required],
-      preferredDate: ['', Validators.required], // Usaremos preferredDate y preferredTime
+      preferredDate: ['', Validators.required],
       preferredTime: ['', Validators.required],
-      status: ['pending'], // El validador se aplicará condicionalmente en ngOnInit/ngOnChanges
+      status: ['pending'], 
     });
   }
 
   ngOnInit(): void {
-    // La lógica de disponibilidad solo se ejecuta si NO estamos en modo edición (formulario público)
     if (!this.isEditMode) {
       this.generateAllPossibleTimes();
       this.fetchBookedAppointments();
@@ -100,26 +95,22 @@ export class AppointmentForm implements OnInit, OnChanges {
         });
     }
 
-    // Aplicar validador de 'status' condicionalmente
     if (this.showStatusField) {
       this.appointmentForm.get('status')?.setValidators(Validators.required);
     } else {
       this.appointmentForm.get('status')?.clearValidators();
     }
-    this.appointmentForm.get('status')?.updateValueAndValidity(); // Asegura que los validadores se apliquen
+    this.appointmentForm.get('status')?.updateValueAndValidity();
   }
 
-  // ngOnChanges se ejecuta cada vez que una propiedad de entrada (@Input) cambia
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['initialData'] && this.initialData && this.appointmentForm) {
-      // Si hay datos iniciales, los aplicamos al formulario
       const data = this.initialData;
       this.appointmentForm.patchValue({
         patientName: data.patientName,
         patientPhone: data.patientPhone,
         patientEmail: data.patientEmail,
         reason: data.reason,
-        // Al cargar, dividimos el ISO string en fecha y hora para los inputs
         preferredDate: data.preferredDateTime
           ? new Date(data.preferredDateTime).toISOString().split('T')[0]
           : '',
@@ -134,7 +125,6 @@ export class AppointmentForm implements OnInit, OnChanges {
       });
     }
 
-    // Actualizar validación de 'status' si showStatusField cambia en tiempo de ejecución
     if (changes['showStatusField'] && this.appointmentForm) {
       if (changes['showStatusField'].currentValue) {
         this.appointmentForm.get('status')?.setValidators(Validators.required);
@@ -145,23 +135,21 @@ export class AppointmentForm implements OnInit, OnChanges {
     }
   }
 
-  // Método para el submit interno del formulario, que luego emite al padre
   onInternalSubmit(): void {
     this.submissionSuccess = false;
     this.submissionError = false;
     this.errorMessage = '';
 
     if (this.appointmentForm.invalid) {
-      this.appointmentForm.markAllAsTouched(); // Marca todos para mostrar errores
+      this.appointmentForm.markAllAsTouched(); 
       this.errorMessage =
         'Por favor, completa todos los campos requeridos y corrige los errores.';
-      this.formSubmit.emit({ isValid: false, data: null }); // Notifica al padre que es inválido
+      this.formSubmit.emit({ isValid: false, data: null }); 
       return;
     }
 
     const rawData = this.appointmentForm.value;
 
-    // Combinar fecha y hora en un solo campo preferredDateTime/scheduledDateTime
     const datePart = rawData.preferredDate;
     const timePart = rawData.preferredTime;
     const combinedDateTime = new Date(`${datePart}T${timePart}:00`);
@@ -169,41 +157,35 @@ export class AppointmentForm implements OnInit, OnChanges {
     const formattedData = {
       ...rawData,
       preferredDateTime: combinedDateTime.toISOString(),
-      scheduledDateTime: combinedDateTime.toISOString(), // Asumimos que son la misma
+      scheduledDateTime: combinedDateTime.toISOString(),
     };
 
     delete formattedData.preferredDate;
     delete formattedData.preferredTime;
 
-    // Si no estamos en modo edición (es decir, es el formulario público),
-    // omitimos el campo status al enviar
+
     if (!this.showStatusField) {
       delete formattedData.status;
     }
 
-    this.formSubmit.emit({ isValid: true, data: formattedData }); // Emite los datos válidos
+    this.formSubmit.emit({ isValid: true, data: formattedData });
   }
 
-    resetForm(): void {
+  resetForm(): void {
     this.appointmentForm.reset();
-    // Opcional: Establecer valores por defecto si los hay, como el estado inicial
     this.appointmentForm.get('status')?.setValue('pending');
 
-    // Limpia los errores de validación
-    Object.keys(this.appointmentForm.controls).forEach(key => {
+    Object.keys(this.appointmentForm.controls).forEach((key) => {
       this.appointmentForm.get(key)?.setErrors(null);
     });
 
-    // Vuelve a cargar las citas disponibles si la lógica de disponibilidad está activa
     if (!this.isEditMode) {
-      this.fetchBookedAppointments(); // Vuelve a cargar los slots ocupados
+      this.fetchBookedAppointments(); 
     }
 
-    // Emitir el evento para que el padre sepa que el formulario fue reseteado si lo necesita
     this.formReset.emit();
   }
 
-  // Método para obtener el mensaje de error de un campo específico
   getControlErrorMessage(controlName: string): string | null {
     const control = this.appointmentForm.get(controlName);
     if (control?.touched && control?.invalid) {
@@ -220,7 +202,6 @@ export class AppointmentForm implements OnInit, OnChanges {
     return null;
   }
 
-  // Lógica de disponibilidad de citas (solo para el formulario público)
   private generateAllPossibleTimes(): void {
     this.allPossibleTimes = [];
     const startHour = 16;
@@ -350,7 +331,6 @@ export class AppointmentForm implements OnInit, OnChanges {
     );
   }
 
-  // Método para el keypress del teléfono (reutilizado)
   onPhoneKeyPress(event: KeyboardEvent): void {
     const inputChar = String.fromCharCode(event.charCode);
     const phoneNumberControl = this.appointmentForm.get('patientPhone');
@@ -362,7 +342,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       event.keyCode === 46 ||
       event.keyCode === 37 ||
       event.keyCode === 39 ||
-      event.keyCode === 9; // backspace, delete, left arrow, right arrow, tab
+      event.keyCode === 9; 
 
     if (!isNumeric && !isControlKey) {
       event.preventDefault();
