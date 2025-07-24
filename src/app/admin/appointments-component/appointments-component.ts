@@ -66,11 +66,45 @@ export class AppointmentsComponent implements OnInit {
       queryParams.status = this.filterStatus;
     }
     if (this.filterDateFrom) {
-      queryParams.dateFrom = new Date(this.filterDateFrom).toISOString();
+      const dateFromParts = this.filterDateFrom.split('-').map(Number);
+      const localDateFrom = new Date(
+        dateFromParts[0], // Año
+        dateFromParts[1] - 1, // Mes (restar 1)
+        dateFromParts[2], // Día
+        0,
+        0,
+        0,
+        0 // Medianoche del día seleccionado
+      );
+      queryParams.dateFrom = localDateFrom.toISOString();
+      // console.log('Filter Date From (LOCAL):', localDateFrom.toLocaleString());
+      // console.log(
+      //   'Filter Date From (ISO/UTC sent to backend):',
+      //   queryParams.dateFrom
+      // );
     }
     if (this.filterDateTo) {
-      queryParams.dateTo = new Date(this.filterDateTo).toISOString();
+      const dateToParts = this.filterDateTo.split('-').map(Number);
+      // Crea una fecha en la zona horaria local, al final del día seleccionado
+      // Los meses en JS son 0-indexados
+      const localDateTo = new Date(
+        dateToParts[0], // Año
+        dateToParts[1] - 1, // Mes (restar 1)
+        dateToParts[2], // Día
+        23,
+        59,
+        59,
+        999 // Último milisegundo del día seleccionado
+      );
+      queryParams.dateTo = localDateTo.toISOString();
+      // console.log('Filter Date To (LOCAL):', localDateTo.toLocaleString());
+      // console.log(
+      //   'Filter Date To (ISO/UTC sent to backend):',
+      //   queryParams.dateTo
+      // );
     }
+
+    // console.log('Final Query Parameters sent to backend:', queryParams);
 
     this.appointmentsService.getAllAppointments(queryParams).subscribe({
       next: (response: AppointmentsResponse) => {
@@ -81,6 +115,9 @@ export class AppointmentsComponent implements OnInit {
         }));
         this.totalAppointments = response.total;
         this.loading = false;
+
+        // console.log('Appointments received from backend:', this.appointments);
+        // console.log('Total Appointments received:', this.totalAppointments);
       },
       error: (err) => {
         console.error('Error al cargar citas:', err);
