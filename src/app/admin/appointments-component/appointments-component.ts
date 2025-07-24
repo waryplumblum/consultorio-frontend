@@ -31,6 +31,14 @@ export class AppointmentsComponent implements OnInit {
 
   statusOptions: string[] = ['pending', 'confirmed', 'cancelled', 'completed'];
 
+  statusTranslations: { [key: string]: string } = {
+    pending: 'Pendiente',
+    confirmed: 'Confirmada',
+    cancelled: 'Cancelada',
+    completed: 'Completada',
+    // Añade cualquier otro estado que manejes
+  };
+
   constructor(
     private appointmentsService: AppointmentService,
     private router: Router
@@ -130,5 +138,9 @@ export class AppointmentsComponent implements OnInit {
         },
       });
     }
+  }
+
+  getTranslatedStatus(status: string): string {
+    return this.statusTranslations[status] || status;
   }
 }
