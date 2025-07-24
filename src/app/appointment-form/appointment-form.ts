@@ -33,7 +33,6 @@ import { PhoneNumberFormatterDirective } from '../shared/phone-number-formatter'
   standalone: true,
 })
 export class AppointmentForm implements OnInit, OnChanges {
-
   // --- NUEVAS PROPIEDADES DE ENTRADA (@Input) ---
   @Input() formTitle: string = ''; // Título predeterminado para el formulario público
   @Input() submitButtonText: string = 'Agendar Cita'; // Texto predeterminado del botón
@@ -43,7 +42,8 @@ export class AppointmentForm implements OnInit, OnChanges {
   @Input() externalLoading: boolean = false; // Para controlar el estado 'cargando' desde el padre
 
   // --- NUEVAS PROPIEDADES DE SALIDA (@Output) ---
-  @Output() formSubmit = new EventEmitter<{ isValid: boolean, data: any }>(); // Emite los datos del formulario
+  @Output() formReset = new EventEmitter<void>(); // Emite un evento sin datos cuando el formulario debe ser reseteado
+  @Output() formSubmit = new EventEmitter<{ isValid: boolean; data: any }>(); // Emite los datos del formulario
 
   // Propiedades existentes
   appointmentForm!: FormGroup; // Se inicializa en constructor/ngOnInit
@@ -59,8 +59,10 @@ export class AppointmentForm implements OnInit, OnChanges {
   minDate: string;
   statusOptions: string[] = ['pending', 'confirmed', 'cancelled', 'completed']; // Opciones de estado
 
-
-  constructor(private fb: FormBuilder, private appointmentService: AppointmentService) {
+  constructor(
+    private fb: FormBuilder,
+    private appointmentService: AppointmentService
+  ) {
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
 
@@ -72,7 +74,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       reason: ['', Validators.required],
       preferredDate: ['', Validators.required], // Usaremos preferredDate y preferredTime
       preferredTime: ['', Validators.required],
-      status: ['pending'] // El validador se aplicará condicionalmente en ngOnInit/ngOnChanges
+      status: ['pending'], // El validador se aplicará condicionalmente en ngOnInit/ngOnChanges
     });
   }
 
@@ -82,13 +84,20 @@ export class AppointmentForm implements OnInit, OnChanges {
       this.generateAllPossibleTimes();
       this.fetchBookedAppointments();
 
-      this.appointmentForm.get('preferredDate')?.valueChanges.subscribe(date => {
-        this.onDateChange(date);
-        // Resetear la hora si la fecha cambia y la hora seleccionada ya no es válida
-        if (this.appointmentForm.get('preferredTime')?.value && !this.availableTimesForSelectedDate.includes(this.appointmentForm.get('preferredTime')?.value)) {
+      this.appointmentForm
+        .get('preferredDate')
+        ?.valueChanges.subscribe((date) => {
+          this.onDateChange(date);
+          // Resetear la hora si la fecha cambia y la hora seleccionada ya no es válida
+          if (
+            this.appointmentForm.get('preferredTime')?.value &&
+            !this.availableTimesForSelectedDate.includes(
+              this.appointmentForm.get('preferredTime')?.value
+            )
+          ) {
             this.appointmentForm.get('preferredTime')?.setValue('');
-        }
-      });
+          }
+        });
     }
 
     // Aplicar validador de 'status' condicionalmente
@@ -111,9 +120,17 @@ export class AppointmentForm implements OnInit, OnChanges {
         patientEmail: data.patientEmail,
         reason: data.reason,
         // Al cargar, dividimos el ISO string en fecha y hora para los inputs
-        preferredDate: data.preferredDateTime ? new Date(data.preferredDateTime).toISOString().split('T')[0] : '',
-        preferredTime: data.preferredDateTime ? new Date(data.preferredDateTime).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false }) : '',
-        status: data.status || 'pending'
+        preferredDate: data.preferredDateTime
+          ? new Date(data.preferredDateTime).toISOString().split('T')[0]
+          : '',
+        preferredTime: data.preferredDateTime
+          ? new Date(data.preferredDateTime).toLocaleTimeString('es-MX', {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            })
+          : '',
+        status: data.status || 'pending',
       });
     }
 
@@ -136,7 +153,8 @@ export class AppointmentForm implements OnInit, OnChanges {
 
     if (this.appointmentForm.invalid) {
       this.appointmentForm.markAllAsTouched(); // Marca todos para mostrar errores
-      this.errorMessage = 'Por favor, completa todos los campos requeridos y corrige los errores.';
+      this.errorMessage =
+        'Por favor, completa todos los campos requeridos y corrige los errores.';
       this.formSubmit.emit({ isValid: false, data: null }); // Notifica al padre que es inválido
       return;
     }
@@ -151,7 +169,7 @@ export class AppointmentForm implements OnInit, OnChanges {
     const formattedData = {
       ...rawData,
       preferredDateTime: combinedDateTime.toISOString(),
-      scheduledDateTime: combinedDateTime.toISOString() // Asumimos que son la misma
+      scheduledDateTime: combinedDateTime.toISOString(), // Asumimos que son la misma
     };
 
     delete formattedData.preferredDate;
@@ -164,6 +182,25 @@ export class AppointmentForm implements OnInit, OnChanges {
     }
 
     this.formSubmit.emit({ isValid: true, data: formattedData }); // Emite los datos válidos
+  }
+
+    resetForm(): void {
+    this.appointmentForm.reset();
+    // Opcional: Establecer valores por defecto si los hay, como el estado inicial
+    this.appointmentForm.get('status')?.setValue('pending');
+
+    // Limpia los errores de validación
+    Object.keys(this.appointmentForm.controls).forEach(key => {
+      this.appointmentForm.get(key)?.setErrors(null);
+    });
+
+    // Vuelve a cargar las citas disponibles si la lógica de disponibilidad está activa
+    if (!this.isEditMode) {
+      this.fetchBookedAppointments(); // Vuelve a cargar los slots ocupados
+    }
+
+    // Emitir el evento para que el padre sepa que el formulario fue reseteado si lo necesita
+    this.formReset.emit();
   }
 
   // Método para obtener el mensaje de error de un campo específico
@@ -195,7 +232,9 @@ export class AppointmentForm implements OnInit, OnChanges {
     let currentMinute = startMinute;
 
     while (true) {
-      const time = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
+      const time = `${String(currentHour).padStart(2, '0')}:${String(
+        currentMinute
+      ).padStart(2, '0')}`;
       this.allPossibleTimes.push(time);
 
       currentMinute += 30;
@@ -205,18 +244,23 @@ export class AppointmentForm implements OnInit, OnChanges {
         currentHour++;
       }
 
-      if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
+      if (
+        currentHour > endHour ||
+        (currentHour === endHour && currentMinute > endMinute)
+      ) {
         break;
       }
     }
   }
 
   private fetchBookedAppointments(): void {
-    this.appointmentService.getFutureAppointmentsPublic()
+    this.appointmentService
+      .getFutureAppointmentsPublic()
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           console.error('Error al cargar las citas existentes:', error);
-          this.errorMessage = 'No se pudieron cargar los horarios disponibles. Por favor, intente de nuevo más tarde.';
+          this.errorMessage =
+            'No se pudieron cargar los horarios disponibles. Por favor, intente de nuevo más tarde.';
           this.submissionError = true;
           return throwError(() => new Error(this.errorMessage));
         })
@@ -224,18 +268,27 @@ export class AppointmentForm implements OnInit, OnChanges {
       .subscribe((appointments: Appointment[]) => {
         this.bookedSlots = {};
 
-        appointments.filter((app: Appointment) => app.status !== 'cancelled').forEach((app: Appointment) => {
-          const date = new Date(app.preferredDateTime).toISOString().split('T')[0];
-          const time = new Date(app.preferredDateTime).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
+        appointments
+          .filter((app: Appointment) => app.status !== 'cancelled')
+          .forEach((app: Appointment) => {
+            const date = new Date(app.preferredDateTime)
+              .toISOString()
+              .split('T')[0];
+            const time = new Date(app.preferredDateTime).toLocaleTimeString(
+              'es-MX',
+              { hour: '2-digit', minute: '2-digit', hour12: false }
+            );
 
-          if (!this.bookedSlots[date]) {
-            this.bookedSlots[date] = [];
-          }
-          this.bookedSlots[date].push(time);
-        });
+            if (!this.bookedSlots[date]) {
+              this.bookedSlots[date] = [];
+            }
+            this.bookedSlots[date].push(time);
+          });
 
         this.updateAvailableDates();
-        this.onDateChange(this.appointmentForm.get('preferredDate')?.value || this.minDate);
+        this.onDateChange(
+          this.appointmentForm.get('preferredDate')?.value || this.minDate
+        );
       });
   }
 
@@ -250,7 +303,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       const dateString = futureDate.toISOString().split('T')[0];
 
       const bookedTimesForDate = this.bookedSlots[dateString] || [];
-      const hasAvailableTime = this.allPossibleTimes.some(time => {
+      const hasAvailableTime = this.allPossibleTimes.some((time) => {
         if (dateString === this.minDate) {
           const [hour, minute] = time.split(':').map(Number);
           const currentTime = new Date();
@@ -277,14 +330,24 @@ export class AppointmentForm implements OnInit, OnChanges {
     const now = new Date();
     const todayString = now.toISOString().split('T')[0];
 
-    this.availableTimesForSelectedDate = this.allPossibleTimes.filter(time => {
-      if (selectedDate === todayString) {
-        const [hour, minute] = time.split(':').map(Number);
-        const slotDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
-        return slotDateTime > now && !bookedTimesForSelectedDate.includes(time);
+    this.availableTimesForSelectedDate = this.allPossibleTimes.filter(
+      (time) => {
+        if (selectedDate === todayString) {
+          const [hour, minute] = time.split(':').map(Number);
+          const slotDateTime = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hour,
+            minute
+          );
+          return (
+            slotDateTime > now && !bookedTimesForSelectedDate.includes(time)
+          );
+        }
+        return !bookedTimesForSelectedDate.includes(time);
       }
-      return !bookedTimesForSelectedDate.includes(time);
-    });
+    );
   }
 
   // Método para el keypress del teléfono (reutilizado)
@@ -294,9 +357,12 @@ export class AppointmentForm implements OnInit, OnChanges {
     const currentValue = phoneNumberControl?.value || '';
 
     const isNumeric = /^[0-9]$/.test(inputChar);
-    const isControlKey = event.keyCode === 8 || event.keyCode === 46 ||
-                         event.keyCode === 37 || event.keyCode === 39 ||
-                         event.keyCode === 9; // backspace, delete, left arrow, right arrow, tab
+    const isControlKey =
+      event.keyCode === 8 ||
+      event.keyCode === 46 ||
+      event.keyCode === 37 ||
+      event.keyCode === 39 ||
+      event.keyCode === 9; // backspace, delete, left arrow, right arrow, tab
 
     if (!isNumeric && !isControlKey) {
       event.preventDefault();

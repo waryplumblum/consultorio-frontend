@@ -2,11 +2,19 @@
   <header class="hero-section">
     <div class="hero-content">
       <h1 class="fade-in slide-in-left">{{ doctor.name }}</h1>
-      <p class="specialties fade-in slide-in-left delay-1">{{ doctor.specialties.join(' | ') }}</p>
-      <a (click)="scrollToAppointmentForm()" class="btn-primary fade-in delay-2">Agendar Cita</a>
+      <p class="specialties fade-in slide-in-left delay-1">
+        {{ doctor.specialties.join(" | ") }}
+      </p>
+      <a (click)="scrollToAppointmentForm()" class="btn-primary fade-in delay-2"
+        >Agendar Cita</a
+      >
     </div>
     <div class="doctor-image-container fade-in slide-in-right delay-3">
-      <img [src]="doctor.profilePicture" alt="Foto del Dr. {{ doctor.name }}" class="doctor-profile-picture">
+      <img
+        [src]="doctor.profilePicture"
+        alt="Foto del Dr. {{ doctor.name }}"
+        class="doctor-profile-picture"
+      />
     </div>
   </header>
 
@@ -19,13 +27,23 @@
 
   <section class="image-carousel-section">
     <div class="carousel-container animate-on-scroll fade-in">
-      <div class="carousel-track" [style.transform]="'translateX(' + (-currentIndex * 100) + '%)'">
-        <img *ngFor="let image of carouselImages; let i = index" [src]="image" alt="Imagen {{ i + 1 }}"
-          class="carousel-image">
+      <div
+        class="carousel-track"
+        [style.transform]="'translateX(' + -currentIndex * 100 + '%)'"
+      >
+        <img
+          *ngFor="let image of carouselImages; let i = index"
+          [src]="image"
+          alt="Imagen {{ i + 1 }}"
+          class="carousel-image"
+        />
       </div>
       <div class="carousel-dots">
-        <span *ngFor="let image of carouselImages; let i = index" [class.active]="i === currentIndex"
-          (click)="goToSlide(i)">
+        <span
+          *ngFor="let image of carouselImages; let i = index"
+          [class.active]="i === currentIndex"
+          (click)="goToSlide(i)"
+        >
         </span>
       </div>
     </div>
@@ -35,25 +53,51 @@
     <div class="section-content">
       <h2 class="animate-on-scroll fade-in">Mis Servicios</h2>
       <div class="services-slider-container animate-on-scroll fade-in delay-1">
-        <button class="slider-arrow left-arrow" (click)="scrollServices('left')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-            <path fill-rule="evenodd"
+        <button
+          class="slider-arrow left-arrow"
+          (click)="scrollServices('left')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              fill-rule="evenodd"
               d="M11.72 3.53a.75.75 0 0 1 0 1.06L7.56 9.75h10.94a.75.75 0 0 1 0 1.5H7.56l4.16 5.16a.75.75 0 0 1-1.06 1.06l-5.5-6.75a.75.75 0 0 1 0-1.06l5.5-6.75a.75.75 0 0 1 1.06 0Z"
-              clip-rule="evenodd" />
+              clip-rule="evenodd"
+            />
           </svg>
         </button>
         <div class="services-slider" #servicesSlider>
-          <div *ngFor="let service of doctor.services" class="service-card animate-on-scroll zoom-in">
-            <div class="service-icon" [innerHTML]="service.icon | safeHtml"></div>
+          <div
+            *ngFor="let service of doctor.services"
+            class="service-card animate-on-scroll zoom-in"
+          >
+            <div
+              class="service-icon"
+              [innerHTML]="service.icon | safeHtml"
+            ></div>
             <h3>{{ service.name }}</h3>
             <p>{{ service.description }}</p>
           </div>
         </div>
-        <button class="slider-arrow right-arrow" (click)="scrollServices('right')">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-            <path fill-rule="evenodd"
+        <button
+          class="slider-arrow right-arrow"
+          (click)="scrollServices('right')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              fill-rule="evenodd"
               d="M12.28 2.53a.75.75 0 0 0 0 1.06L16.44 9.75H5.5a.75.75 0 0 0 0 1.5h10.94l-4.16 5.16a.75.75 0 0 0 1.06 1.06l5.5-6.75a.75.75 0 0 0 0-1.06l-5.5-6.75a.75.75 0 0 0-1.06 0Z"
-              clip-rule="evenodd" />
+              clip-rule="evenodd"
+            />
           </svg>
         </button>
       </div>
@@ -64,15 +108,33 @@
     <div class="section-content">
       <h2 class="animate-on-scroll fade-in">Contacto</h2>
       <div class="contact-info animate-on-scroll fade-in delay-1">
-        <p><strong>Teléfono: </strong> <a href="tel:{{ doctor.contactInfo.phone }}">{{ doctor.contactInfo.phone }}</a>
+        <p>
+          <strong>Teléfono: </strong>
+          <a href="tel:{{ doctor.contactInfo.phone }}">{{
+            doctor.contactInfo.phone
+          }}</a>
         </p>
-        <p><strong>Email: </strong> <a href="mailto:{{ doctor.contactInfo.email }}">{{ doctor.contactInfo.email }}</a>
+        <p>
+          <strong>Email: </strong>
+          <a href="mailto:{{ doctor.contactInfo.email }}">{{
+            doctor.contactInfo.email
+          }}</a>
         </p>
         <p><strong>Dirección: </strong> {{ doctor.contactInfo.address }}</p>
       </div>
-      <div class="map-container animate-on-scroll fade-in delay-2" *ngIf="doctor.contactInfo.googleMapsLink">
-        <iframe [src]="doctor.contactInfo.googleMapsLink | safeHtml:'resourceUrl'" width="100%" height="350"
-          style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      <div
+        class="map-container animate-on-scroll fade-in delay-2"
+        *ngIf="doctor.contactInfo.googleMapsLink"
+      >
+        <iframe
+          [src]="doctor.contactInfo.googleMapsLink | safeHtml : 'resourceUrl'"
+          width="100%"
+          height="350"
+          style="border: 0"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        >
         </iframe>
       </div>
     </div>
@@ -81,7 +143,21 @@
   <section class="appointment-section" id="appointment-form-section">
     <div class="section-content">
       <h2 class="animate-on-scroll fade-in">Agenda tu Cita</h2>
-      <app-appointment-form class="animate-on-scroll fade-in delay-1"></app-appointment-form>
+      <app-appointment-form
+        class="animate-on-scroll fade-in delay-1"
+        [formTitle]="'Agendar Cita'"
+        [submitButtonText]="'Confirmar Cita'"
+        [isEditMode]="false"
+        [showStatusField]="false"
+        (formSubmit)="onFormSubmittedByPatient($event)"
+        [externalLoading]="loadingAppointment"
+      ></app-appointment-form>
+      <div *ngIf="submitMessage" class="submit-success-message">
+        {{ submitMessage }}
+      </div>
+      <div *ngIf="errorMessage && !submitMessage" class="submit-error-message">
+        {{ errorMessage }}
+      </div>
     </div>
   </section>
 </div>

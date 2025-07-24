@@ -12,6 +12,8 @@ import {
 import { SafeHtmlPipe } from '../pipes/safe-html.pipe';
 import { CommonModule } from '@angular/common';
 import { AppointmentForm } from '../appointment-form/appointment-form';
+import { AppointmentService } from '../services/appointment-service';
+import { Appointment } from '../models/appointment.model';
 
 @Component({
   selector: 'app-doctor-presentation',
@@ -22,10 +24,15 @@ import { AppointmentForm } from '../appointment-form/appointment-form';
 })
 export class DoctorPresentation implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('servicesSlider') servicesSlider!: ElementRef<HTMLDivElement>;
-
   @ViewChildren('.animate-on-scroll') animatedElements!: QueryList<ElementRef>;
 
+  @ViewChild(AppointmentForm) appointmentFormComponent!: AppointmentForm;
+
   private observer!: IntersectionObserver;
+
+  loadingAppointment: boolean = false;
+  submitMessage: string | null = null;
+  errorMessage: string | null = null;
 
   doctor = {
     name: 'Dr. Samuel Hernández Lomelí',
@@ -87,10 +94,11 @@ export class DoctorPresentation implements OnInit, AfterViewInit, OnDestroy {
     'assets/images/carrousele_4.jpeg',
     'assets/images/carrousele_5.jpeg',
   ];
+
   currentIndex: number = 0;
   private carouselInterval: any;
 
-  constructor() {}
+  constructor(private appointmentService: AppointmentService) {}
 
   ngOnInit(): void {
     this.startCarouselAutoPlay();
@@ -105,28 +113,26 @@ export class DoctorPresentation implements OnInit, AfterViewInit, OnDestroy {
       clearInterval(this.carouselInterval);
     }
     if (this.observer) {
-      // Add this for cleanup
       this.observer.disconnect();
     }
   }
 
   initIntersectionObserver(): void {
     const options = {
-      root: null, // viewport
+      root: null,
       rootMargin: '0px',
-      threshold: 0.1, // 10% of the element visible to trigger
+      threshold: 0.1,
     };
 
     this.observer = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target); // Optional: animate only once
+          observer.unobserve(entry.target);
         }
       });
     }, options);
 
-    // Ensure elements are available before observing
     this.animatedElements.forEach((el) =>
       this.observer.observe(el.nativeElement)
     );
@@ -171,5 +177,52 @@ export class DoctorPresentation implements OnInit, AfterViewInit, OnDestroy {
     } else {
       slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
+  }
+
+  // --- NUEVO MÉTODO PARA MANEJAR EL ENVÍO DEL FORMULARIO DEL PACIENTE ---
+  onFormSubmittedByPatient(event: { isValid: boolean; data: any }): void {
+    this.submitMessage = null; // Limpia mensajes anteriores
+    this.errorMessage = null; // Limpia mensajes anteriores
+
+    if (!event.isValid) {
+      this.errorMessage =
+        'Por favor, completa todos los campos requeridos y corrige los errores.';
+      return;
+    }
+
+    this.loadingAppointment = true;
+    const formData: Appointment = event.data;
+
+    this.appointmentService.createAppointment(formData).subscribe({
+      next: (res) => {
+        console.log('Cita agendada exitosamente (vista pública):', res);
+        this.submitMessage =
+          '¡Tu cita ha sido agendada exitosamente! Nos pondremos en contacto pronto.';
+        this.loadingAppointment = false;
+        if (this.appointmentFormComponent) {
+          this.appointmentFormComponent.resetForm();
+        }
+        setTimeout(() => {
+          this.submitMessage = null;
+        }, 5000); // El mensaje desaparece después de 5 segundos
+      },
+      error: (err) => {
+        console.error('Error al agendar la cita (vista pública):', err);
+        if (err.error && err.error.message) {
+          if (Array.isArray(err.error.message)) {
+            this.errorMessage = err.error.message.join(', ');
+          } else {
+            this.errorMessage = err.error.message;
+          }
+        } else {
+          this.errorMessage =
+            'Hubo un error al agendar tu cita. Por favor, inténtalo de nuevo.';
+        }
+        this.loadingAppointment = false; // Desactiva el estado de carga
+        setTimeout(() => {
+          this.errorMessage = null;
+        }, 8000);
+      },
+    });
   }
 }
