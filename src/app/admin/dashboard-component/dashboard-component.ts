@@ -32,6 +32,14 @@ export class DashboardComponent implements OnInit {
   loadingData: boolean = true;
   errorMessage: string | null = null;
 
+  statusTranslations: { [key: string]: string } = {
+    pending: 'Pendiente',
+    confirmed: 'Confirmada',
+    cancelled: 'Cancelada',
+    completed: 'Completada',
+    // Agrega aquí cualquier otro estado que manejes
+  };
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -63,6 +71,10 @@ export class DashboardComponent implements OnInit {
         this.loadingData = false;
       },
     });
+  }
+
+  getTranslatedStatus(status: string): string {
+    return this.statusTranslations[status] || status; // Si no encuentra traducción, devuelve el original
   }
 
   logout(): void {

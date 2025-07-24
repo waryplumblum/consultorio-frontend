@@ -147,19 +147,19 @@
       .status-pending {
         background-color: #ffc107;
         color: #343a40;
-      }
+      } 
       .status-confirmed {
-        background-color: #28a745;
-      }
+        background-color: #2196f3;
+      } 
       .status-cancelled {
         background-color: #dc3545;
       }
       .status-completed {
-        background-color: #6c757d;
-      }
+        background-color: #4caf50;
+      } 
 
       .actions-column {
-        white-space: nowrap; // Evita que los botones se envuelvan
+        white-space: nowrap;
         .btn {
           padding: 8px 12px;
           border: none;

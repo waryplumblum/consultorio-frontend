@@ -25,9 +25,8 @@ import { PhoneNumberFormatterDirective } from '../shared/components/formatter/ph
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    PhoneNumberFormatterDirective,
-    TitleCasePipe,
-  ],
+    PhoneNumberFormatterDirective
+],
   templateUrl: './appointment-form.html',
   styleUrl: './appointment-form.scss',
   standalone: true,

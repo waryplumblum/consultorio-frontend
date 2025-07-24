@@ -31,7 +31,7 @@
         -
         <span class="appointment-client">{{ appointment.patientName }}</span> -
         <span class="appointment-status status-{{ appointment.status }}">{{
-          appointment.status
+          getTranslatedStatus(appointment.status)
         }}</span>
       </li>
     </ul>
