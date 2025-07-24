@@ -82,49 +82,44 @@ export class AppointmentForm implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (!this.isEditMode) {
-      this.generateAllPossibleTimes();
-      this.fetchBookedAppointments();
+    this.generateAllPossibleTimes();
+    this.fetchBookedAppointments();
 
-      this.appointmentForm
-        .get('preferredDate')
-        ?.valueChanges.subscribe((date) => {
-          console.log('preferredDate changed to:', date);
+    this.appointmentForm
+      .get('preferredDate')
+      ?.valueChanges.subscribe((date) => {
+        console.log('preferredDate changed to:', date);
 
-          const preferredTimeControl =
-            this.appointmentForm.get('preferredTime');
+        const preferredTimeControl = this.appointmentForm.get('preferredTime');
 
-          if (date) {
-            // Si hay una fecha seleccionada, habilitar el control de tiempo
-            preferredTimeControl?.enable();
-            // Y establecer el validador requerido
-            preferredTimeControl?.setValidators(Validators.required);
-          } else {
-            // Si no hay fecha, deshabilitar el control de tiempo
-            preferredTimeControl?.disable();
-            // Limpiar el valor y los validadores si se borra la fecha
-            preferredTimeControl?.setValue('');
-            preferredTimeControl?.clearValidators();
-          }
-          preferredTimeControl?.updateValueAndValidity(); // Asegurarse de que los validadores se actualicen
+        if (date) {
+          // Si hay una fecha seleccionada, habilitar el control de tiempo
+          preferredTimeControl?.enable();
+          // Y establecer el validador requerido
+          preferredTimeControl?.setValidators(Validators.required);
+        } else {
+          // Si no hay fecha, deshabilitar el control de tiempo
+          preferredTimeControl?.disable();
+          // Limpiar el valor y los validadores si se borra la fecha
+          preferredTimeControl?.setValue('');
+          preferredTimeControl?.clearValidators();
+        }
+        preferredTimeControl?.updateValueAndValidity(); // Asegurarse de que los validadores se actualicen
 
-          this.onDateChange(date); // Tu lógica existente para actualizar los tiempos disponibles
+        this.onDateChange(date); // Tu lógica existente para actualizar los tiempos disponibles
 
-          // Restablecer preferredTime si el valor actual no está en los tiempos disponibles
-          // Esto ya lo tienes, pero es bueno revisarlo si el control estaba deshabilitado
-          if (
-            preferredTimeControl?.value &&
-            !this.availableTimesForSelectedDate.includes(
-              preferredTimeControl.value
-            )
-          ) {
-            console.log(
-              'Resetting preferredTime due to date change or disable.'
-            );
-            preferredTimeControl.setValue('');
-          }
-        });
-    }
+        // Restablecer preferredTime si el valor actual no está en los tiempos disponibles
+        // Esto ya lo tienes, pero es bueno revisarlo si el control estaba deshabilitado
+        if (
+          preferredTimeControl?.value &&
+          !this.availableTimesForSelectedDate.includes(
+            preferredTimeControl.value
+          )
+        ) {
+          console.log('Resetting preferredTime due to date change or disable.');
+          preferredTimeControl.setValue('');
+        }
+      });
 
     // ... (resto de tu ngOnInit, sin cambios significativos aquí)
     if (this.showStatusField) {
@@ -160,24 +155,20 @@ export class AppointmentForm implements OnInit, OnChanges {
         this.appointmentForm.value
       );
 
-      // AÑADE ESTE BLOQUE DE CÓDIGO AQUÍ:
       if (this.isEditMode) {
+        const preferredDate = this.appointmentForm.get('preferredDate')?.value;
         const preferredTimeControl = this.appointmentForm.get('preferredTime');
-        // Si hay una fecha en initialData, habilita el control de tiempo
-        if (this.appointmentForm.get('preferredDate')?.value) {
+
+        if (preferredDate) {
+          this.onDateChange(preferredDate); // Vuelve a calcular los tiempos disponibles para la fecha inicial
           preferredTimeControl?.enable();
           preferredTimeControl?.setValidators(Validators.required);
-          preferredTimeControl?.updateValueAndValidity();
-          console.log('ngOnChanges - preferredTime ENABLED for edit mode');
         } else {
-          // Si por alguna razón no hay fecha en initialData (ej. nuevo registro o error), deshabilitarlo
           preferredTimeControl?.disable();
           preferredTimeControl?.clearValidators();
-          preferredTimeControl?.updateValueAndValidity();
-          console.log(
-            'ngOnChanges - preferredTime DISABLED for edit mode (no initial date)'
-          );
         }
+        preferredTimeControl?.updateValueAndValidity();
+        console.log('ngOnChanges - preferredTime state updated for edit mode');
       }
     }
 
@@ -252,9 +243,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       this.appointmentForm.get(key)?.setErrors(null);
     });
 
-    if (!this.isEditMode) {
-      this.fetchBookedAppointments();
-    }
+    this.fetchBookedAppointments();
 
     console.log('Form has been reset.');
     this.formReset.emit();
@@ -464,10 +453,33 @@ export class AppointmentForm implements OnInit, OnChanges {
       bookedTimesForSelectedDate
     );
 
+    // Obtener la hora de la cita que se está editando, si existe.
+    // Asegurarse de que esté en el mismo formato HH:MM
+    const currentAppointmentTime = this.initialData?.preferredDateTime
+      ? new Date(this.initialData.preferredDateTime).toLocaleTimeString(
+          'es-MX',
+          {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          }
+        )
+      : '';
+
     this.availableTimesForSelectedDate = this.allPossibleTimes.filter(
       (time) => {
-        // Comparamos si la fecha seleccionada es el MISMO DÍA que "hoy" (sin importar la hora)
-        // Usamos getTime() para comparar los milisegundos desde el epoch para fechas limpias LOCALES
+        // Determinar si el `time` actual en el bucle es la hora de la cita que estamos editando
+        const isThisTheAppointmentBeingEditedTime =
+          this.isEditMode &&
+          time === currentAppointmentTime &&
+          // También asegurar que la fecha seleccionada sea la misma que la de la cita original
+          selectedDate ===
+            (this.initialData?.preferredDateTime
+              ? new Date(this.initialData.preferredDateTime)
+                  .toISOString()
+                  .split('T')[0]
+              : '');
+
         if (selectedDateObject.getTime() === todayStartOfDay.getTime()) {
           const [hour, minute] = time.split(':').map(Number);
           const slotDateTime = new Date(
@@ -480,20 +492,27 @@ export class AppointmentForm implements OnInit, OnChanges {
           console.log(
             `onDateChange - Checking slot ${time} for selected date (TODAY - ${selectedDate}): slotDateTime=${slotDateTime.toLocaleTimeString()}, now=${now.toLocaleTimeString()}, booked=${bookedTimesForSelectedDate.includes(
               time
-            )}`
+            )}, isEditingThisTime=${isThisTheAppointmentBeingEditedTime}`
           );
-          // Si es hoy, solo mostramos los slots futuros y no reservados
+          // Si es hoy, solo mostramos los slots futuros y no reservados,
+          // O si es la hora de la cita que estamos editando (independientemente de si está en el pasado o "reservada")
           return (
-            slotDateTime > now && !bookedTimesForSelectedDate.includes(time)
+            (slotDateTime > now &&
+              !bookedTimesForSelectedDate.includes(time)) ||
+            isThisTheAppointmentBeingEditedTime
           );
         } else {
-          // Si es CUALQUIER OTRO DÍA (futuro), mostramos todos los slots no reservados
+          // Si es CUALQUIER OTRO DÍA (futuro), mostramos todos los slots no reservados,
+          // O si es la hora de la cita que estamos editando
           console.log(
             `onDateChange - Checking slot ${time} for future date (${selectedDate}): booked=${bookedTimesForSelectedDate.includes(
               time
-            )}`
+            )}, isEditingThisTime=${isThisTheAppointmentBeingEditedTime}`
           );
-          return !bookedTimesForSelectedDate.includes(time);
+          return (
+            !bookedTimesForSelectedDate.includes(time) ||
+            isThisTheAppointmentBeingEditedTime
+          );
         }
       }
     );
@@ -502,7 +521,6 @@ export class AppointmentForm implements OnInit, OnChanges {
       this.availableTimesForSelectedDate
     );
   }
-
   onPhoneKeyPress(event: KeyboardEvent): void {
     const inputChar = String.fromCharCode(event.charCode);
     const phoneNumberControl = this.appointmentForm.get('patientPhone');

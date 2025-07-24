@@ -80,37 +80,32 @@
 
     <div class="form-group">
       <label for="preferredTime">Hora Preferida:</label>
-      <ng-container *ngIf="isEditMode; else publicTimeSelect">
-        <input type="time" id="preferredTime" formControlName="preferredTime" />
-      </ng-container>
-      <ng-template #publicTimeSelect>
-        <select id="preferredTime" formControlName="preferredTime">
-          <option value="" disabled>Selecciona una hora</option>
-          <option
-            *ngIf="!appointmentForm.get('preferredDate')?.value"
-            value=""
-            disabled
-          >
-            Selecciona una fecha primero
-          </option>
-          <option
-            *ngFor="let time of availableTimesForSelectedDate"
-            [value]="time"
-          >
-            {{ time }}
-          </option>
-          <option
-            *ngIf="
-              availableTimesForSelectedDate.length === 0 &&
-              appointmentForm.get('preferredDate')?.value
-            "
-            value=""
-            disabled
-          >
-            No hay horarios disponibles para esta fecha.
-          </option>
-        </select>
-      </ng-template>
+      <select id="preferredTime" formControlName="preferredTime">
+        <option value="" disabled>Selecciona una hora</option>
+        <option
+          *ngIf="!appointmentForm.get('preferredDate')?.value"
+          value=""
+          disabled
+        >
+          Selecciona una fecha primero
+        </option>
+        <option
+          *ngFor="let time of availableTimesForSelectedDate"
+          [value]="time"
+        >
+          {{ time }}
+        </option>
+        <option
+          *ngIf="
+            availableTimesForSelectedDate.length === 0 &&
+            appointmentForm.get('preferredDate')?.value
+          "
+          value=""
+          disabled
+        >
+          No hay horarios disponibles para esta fecha.
+        </option>
+      </select>
       <div
         *ngIf="getControlErrorMessage('preferredTime')"
         class="error-message"
@@ -122,7 +117,10 @@
     <div class="form-group" *ngIf="showStatusField">
       <label for="status">Estado de la Cita:</label>
       <select id="status" formControlName="status">
-        <option *ngFor="let status of statusOptionsTranslated" [value]="status.value">
+        <option
+          *ngFor="let status of statusOptionsTranslated"
+          [value]="status.value"
+        >
           {{ status.label }}
         </option>
       </select>
