@@ -22,11 +22,7 @@ import { PhoneNumberFormatterDirective } from '../shared/components/formatter/ph
 
 @Component({
   selector: 'app-appointment-form',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    PhoneNumberFormatterDirective
-],
+  imports: [CommonModule, ReactiveFormsModule, PhoneNumberFormatterDirective],
   templateUrl: './appointment-form.html',
   styleUrl: './appointment-form.scss',
   standalone: true,
@@ -80,7 +76,7 @@ export class AppointmentForm implements OnInit, OnChanges {
       patientEmail: ['', [Validators.required, Validators.email]],
       reason: ['', Validators.required],
       preferredDate: ['', Validators.required],
-      preferredTime: ['', Validators.required],
+      preferredTime: [{ value: '', disabled: true }],
       status: ['pending'],
     });
   }
@@ -94,19 +90,43 @@ export class AppointmentForm implements OnInit, OnChanges {
         .get('preferredDate')
         ?.valueChanges.subscribe((date) => {
           console.log('preferredDate changed to:', date);
-          this.onDateChange(date);
+
+          const preferredTimeControl =
+            this.appointmentForm.get('preferredTime');
+
+          if (date) {
+            // Si hay una fecha seleccionada, habilitar el control de tiempo
+            preferredTimeControl?.enable();
+            // Y establecer el validador requerido
+            preferredTimeControl?.setValidators(Validators.required);
+          } else {
+            // Si no hay fecha, deshabilitar el control de tiempo
+            preferredTimeControl?.disable();
+            // Limpiar el valor y los validadores si se borra la fecha
+            preferredTimeControl?.setValue('');
+            preferredTimeControl?.clearValidators();
+          }
+          preferredTimeControl?.updateValueAndValidity(); // Asegurarse de que los validadores se actualicen
+
+          this.onDateChange(date); // Tu lógica existente para actualizar los tiempos disponibles
+
+          // Restablecer preferredTime si el valor actual no está en los tiempos disponibles
+          // Esto ya lo tienes, pero es bueno revisarlo si el control estaba deshabilitado
           if (
-            this.appointmentForm.get('preferredTime')?.value &&
+            preferredTimeControl?.value &&
             !this.availableTimesForSelectedDate.includes(
-              this.appointmentForm.get('preferredTime')?.value
+              preferredTimeControl.value
             )
           ) {
-            console.log('Resetting preferredTime due to date change.');
-            this.appointmentForm.get('preferredTime')?.setValue('');
+            console.log(
+              'Resetting preferredTime due to date change or disable.'
+            );
+            preferredTimeControl.setValue('');
           }
         });
     }
 
+    // ... (resto de tu ngOnInit, sin cambios significativos aquí)
     if (this.showStatusField) {
       this.appointmentForm.get('status')?.setValidators(Validators.required);
     } else {
@@ -124,7 +144,7 @@ export class AppointmentForm implements OnInit, OnChanges {
         patientEmail: data.patientEmail,
         reason: data.reason,
         preferredDate: data.preferredDateTime
-          ? new Date(data.preferredDateTime).toISOString().split('T')[0] // Se mantiene ISO para inicialización desde data existente (viene de backend)
+          ? new Date(data.preferredDateTime).toISOString().split('T')[0]
           : '',
         preferredTime: data.preferredDateTime
           ? new Date(data.preferredDateTime).toLocaleTimeString('es-MX', {
@@ -139,6 +159,26 @@ export class AppointmentForm implements OnInit, OnChanges {
         'ngOnChanges - initialData patched:',
         this.appointmentForm.value
       );
+
+      // AÑADE ESTE BLOQUE DE CÓDIGO AQUÍ:
+      if (this.isEditMode) {
+        const preferredTimeControl = this.appointmentForm.get('preferredTime');
+        // Si hay una fecha en initialData, habilita el control de tiempo
+        if (this.appointmentForm.get('preferredDate')?.value) {
+          preferredTimeControl?.enable();
+          preferredTimeControl?.setValidators(Validators.required);
+          preferredTimeControl?.updateValueAndValidity();
+          console.log('ngOnChanges - preferredTime ENABLED for edit mode');
+        } else {
+          // Si por alguna razón no hay fecha en initialData (ej. nuevo registro o error), deshabilitarlo
+          preferredTimeControl?.disable();
+          preferredTimeControl?.clearValidators();
+          preferredTimeControl?.updateValueAndValidity();
+          console.log(
+            'ngOnChanges - preferredTime DISABLED for edit mode (no initial date)'
+          );
+        }
+      }
     }
 
     if (changes['showStatusField'] && this.appointmentForm) {
