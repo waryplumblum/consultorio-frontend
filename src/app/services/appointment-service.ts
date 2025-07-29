@@ -93,10 +93,10 @@ export class AppointmentService {
 
   getFutureAppointmentsPublic(): Observable<Appointment[]> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    console.log(
-      'getFutureAppointmentsPublic: Enviando petición GET a /future sin token. Headers:',
-      headers.keys()
-    );
+    // console.log(
+    //   'getFutureAppointmentsPublic: Enviando petición GET a /future sin token. Headers:',
+    //   headers.keys()
+    // );
     return this.http.get<Appointment[]>(`${this.apiUrl}/future`, { headers });
   }
 }
