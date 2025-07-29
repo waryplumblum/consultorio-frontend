@@ -7,6 +7,7 @@ import {
   AppointmentsResponse,
 } from '../../models/appointment.model';
 import { AppointmentService } from '../../services/appointment-service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-appointments-component',
@@ -36,12 +37,12 @@ export class AppointmentsComponent implements OnInit {
     confirmed: 'Confirmada',
     cancelled: 'Cancelada',
     completed: 'Completada',
-    // Añade cualquier otro estado que manejes
   };
 
   constructor(
     private appointmentsService: AppointmentService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -68,58 +69,40 @@ export class AppointmentsComponent implements OnInit {
     if (this.filterDateFrom) {
       const dateFromParts = this.filterDateFrom.split('-').map(Number);
       const localDateFrom = new Date(
-        dateFromParts[0], // Año
-        dateFromParts[1] - 1, // Mes (restar 1)
-        dateFromParts[2], // Día
+        dateFromParts[0],
+        dateFromParts[1] - 1,
+        dateFromParts[2],
         0,
         0,
         0,
-        0 // Medianoche del día seleccionado
+        0
       );
       queryParams.dateFrom = localDateFrom.toISOString();
-      // console.log('Filter Date From (LOCAL):', localDateFrom.toLocaleString());
-      // console.log(
-      //   'Filter Date From (ISO/UTC sent to backend):',
-      //   queryParams.dateFrom
-      // );
     }
     if (this.filterDateTo) {
       const dateToParts = this.filterDateTo.split('-').map(Number);
-      // Crea una fecha en la zona horaria local, al final del día seleccionado
-      // Los meses en JS son 0-indexados
+
       const localDateTo = new Date(
-        dateToParts[0], // Año
-        dateToParts[1] - 1, // Mes (restar 1)
-        dateToParts[2], // Día
+        dateToParts[0],
+        dateToParts[1] - 1,
+        dateToParts[2],
         23,
         59,
         59,
-        999 // Último milisegundo del día seleccionado
+        999
       );
       queryParams.dateTo = localDateTo.toISOString();
-      // console.log('Filter Date To (LOCAL):', localDateTo.toLocaleString());
-      // console.log(
-      //   'Filter Date To (ISO/UTC sent to backend):',
-      //   queryParams.dateTo
-      // );
     }
-
-    // console.log('Final Query Parameters sent to backend:', queryParams);
 
     this.appointmentsService.getAllAppointments(queryParams).subscribe({
       next: (response: AppointmentsResponse) => {
-        this.appointments = response.data
-          .filter((app) => !app.isDeleted)
-          .map((app) => ({
-            ...app,
-            scheduledDateTime: new Date(app.scheduledDateTime),
-            preferredDateTime: new Date(app.preferredDateTime),
-          }));
-        this.totalAppointments = this.appointments.length;
+        this.appointments = response.data.map((app) => ({
+          ...app,
+          scheduledDateTime: new Date(app.scheduledDateTime),
+          preferredDateTime: new Date(app.preferredDateTime),
+        }));
+        this.totalAppointments = response.total;
         this.loading = false;
-
-        // console.log('Appointments received from backend:', this.appointments);
-        // console.log('Total Appointments received:', this.totalAppointments);
       },
       error: (err) => {
         console.error('Error al cargar citas:', err);
