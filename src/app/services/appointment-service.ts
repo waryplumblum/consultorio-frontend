@@ -44,14 +44,15 @@ export class AppointmentService {
       for (const key in params) {
         if (
           params.hasOwnProperty(key) &&
-          params[key] !== null &&
-          params[key] !== undefined &&
-          params[key] !== ''
+          (params as any)[key] !== null &&
+          (params as any)[key] !== undefined &&
+          (params as any)[key] !== ''
         ) {
-          if (params[key] instanceof Date) {
-            httpParams = httpParams.set(key, params[key].toISOString());
+          // Si el valor es un booleano, asegúrate de que se serialice correctamente
+          if (typeof (params as any)[key] === 'boolean') {
+            httpParams = httpParams.set(key, (params as any)[key].toString());
           } else {
-            httpParams = httpParams.set(key, params[key].toString());
+            httpParams = httpParams.set(key, (params as any)[key].toString());
           }
         }
       }
@@ -77,9 +78,14 @@ export class AppointmentService {
     });
   }
 
-  deleteAppointment(id: string): Observable<any> {
+  softDeleteAppointment(id: string): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers });
+    // Llama a PATCH para actualizar el campo isDeleted a true
+    return this.http.patch<any>(
+      `${this.apiUrl}/${id}`,
+      { isDeleted: true },
+      { headers }
+    );
   }
 
   // --- Métodos que NO requieren autenticación ---

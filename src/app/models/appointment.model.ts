@@ -9,6 +9,7 @@ export interface Appointment {
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed'; // Tipos específicos de estados
   createdAt: string;
   updatedAt: string;
+  isDeleted?: boolean;
 }
 
 export interface AppointmentsResponse {

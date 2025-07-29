@@ -108,12 +108,14 @@ export class AppointmentsComponent implements OnInit {
 
     this.appointmentsService.getAllAppointments(queryParams).subscribe({
       next: (response: AppointmentsResponse) => {
-        this.appointments = response.data.map((app) => ({
-          ...app,
-          scheduledDateTime: new Date(app.scheduledDateTime),
-          preferredDateTime: new Date(app.preferredDateTime),
-        }));
-        this.totalAppointments = response.total;
+        this.appointments = response.data
+          .filter((app) => !app.isDeleted)
+          .map((app) => ({
+            ...app,
+            scheduledDateTime: new Date(app.scheduledDateTime),
+            preferredDateTime: new Date(app.preferredDateTime),
+          }));
+        this.totalAppointments = this.appointments.length;
         this.loading = false;
 
         // console.log('Appointments received from backend:', this.appointments);
@@ -164,7 +166,7 @@ export class AppointmentsComponent implements OnInit {
 
   deleteAppointment(id: string): void {
     if (confirm('¿Estás seguro de que quieres eliminar esta cita?')) {
-      this.appointmentsService.deleteAppointment(id).subscribe({
+      this.appointmentsService.softDeleteAppointment(id).subscribe({
         next: () => {
           console.log('Cita eliminada:', id);
           this.loadAppointments();
