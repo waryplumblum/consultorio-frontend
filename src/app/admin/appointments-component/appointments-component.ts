@@ -103,11 +103,25 @@ export class AppointmentsComponent implements OnInit {
         }));
         this.totalAppointments = response.total;
         this.loading = false;
+        if (
+          this.appointments.length === 0 &&
+          !this.filterPatientName &&
+          !this.filterStatus &&
+          !this.filterDateFrom &&
+          !this.filterDateTo
+        ) {
+          this.notificationService.showInfo('No hay citas registradas.');
+        } else if (this.appointments.length === 0) {
+          this.notificationService.showInfo(
+            'No se encontraron citas con los filtros aplicados.'
+          );
+        }
       },
       error: (err) => {
         console.error('Error al cargar citas:', err);
-        this.errorMessage =
-          'No se pudieron cargar las citas. Inténtalo de nuevo.';
+        this.notificationService.showError(
+          'No se pudieron cargar las citas. Inténtalo de nuevo.'
+        );
         this.loading = false;
       },
     });
@@ -132,6 +146,7 @@ export class AppointmentsComponent implements OnInit {
   applyFilters(): void {
     this.currentPage = 1;
     this.loadAppointments();
+    this.notificationService.showInfo('Filtros aplicados.');
   }
 
   clearFilters(): void {
@@ -141,6 +156,7 @@ export class AppointmentsComponent implements OnInit {
     this.filterDateTo = '';
     this.currentPage = 1;
     this.loadAppointments();
+    this.notificationService.showInfo('Filtros limpiados.');
   }
 
   editAppointment(id: string): void {
@@ -151,14 +167,19 @@ export class AppointmentsComponent implements OnInit {
     if (confirm('¿Estás seguro de que quieres eliminar esta cita?')) {
       this.appointmentsService.softDeleteAppointment(id).subscribe({
         next: () => {
+          this.notificationService.showSuccess('Cita eliminada lógicamente.');
           console.log('Cita eliminada:', id);
           this.loadAppointments();
         },
         error: (err) => {
           console.error('Error al eliminar cita:', err);
-          this.errorMessage = 'No se pudo eliminar la cita.';
+          this.notificationService.showError(
+            'No se pudo eliminar la cita. Inténtalo de nuevo.'
+          );
         },
       });
+    } else {
+      this.notificationService.showInfo('Eliminación de cita cancelada.');
     }
   }
 
