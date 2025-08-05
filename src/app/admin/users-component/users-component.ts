@@ -23,7 +23,7 @@ export class AdminUsersComponent implements OnInit {
   allUsers: User[] = [];
   // Nueva lista para usuarios filtrados antes de la paginación
   filteredUsers: User[] = [];
-  
+
   loading: boolean = true;
   errorMessage: string | null = null;
   isAdmin: boolean = false;
@@ -36,6 +36,11 @@ export class AdminUsersComponent implements OnInit {
   filterEmail: string = '';
   filterName: string = '';
   filterRole: string = '';
+
+  roleTranslations: { [key: string]: string } = {
+    admin: 'Administrador',
+    secretary: 'Secretaria',
+  };
 
   private filterTextChanged = new Subject<void>();
 
@@ -51,8 +56,8 @@ export class AdminUsersComponent implements OnInit {
     this.loadAllUsers(); // Usamos este nuevo método que carga todo
     this.filterTextChanged
       .pipe(
-        debounceTime(300),
-        distinctUntilChanged()
+        debounceTime(300)
+        // distinctUntilChanged()
       )
       .subscribe(() => {
         this.currentPage = 1; // Resetea la página al aplicar un nuevo filtro
@@ -190,5 +195,8 @@ export class AdminUsersComponent implements OnInit {
   getPagesArray(): number[] {
     const totalPages = this.getTotalPages();
     return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+  getTranslatedRole(role: string): string {
+    return this.roleTranslations[role.toLowerCase()] || role;
   }
 }

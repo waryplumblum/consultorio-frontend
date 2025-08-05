@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Importar ReactiveFormsModule y FormBuilder
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms'; // Importar ReactiveFormsModule y FormBuilder
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { Observable } from 'rxjs'; // Para el tipo de operación
@@ -24,6 +29,11 @@ export class UserFormComponent implements OnInit {
 
   // Opciones de rol (deben coincidir con tu backend)
   roleOptions: ('admin' | 'secretary')[] = ['admin', 'secretary'];
+
+  roleTranslations: { [key: string]: string } = {
+    admin: 'Administrador',
+    secretary: 'Secretaria',
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -50,10 +60,7 @@ export class UserFormComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(6)
-      ]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       role: ['secretary', Validators.required], // Valor por defecto
       // isDeleted no se gestiona directamente en el formulario de creación/edición,
       // se gestiona en el borrado lógico.
@@ -84,7 +91,9 @@ export class UserFormComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar datos del usuario:', err);
-        this.notificationService.showError('No se pudo cargar el usuario para edición.');
+        this.notificationService.showError(
+          'No se pudo cargar el usuario para edición.'
+        );
         this.loading = false;
         this.router.navigate(['/admin/users']); // Redirigir si no se encuentra el usuario
       },
@@ -94,7 +103,9 @@ export class UserFormComponent implements OnInit {
   onSubmit(): void {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
-      this.notificationService.showError('Por favor, completa todos los campos requeridos y corrige los errores.');
+      this.notificationService.showError(
+        'Por favor, completa todos los campos requeridos y corrige los errores.'
+      );
       return;
     }
 
@@ -116,7 +127,8 @@ export class UserFormComponent implements OnInit {
       // El email está deshabilitado, así que no se espera que cambie desde el formulario.
       // Si se permitiera cambiar, también se compararía.
 
-      if (formData.password) { // Solo si el usuario ingresó una nueva contraseña
+      if (formData.password) {
+        // Solo si el usuario ingresó una nueva contraseña
         changedData.password = formData.password;
       }
       if (formData.role !== this.initialUserData?.role) {
@@ -124,7 +136,9 @@ export class UserFormComponent implements OnInit {
       }
 
       if (Object.keys(changedData).length === 0) {
-        this.notificationService.showInfo('No se detectaron cambios para actualizar.');
+        this.notificationService.showInfo(
+          'No se detectaron cambios para actualizar.'
+        );
         this.loading = false;
         setTimeout(() => this.router.navigate(['/admin/users']), 1000);
         return;
@@ -138,15 +152,22 @@ export class UserFormComponent implements OnInit {
 
     operation.subscribe({
       next: (res) => {
-        this.notificationService.showSuccess(`Usuario ${this.isEditMode ? 'actualizado' : 'creado'} exitosamente.`);
+        this.notificationService.showSuccess(
+          `Usuario ${this.isEditMode ? 'actualizado' : 'creado'} exitosamente.`
+        );
         this.loading = false;
         setTimeout(() => {
           this.router.navigate(['/admin/users']);
         }, 1000);
       },
       error: (err) => {
-        console.error(`Error al ${this.isEditMode ? 'actualizar' : 'crear'} usuario:`, err);
-        let errorMsg = `No se pudo ${this.isEditMode ? 'actualizar' : 'crear'} el usuario.`;
+        console.error(
+          `Error al ${this.isEditMode ? 'actualizar' : 'crear'} usuario:`,
+          err
+        );
+        let errorMsg = `No se pudo ${
+          this.isEditMode ? 'actualizar' : 'crear'
+        } el usuario.`;
 
         if (err.error && err.error.message) {
           if (Array.isArray(err.error.message)) {
@@ -163,5 +184,9 @@ export class UserFormComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/admin/users']);
+  }
+
+  getTranslatedRole(role: string): string {
+    return this.roleTranslations[role.toLowerCase()] || role;
   }
 }

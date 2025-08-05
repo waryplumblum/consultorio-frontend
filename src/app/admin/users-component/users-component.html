@@ -27,11 +27,14 @@
     </div>
     <div class="filter-group">
       <label for="filterRole">Rol:</label>
-      <select id="filterRole" [(ngModel)]="filterRole" (change)="onFilterChange()">
+      <select
+        id="filterRole"
+        [(ngModel)]="filterRole"
+        (change)="onFilterChange()"
+      >
         <option value="">Todos</option>
-        <option value="admin">Administrador</option>
-        <option value="patient">Paciente</option>
-        <option value="doctor">Doctor</option>
+        <option value="Admin">Administrador</option>
+        <option value="Secretary">Secretaria</option>
       </select>
     </div>
 
@@ -68,7 +71,7 @@
           <td data-label="Email">{{ user.email }}</td>
           <td data-label="Nombre">{{ user.firstName }}</td>
           <td data-label="Apellido">{{ user.lastName }}</td>
-          <td data-label="Rol">{{ user.role | titlecase }}</td>
+          <td data-label="Rol">{{ getTranslatedRole(user.role) }}</td>
           <td class="actions-column" data-label="Acciones">
             <button
               class="btn btn-edit"
@@ -96,7 +99,7 @@
   >
     <p>No se encontraron usuarios que coincidan con los filtros aplicados.</p>
   </div>
-  
+
   <div
     class="pagination-controls"
     *ngIf="!loading && !errorMessage && totalUsers > itemsPerPage"

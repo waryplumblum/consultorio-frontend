@@ -1,7 +1,9 @@
 <div class="user-form-container">
-  <h2>{{ isEditMode ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}</h2>
+  <h2>{{ isEditMode ? "Editar Usuario" : "Crear Nuevo Usuario" }}</h2>
 
-  <div *ngIf="loading" class="loading-message">Cargando datos del usuario...</div>
+  <div *ngIf="loading" class="loading-message">
+    Cargando datos del usuario...
+  </div>
 
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
     <div class="form-group">
@@ -12,7 +14,13 @@
         formControlName="firstName"
         placeholder="Nombre del usuario"
       />
-      <div *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched" class="error-message">
+      <div
+        *ngIf="
+          userForm.get('firstName')?.invalid &&
+          userForm.get('firstName')?.touched
+        "
+        class="error-message"
+      >
         El nombre es requerido.
       </div>
     </div>
@@ -25,7 +33,12 @@
         formControlName="lastName"
         placeholder="Apellido del usuario"
       />
-      <div *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched" class="error-message">
+      <div
+        *ngIf="
+          userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched
+        "
+        class="error-message"
+      >
         El apellido es requerido.
       </div>
     </div>
@@ -38,9 +51,16 @@
         formControlName="email"
         placeholder="ejemplo@dominio.com"
       />
-      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="error-message">
-        <span *ngIf="userForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</span>
-        <span *ngIf="userForm.get('email')?.errors?.['email']">Por favor, introduce un correo electrónico válido.</span>
+      <div
+        *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+        class="error-message"
+      >
+        <span *ngIf="userForm.get('email')?.errors?.['required']"
+          >El correo electrónico es requerido.</span
+        >
+        <span *ngIf="userForm.get('email')?.errors?.['email']"
+          >Por favor, introduce un correo electrónico válido.</span
+        >
       </div>
     </div>
 
@@ -50,11 +70,22 @@
         type="password"
         id="password"
         formControlName="password"
-        placeholder="{{ isEditMode ? 'Dejar en blanco para no cambiar' : 'Mínimo 6 caracteres' }}"
+        placeholder="{{
+          isEditMode ? 'Dejar en blanco para no cambiar' : 'Mínimo 6 caracteres'
+        }}"
       />
-      <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="error-message">
-        <span *ngIf="userForm.get('password')?.errors?.['required']">La contraseña es requerida.</span>
-        <span *ngIf="userForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</span>
+      <div
+        *ngIf="
+          userForm.get('password')?.invalid && userForm.get('password')?.touched
+        "
+        class="error-message"
+      >
+        <span *ngIf="userForm.get('password')?.errors?.['required']"
+          >La contraseña es requerida.</span
+        >
+        <span *ngIf="userForm.get('password')?.errors?.['minlength']"
+          >La contraseña debe tener al menos 6 caracteres.</span
+        >
       </div>
     </div>
 
@@ -62,17 +93,21 @@
       <label for="role">Rol:</label>
       <select id="role" formControlName="role">
         <option *ngFor="let role of roleOptions" [value]="role">
-          {{ role | titlecase }}
+          {{ getTranslatedRole(role) }}
         </option>
       </select>
-      <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="error-message">
+      <div
+        *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched"
+        class="error-message"
+      >
         El rol es requerido.
       </div>
     </div>
 
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">
-        <i class="fas fa-save"></i> {{ isEditMode ? 'Actualizar Usuario' : 'Crear Usuario' }}
+        <i class="fas fa-save"></i>
+        {{ isEditMode ? "Actualizar Usuario" : "Crear Usuario" }}
       </button>
       <button type="button" class="btn btn-secondary" (click)="onCancel()">
         <i class="fas fa-times"></i> Cancelar
