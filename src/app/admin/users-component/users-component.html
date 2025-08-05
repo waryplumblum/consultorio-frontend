@@ -12,7 +12,7 @@
         id="filterEmail"
         placeholder="Filtrar por email"
         [(ngModel)]="filterEmail"
-        (input)="applyFilters()"
+        (input)="onFilterChange()"
       />
     </div>
     <div class="filter-group">
@@ -22,16 +22,12 @@
         id="filterName"
         placeholder="Filtrar por nombre"
         [(ngModel)]="filterName"
-        (input)="applyFilters()"
+        (input)="onFilterChange()"
       />
     </div>
     <div class="filter-group">
       <label for="filterRole">Rol:</label>
-      <select
-        id="filterRole"
-        [(ngModel)]="filterRole"
-        (change)="applyFilters()"
-      >
+      <select id="filterRole" [(ngModel)]="filterRole" (change)="onFilterChange()">
         <option value="">Todos</option>
         <option value="admin">Administrador</option>
         <option value="patient">Paciente</option>
@@ -50,15 +46,12 @@
       >
         <i class="fas fa-user-plus"></i> Nuevo Usuario
       </button>
-      <button class="btn btn-primary" (click)="loadUsers()">
-        <i class="fas fa-sync-alt"></i> Actualizar Lista
-      </button>
     </div>
   </div>
 
   <div
     class="users-table"
-    *ngIf="!loading && !errorMessage && filteredUsers.length > 0"
+    *ngIf="!loading && !errorMessage && users.length > 0"
   >
     <table>
       <thead>
@@ -71,7 +64,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of filteredUsers">
+        <tr *ngFor="let user of users">
           <td data-label="Email">{{ user.email }}</td>
           <td data-label="Nombre">{{ user.firstName }}</td>
           <td data-label="Apellido">{{ user.lastName }}</td>
@@ -98,9 +91,37 @@
   </div>
 
   <div
-    *ngIf="!loading && !errorMessage && filteredUsers.length === 0"
+    *ngIf="!loading && !errorMessage && users.length === 0"
     class="no-users-found"
   >
     <p>No se encontraron usuarios que coincidan con los filtros aplicados.</p>
+  </div>
+  
+  <div
+    class="pagination-controls"
+    *ngIf="!loading && !errorMessage && totalUsers > itemsPerPage"
+  >
+    <button
+      class="btn"
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)"
+    >
+      Anterior
+    </button>
+    <button
+      class="btn page-number"
+      *ngFor="let pageNum of getPagesArray()"
+      [class.active]="pageNum === currentPage"
+      (click)="onPageChange(pageNum)"
+    >
+      {{ pageNum }}
+    </button>
+    <button
+      class="btn"
+      [disabled]="currentPage === getTotalPages()"
+      (click)="onPageChange(currentPage + 1)"
+    >
+      Siguiente
+    </button>
   </div>
 </div>

@@ -5,7 +5,6 @@
 $primary-color: #007bff; // Un azul principal
 $success-color: #28a745;
 $danger-color: #dc3545;
-$warning-color: #ffc107;
 $info-color: #17a2b8; // Color para el botón de editar
 $text-dark: #333;
 $text-medium: #555;
@@ -43,7 +42,6 @@ h2 {
   font-weight: bold;
   text-align: center;
 }
-// Estilos basados en appointments-component
 .loading-message {
   background-color: #e2f0fb;
   color: $primary-color;
@@ -59,7 +57,7 @@ h2 {
   margin-top: 20px;
 }
 
-.filters-section { // Cambio de filters-bar a filters-section
+.filters-section {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -89,18 +87,15 @@ h2 {
       width: 100%;
       box-sizing: border-box;
     }
-    // Removido el estilo de focus del users-form-component para usar el de citas si lo hubiera
-    // y para mantener el foco en la uniformidad
   }
 }
 
-.filter-actions { // Cambio de actions-bar a filter-actions
+.filter-actions {
   display: flex;
   align-items: flex-end;
   gap: 10px;
   margin-left: auto;
-  
-  // Reutilizando los estilos de los botones del appointment-component
+
   .btn {
     padding: 10px 20px;
     border: none;
@@ -108,12 +103,9 @@ h2 {
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.3s ease;
-  }
-  .btn-primary {
-    background-color: $primary-color;
-    color: white;
-    &:hover {
-      background-color: color.adjust($primary-color, $lightness: -10%);
+
+    i {
+      margin-right: 5px;
     }
   }
   .btn-secondary {
@@ -134,7 +126,6 @@ h2 {
 
 .users-table {
   overflow-x: auto;
-  
   table {
     width: 100%;
     border-collapse: collapse;
@@ -188,5 +179,36 @@ h2 {
         background-color: color.adjust($danger-color, $lightness: -10%);
       }
     }
+  }
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+
+  .btn {
+    padding: 10px 15px;
+    border: 1px solid $primary-color;
+    border-radius: 5px;
+    background-color: $background-paper;
+    color: $primary-color;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background-color: $primary-color;
+      color: white;
+    }
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  .page-number.active {
+    background-color: $primary-color;
+    color: white;
   }
 }
