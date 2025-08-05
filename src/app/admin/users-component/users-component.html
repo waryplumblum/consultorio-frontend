@@ -4,7 +4,7 @@
   <div *ngIf="loading" class="loading-message">Cargando usuarios...</div>
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-  <div class="filters-bar">
+  <div class="filters-section">
     <div class="filter-group">
       <label for="filterEmail">Email:</label>
       <input
@@ -38,22 +38,22 @@
         <option value="doctor">Doctor</option>
       </select>
     </div>
-    <button class="btn btn-secondary" (click)="clearFilters()">
-      <i class="fas fa-filter-circle-xmark"></i> Limpiar Filtros
-    </button>
-  </div>
 
-  <div class="actions-bar">
-    <button
-      class="btn btn-success"
-      routerLink="/admin/users/new"
-      *ngIf="isAdmin"
-    >
-      <i class="fas fa-user-plus"></i> Crear Nuevo Usuario
-    </button>
-    <button class="btn btn-primary" (click)="loadUsers()">
-      <i class="fas fa-sync-alt"></i> Actualizar Lista
-    </button>
+    <div class="filter-actions">
+      <button class="btn btn-secondary" (click)="clearFilters()">
+        <i class="fas fa-filter-circle-xmark"></i> Limpiar Filtros
+      </button>
+      <button
+        class="btn btn-success"
+        routerLink="/admin/users/new"
+        *ngIf="isAdmin"
+      >
+        <i class="fas fa-user-plus"></i> Crear Nuevo Usuario
+      </button>
+      <button class="btn btn-primary" (click)="loadUsers()">
+        <i class="fas fa-sync-alt"></i> Actualizar Lista
+      </button>
+    </div>
   </div>
 
   <div
