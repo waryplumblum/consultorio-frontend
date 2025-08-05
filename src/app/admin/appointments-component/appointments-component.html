@@ -12,12 +12,13 @@
         id="patientName"
         [(ngModel)]="filterPatientName"
         placeholder="Buscar por nombre"
+        (input)="onFilterChange()"
       />
     </div>
 
     <div class="filter-group">
       <label for="status">Estado:</label>
-      <select id="status" [(ngModel)]="filterStatus">
+      <select id="status" [(ngModel)]="filterStatus" (change)="onFilterChange()">
         <option value="">Todos</option>
         <option *ngFor="let status of statusOptions" [value]="status">
           {{ getTranslatedStatus(status) }}
@@ -27,23 +28,21 @@
 
     <div class="filter-group">
       <label for="dateFrom">Fecha Desde:</label>
-      <input type="date" id="dateFrom" [(ngModel)]="filterDateFrom" />
+      <input type="date" id="dateFrom" [(ngModel)]="filterDateFrom" (change)="onFilterChange()" />
     </div>
 
     <div class="filter-group">
       <label for="dateTo">Fecha Hasta:</label>
-      <input type="date" id="dateTo" [(ngModel)]="filterDateTo" />
+      <input type="date" id="dateTo" [(ngModel)]="filterDateTo" (change)="onFilterChange()" />
     </div>
 
     <div class="filter-actions">
-      <button class="btn btn-primary" (click)="applyFilters()">
-        Aplicar Filtros
-      </button>
+      <!-- Eliminado el botón "Aplicar Filtros" -->
       <button class="btn btn-secondary" (click)="clearFilters()">
-        Limpiar Filtros
+        <i class="fas fa-filter-circle-xmark"></i> Limpiar Filtros
       </button>
       <button class="btn btn-success" routerLink="/admin/appointments/new">
-        Crear Nueva Cita
+        <i class="fas fa-calendar-plus"></i> Crear Nueva Cita
       </button>
     </div>
   </div>

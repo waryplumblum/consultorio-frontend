@@ -36,7 +36,15 @@ export class AppointmentService {
     }>(`${this.apiUrl}/summary`, { headers });
   }
 
-  getAllAppointments(params?: any): Observable<AppointmentsResponse> {
+  // NUEVO MÉTODO: Obtiene TODAS las citas sin paginación
+  getAllAppointments(): Observable<Appointment[]> {
+    const headers = this.getAuthHeaders();
+    // Este endpoint debe llamar a tu nuevo controlador /appointments/all
+    return this.http.get<Appointment[]>(`${this.apiUrl}/all`, { headers });
+  }
+
+  // MÉTODO ORIGINAL: Si lo necesitas para otras funcionalidades, úsalo para la paginación
+  getPaginatedAppointments(params?: any): Observable<AppointmentsResponse> {
     const headers = this.getAuthHeaders();
     let httpParams = new HttpParams();
 
@@ -44,16 +52,11 @@ export class AppointmentService {
       for (const key in params) {
         if (
           params.hasOwnProperty(key) &&
-          (params as any)[key] !== null &&
-          (params as any)[key] !== undefined &&
-          (params as any)[key] !== ''
+          params[key] !== null &&
+          params[key] !== undefined &&
+          params[key] !== ''
         ) {
-          // Si el valor es un booleano, asegúrate de que se serialice correctamente
-          if (typeof (params as any)[key] === 'boolean') {
-            httpParams = httpParams.set(key, (params as any)[key].toString());
-          } else {
-            httpParams = httpParams.set(key, (params as any)[key].toString());
-          }
+          httpParams = httpParams.set(key, params[key].toString());
         }
       }
     }
@@ -62,7 +65,6 @@ export class AppointmentService {
       params: httpParams,
     });
   }
-
   getAppointmentById(id: string): Observable<Appointment> {
     const headers = this.getAuthHeaders();
     return this.http.get<Appointment>(`${this.apiUrl}/${id}`, { headers });
