@@ -123,8 +123,8 @@
         text-align: left;
       }
       th {
-        background-color: #e9ecef;
-        color: #495057;
+        background-color: #34495e;
+        color: white;
         font-weight: bold;
         text-transform: uppercase;
         font-size: 0.9em;
@@ -147,16 +147,16 @@
       .status-pending {
         background-color: #ffc107;
         color: #343a40;
-      } 
+      }
       .status-confirmed {
         background-color: #2196f3;
-      } 
+      }
       .status-cancelled {
         background-color: #dc3545;
       }
       .status-completed {
         background-color: #4caf50;
-      } 
+      }
 
       .actions-column {
         white-space: nowrap;

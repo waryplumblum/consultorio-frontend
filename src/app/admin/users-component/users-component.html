@@ -1,0 +1,106 @@
+<div class="users-container">
+  <h2>Gestión de Usuarios</h2>
+
+  <div *ngIf="loading" class="loading-message">Cargando usuarios...</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label for="filterEmail">Email:</label>
+      <input
+        type="text"
+        id="filterEmail"
+        placeholder="Filtrar por email"
+        [(ngModel)]="filterEmail"
+        (input)="applyFilters()"
+      />
+    </div>
+    <div class="filter-group">
+      <label for="filterName">Nombre:</label>
+      <input
+        type="text"
+        id="filterName"
+        placeholder="Filtrar por nombre"
+        [(ngModel)]="filterName"
+        (input)="applyFilters()"
+      />
+    </div>
+    <div class="filter-group">
+      <label for="filterRole">Rol:</label>
+      <select
+        id="filterRole"
+        [(ngModel)]="filterRole"
+        (change)="applyFilters()"
+      >
+        <option value="">Todos</option>
+        <option value="admin">Administrador</option>
+        <option value="patient">Paciente</option>
+        <option value="doctor">Doctor</option>
+      </select>
+    </div>
+    <button class="btn btn-secondary" (click)="clearFilters()">
+      <i class="fas fa-filter-circle-xmark"></i> Limpiar Filtros
+    </button>
+  </div>
+
+  <div class="actions-bar">
+    <button
+      class="btn btn-success"
+      routerLink="/admin/users/new"
+      *ngIf="isAdmin"
+    >
+      <i class="fas fa-user-plus"></i> Crear Nuevo Usuario
+    </button>
+    <button class="btn btn-primary" (click)="loadUsers()">
+      <i class="fas fa-sync-alt"></i> Actualizar Lista
+    </button>
+  </div>
+
+  <div
+    class="users-table"
+    *ngIf="!loading && !errorMessage && filteredUsers.length > 0"
+  >
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers">
+          <td data-label="Email">{{ user.email }}</td>
+          <td data-label="Nombre">{{ user.firstName }}</td>
+          <td data-label="Apellido">{{ user.lastName }}</td>
+          <td data-label="Rol">{{ user.role | titlecase }}</td>
+          <td class="actions-column" data-label="Acciones">
+            <button
+              class="btn btn-edit"
+              (click)="editUser(user._id)"
+              *ngIf="isAdmin"
+            >
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button
+              class="btn btn-delete"
+              (click)="deleteUser(user._id)"
+              *ngIf="isAdmin"
+            >
+              <i class="fas fa-trash-alt"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div
+    *ngIf="!loading && !errorMessage && filteredUsers.length === 0"
+    class="no-users-found"
+  >
+    <p>No se encontraron usuarios que coincidan con los filtros aplicados.</p>
+  </div>
+</div>

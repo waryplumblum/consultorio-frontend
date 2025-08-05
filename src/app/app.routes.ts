@@ -9,6 +9,8 @@ import { AuthGuard } from './guards/auth-guard';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout';
 import { AppointmentsComponent } from './admin/appointments-component/appointments-component';
 import { AdminAppointmentManagementComponent } from './admin/appointment-form/appointment-form';
+import { AdminUsersComponent } from './admin/users-component/users-component';
+import { UserFormComponent } from './admin/users-component/users-form-component/users-form-component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/doctor-info', pathMatch: 'full' },
@@ -22,7 +24,6 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'appointments', component: AppointmentsComponent },
-      // Rutas para el formulario de citas:
       {
         path: 'appointments/new',
         component: AdminAppointmentManagementComponent,
@@ -31,11 +32,11 @@ export const routes: Routes = [
         path: 'appointments/edit/:id',
         component: AdminAppointmentManagementComponent,
       },
-      // { path: 'users', component: AdminUsersComponent },
+      { path: 'users', component: AdminUsersComponent },
+      { path: 'users/new', component: UserFormComponent },
+      { path: 'users/edit/:id', component: UserFormComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
-  // Aquí puedes añadir una ruta para "No autorizado" si lo deseas
-  // { path: 'unauthorized', component: UnauthorizedComponent }
   { path: '**', redirectTo: '/doctor-info' },
 ];

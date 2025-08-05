@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importar HttpHeaders
 import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode'; // Importar jwt-decode
 
 @Injectable({
   providedIn: 'root',
@@ -43,33 +44,33 @@ export class AuthService {
     return this.currentLoginStatus;
   }
 
-  // Opcional: Decodificar token para obtener información del usuario
-  getDecodedToken(): any {
+  // Decodificar token para obtener información del usuario
+  getDecodedToken(): any | null {
     const token = this.getToken();
     if (token) {
       try {
-        // En un proyecto real, usarías una librería JWT como jwt-decode para esto
-        // npm install jwt-decode
-        // import jwt_decode from "jwt-decode";
-        // return jwt_decode(token);
-
-        // Para este ejemplo simple, una decodificación básica (NO SEGURA para producción)
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split('')
-            .map(function (c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join('')
-        );
-        return JSON.parse(jsonPayload);
+        // Usar jwt-decode para una decodificación segura
+        return jwtDecode(token);
       } catch (e) {
         console.error('Error al decodificar el token:', e);
         return null;
       }
     }
     return null;
+  }
+
+  // ¡NUEVO MÉTODO! Para verificar el rol del usuario
+  hasRole(requiredRole: 'admin' | 'secretary'): boolean {
+    const decodedToken = this.getDecodedToken();
+    if (decodedToken && decodedToken.role) {
+      // Si el rol requerido es 'admin', solo 'admin' puede pasar.
+      // Si el rol requerido es 'secretary', tanto 'admin' como 'secretary' pueden pasar.
+      if (requiredRole === 'admin') {
+        return decodedToken.role === 'admin';
+      } else if (requiredRole === 'secretary') {
+        return decodedToken.role === 'admin' || decodedToken.role === 'secretary';
+      }
+    }
+    return false;
   }
 }
